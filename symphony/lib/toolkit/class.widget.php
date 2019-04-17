@@ -79,7 +79,7 @@ class Widget
     {
         General::ensureType(array(
             'name' => array('var' => $name, 'type' => 'string'),
-            'value' => array('var' => $value, 'type' => 'string', 'optional' => true),
+            'value' => array('var' => $value, 'type' => ['string', 'int', 'double', 'float'], 'optional' => true),
             'type' => array('var' => $type, 'type' => 'string', 'optional' => true),
         ));
 
@@ -193,7 +193,7 @@ class Widget
             'name' => array('var' => $name, 'type' => 'string'),
             'rows' => array('var' => $rows, 'type' => 'int'),
             'cols' => array('var' => $cols, 'type' => 'int'),
-            'value' => array('var' => $value, 'type' => 'string', 'optional' => true)
+            'value' => array('var' => $value, 'type' => ['string', 'int', 'double', 'float'], 'optional' => true)
         ));
 
         $obj = new XMLElement('textarea', $value);
@@ -235,7 +235,7 @@ class Widget
     public static function Anchor($value, $href, $title = null, $class = null, $id = null, array $attributes = null)
     {
         General::ensureType(array(
-            'value' => array('var' => $value, 'type' => 'string'),
+            'value' => array('var' => $value, 'type' => ['string', 'int', 'double', 'float']),
             'href' => array('var' => $href, 'type' => 'string'),
             'title' => array('var' => $title, 'type' => 'string', 'optional' => true),
             'class' => array('var' => $class, 'type' => 'string', 'optional' => true),
