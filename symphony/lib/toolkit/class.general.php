@@ -1666,7 +1666,9 @@ class General
      *  $key = the name of the variable
      *  $value = Array[
      *      'var' => the variable to check
-     *      'type' => enforced type. Must match the XXX part from an `is_XXX()` function
+     *      'type' => enforced type. Must match the XXX part from an `is_XXX()`
+     *                function. Can be and array of types. Validation passes if
+     *                any one of the specified type checks passes
      *      'optional' => boolean. If this is set, the default value of the variable must be null
      *  ]
      *
@@ -1677,36 +1679,58 @@ class General
      *  $color = 'red';
      *  $foo = null;
      *  $bar = 21;
+     *  $mixed = 45.2
      *
      *  General::ensureType(array(
      *      'color' => array('var' => $color, 'type'=> 'string'),               // success
      *      'foo' => array('var' => $foo, 'type'=> 'int',  'optional' => true), // success
      *      'bar' => array('var' => $bar, 'type'=> 'string')                    // fail
+     *      'mixed' => array('var' => $mixed, 'type'=> ['int', 'float'])        // success
      *  ));
      */
-    public static function ensureType(array $params)
-    {
-        foreach ($params as $name => $param) {
-            if (isset($param['optional']) && ($param['optional'] === true)) {
-                if (is_null($param['var'])) {
-                    continue;
-                }
-                // if not null, check it's type
-            }
+     public static function ensureType(array $params)
+     {
+         foreach ($params as $name => $param) {
+             if (isset($param['optional']) && ($param['optional'] === true)) {
+                 if (is_null($param['var'])) {
+                     continue;
+                 }
+                 // if not null, check it's type
+             }
 
-            // validate the validator
-            $validator = 'is_'.$param['type'];
+             // always want to deal with an array of types, but we might get
+             // just a string (i.e. not array).
+             if(!is_array($param['type'])) {
+                 $param['type'] = array($param['type']);
+             }
 
-            if (!function_exists($validator)) {
-                throw new InvalidArgumentException(__('Enforced type `%1$s` for argument `$%2$s` does not match any known variable types.', array($param['type'], $name)));
-            }
+             // Assume its invalid unless proven otherwise
+             $valid = false;
 
-            // validate variable type
-            if (!call_user_func($validator, $param['var'])) {
-                throw new InvalidArgumentException(__('Argument `$%1$s` is not of type `%2$s`, given `%3$s`.', array($name, $param['type'], gettype($param['var']))));
-            }
-        }
-    }
+             // Iterate over each allowable type and validate.
+             foreach($param['type'] as $type) {
+                 // validate the validator
+                 $validator = "is_{$type}";
+
+                 if (!function_exists($validator)) {
+                     throw new InvalidArgumentException(__('Enforced type `%1$s` for argument `$%2$s` does not match any known variable types.', array($type, $name)));
+                 }
+
+                 // validate variable type
+                 if (call_user_func($validator, $param['var'])) {
+                     $valid = true;
+                     break;
+                 }
+             }
+
+             // After iterating over each type, check to see if at least one of
+             // them passed. If not, throw an exception.
+             if($valid == false) {
+                 throw new InvalidArgumentException(__('Argument `$%1$s` is not one of allowable types (%2$s), given `%3$s`.', array($name, implode(', ', $param['type']), gettype($param['var']))));
+             }
+         }
+     }
+
 
 
     /**
