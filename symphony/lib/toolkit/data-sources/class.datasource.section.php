@@ -20,7 +20,7 @@ class SectionDatasource extends Datasource
      * An array of Field objects that this Datasource has created to display
      * the results.
      */
-    private static $_fieldPool = array();
+    protected static $_fieldPool = array();
 
     /**
      * An array of the Symphony meta data parameters.
