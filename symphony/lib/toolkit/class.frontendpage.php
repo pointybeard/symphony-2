@@ -32,7 +32,7 @@ class FrontendPage extends XSLTPage
      * @var string
      * @see boot#getCurrentPage()
      */
-    private $_page;
+    protected $_page;
 
     /**
      * An associative array of the resolved pages's data as returned from `tbl_pages`
@@ -892,7 +892,7 @@ class FrontendPage extends XSLTPage
             // if the XML is still null, an extension has not run the data source, so run normally
             // This is deprecated and will be replaced by execute in Symphony 3.0.0
             if (is_null($xml)) {
-                $xml = $ds->grab($this->_env['pool']);
+                $xml = $ds->execute($this->_env['pool']);
             }
 
             if ($xml) {
