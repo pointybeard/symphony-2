@@ -23,13 +23,13 @@ class XMLElement implements IteratorAggregate
      * The name of the HTML Element, eg. 'p'
      * @var string
      */
-    private $_name;
+    protected $_name;
 
     /**
      * The value of this `XMLElement` as a string
      * @var string
      */
-    private $_value = array();
+    protected $_value = array();
 
     /**
      * Any additional attributes can be included in an associative array
@@ -37,52 +37,52 @@ class XMLElement implements IteratorAggregate
      * attribute.
      * @var array
      */
-    private $_attributes = array();
+    protected $_attributes = array();
 
     /**
      * Children of this `XMLElement`, which will also be `XMLElement`'s
      * @var array
      */
-    private $_children = array();
+    protected $_children = array();
 
     /**
      * Any processing instructions that the XSLT should know about when a
      * `XMLElement` is generated
      * @var array
      */
-    private $_processingInstructions = array();
+    protected $_processingInstructions = array();
 
     /**
      * The DTD the should be output when a `XMLElement` is generated, defaults to null.
      * @var string
      */
-    private $_dtd = null;
+    protected $_dtd = null;
 
     /**
      * The encoding of the `XMLElement`, defaults to 'utf-8'
      * @var string
      */
-    private $_encoding = 'utf-8';
+    protected $_encoding = 'utf-8';
 
     /**
      * The version of the XML that is used for generation, defaults to '1.0'
      * @var string
      */
-    private $_version = '1.0';
+    protected $_version = '1.0';
 
     /**
      * The type of element, defaults to 'xml'. Used when determining the style
      * of end tag for this element when generated
      * @var string
      */
-    private $_elementStyle = 'xml';
+    protected $_elementStyle = 'xml';
 
     /**
      * When set to true this will include the XML declaration will be
      * output when the `XMLElement` is generated. Defaults to `false`.
      * @var boolean
      */
-    private $_includeHeader = false;
+    protected $_includeHeader = false;
 
     /**
      * Specifies whether this HTML element has an closing element, or if
@@ -90,7 +90,7 @@ class XMLElement implements IteratorAggregate
      *  eg. `<p></p>` or `<input />`
      * @var boolean
      */
-    private $_selfclosing = true;
+    protected $_selfclosing = true;
 
     /**
      * Specifies whether attributes need to have a value or if they can
@@ -98,7 +98,7 @@ class XMLElement implements IteratorAggregate
      *  `<option selected>Value</option>`
      * @var boolean
      */
-    private $_allowEmptyAttributes = true;
+    protected $_allowEmptyAttributes = true;
 
     /**
      * The constructor for the `XMLElement`
@@ -458,7 +458,7 @@ class XMLElement implements IteratorAggregate
      *  The child to validate
      *
      */
-    private function validateChild($child)
+    protected function validateChild($child)
     {
         if ($this === $child) {
             throw new Exception(__('Can not add the element itself as one of its child'));
@@ -624,7 +624,7 @@ class XMLElement implements IteratorAggregate
         if (!is_numeric($index)) {
             return false;
         }
-        
+
         $this->validateChild($child);
 
         if ($index >= $this->getNumberOfChildren()) {
@@ -684,7 +684,7 @@ class XMLElement implements IteratorAggregate
      *  from the end of `$this->_children`
      * @return integer
      */
-    private function getRealIndex($index)
+    protected function getRealIndex($index)
     {
         if ($index >= 0) {
             return $index;
@@ -875,7 +875,7 @@ class XMLElement implements IteratorAggregate
      * @param DOMNOde $node
      * @return XMLElement
      */
-    private static function convert(XMLElement $root = null, DOMNode $node)
+    protected static function convert(XMLElement $root = null, DOMNode $node)
     {
         $el = new XMLElement($node->tagName);
 
@@ -896,7 +896,7 @@ class XMLElement implements IteratorAggregate
      * @param XMLElement $element
      * @param DOMNode $node
      */
-    private static function convertNode(XMLElement $element, DOMNode $node)
+    protected static function convertNode(XMLElement $element, DOMNode $node)
     {
         if ($node->hasAttributes()) {
             foreach ($node->attributes as $name => $attrEl) {
