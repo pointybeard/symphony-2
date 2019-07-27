@@ -30,7 +30,7 @@ class contentSystemPreferences extends AdministrationPage
         $formHasErrors = (is_array($this->_errors) && !empty($this->_errors));
 
         if (General::checkFileWritable(CONFIG) === false) {
-            $this->pageAlert(__('The Symphony configuration file, %s, or folder is not writable. You will not be able to save changes to preferences.', array('<code>/manifest/config.php</code>')), Alert::ERROR);
+            $this->pageAlert(__('The Symphony configuration file, %s, or folder is not writable. You will not be able to save changes to preferences.', array('<code>/manifest/config.json</code>')), Alert::ERROR);
             $bIsWritable = false;
         } elseif ($formHasErrors) {
             $this->pageAlert(
