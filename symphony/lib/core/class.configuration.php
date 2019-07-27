@@ -180,68 +180,15 @@ class Configuration
      */
     public function __toString()
     {
-        $string = 'array(';
-
-        $tab = static::TAB;
-
-        foreach ($this->_properties as $group => $data) {
-            $string .= str_repeat(PHP_EOL, 3) . "$tab$tab###### ".strtoupper($group)." ######";
-            $group = addslashes($group);
-            $string .= PHP_EOL . "$tab$tab'$group' => ";
-
-            $string .= $this->serializeArray($data, 3, $tab);
-
-            $string .= ",";
-            $string .= PHP_EOL . "$tab$tab########";
-        }
-        $string .= PHP_EOL . "$tab)";
-
-        return $string;
+        return $this->toJson();
     }
 
     /**
-     * The `serializeArray` function will properly format and indent multidimensional
-     * arrays using recursivity.
-     *
-     * `__toString()` call `serializeArray` to use the recursive condition.
-     * The keys (int) in array won't have apostrophe.
-     * Array without multidimensional array will be output with normal indentation.
-     * @return string
-     *  A string that contains a array representation of the '$data parameter'.
-     * @param array $arr
-     *  A array of properties to serialize.
-     * @param integer $indentation
-     *  The current level of indentation.
-     * @param string $tab
-     *  A horizontal tab
+     * Converts all properties into a JSON string
+     * @return string json representation of configuration properties
      */
-    protected function serializeArray(array $arr, $indentation = 0, $tab = self::TAB)
-    {
-        $tabs = '';
-        $closeTabs = '';
-        for ($i = 0; $i < $indentation; $i++) {
-            $tabs .= $tab;
-            if ($i < $indentation - 1) {
-                $closeTabs .= $tab;
-            }
-        }
-        $string = 'array(';
-        foreach ($arr as $key => $value) {
-            $key = addslashes($key);
-            $string .= (is_numeric($key) ? PHP_EOL . "$tabs $key => " : PHP_EOL . "$tabs'$key' => ");
-            if (is_array($value)) {
-                if (empty($value)) {
-                    $string .= 'array()';
-                } else {
-                    $string .= $this->serializeArray($value, $indentation + 1, $tab);
-                }
-            } else {
-                $string .= (General::strlen($value) > 0 ? var_export($value, true) : 'null');
-            }
-            $string .= ",";
-        }
-        $string .=  PHP_EOL . "$closeTabs)";
-        return $string;
+    public function toJson(): string {
+        return json_encode($this->_properties, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }
 
     /**
@@ -255,21 +202,14 @@ class Configuration
      *  If this is not provided it will use the permissions defined in [`write_mode`][`file`]
      * @return boolean
      */
-    public function write($file = null, $permissions = null)
+    public function write(string $file = null, int $permissions = null)
     {
-        if (is_null($permissions) && isset($this->_properties['file']['write_mode'])) {
+        $file = $file ?? CONFIG;
+
+        if (null == $permissions && isset($this->_properties['file']['write_mode'])) {
             $permissions = $this->_properties['file']['write_mode'];
         }
 
-        if (is_null($file)) {
-            $file = CONFIG;
-        }
-
-        $tab = static::TAB;
-        $eol = PHP_EOL;
-
-        $string = "<?php$eol$tab\$settings = " . (string)$this . ";$eol";
-
-        return General::writeFile($file, $string, $permissions);
+        return General::writeFile($file, (string)$this, $permissions);
     }
 }
