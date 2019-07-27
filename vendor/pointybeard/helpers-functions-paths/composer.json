@@ -1,0 +1,34 @@
+{
+    "name": "pointybeard/helpers-functions-paths",
+    "version": "1.0.0",
+    "description": "A collection of helpful functions related to paths, directories, and files names",
+    "homepage": "https://github.com/pointybeard/helpers-functions-paths",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alannah Kearney",
+            "email": "hi@alannahkearney.com",
+            "homepage": "http://alannahkearney.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5"
+    },
+    "support": {
+        "issues": "https://github.com/pointybeard/helpers-functions-paths/issues",
+        "wiki": "https://github.com/pointybeard/helpers-functions-paths/wiki"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "pointybeard\\Helpers\\Functions\\": "src/"
+        },
+        "files": [
+            "src/Paths/Paths.php"
+        ]
+    }
+}

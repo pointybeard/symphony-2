@@ -6,4 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'pointybeard\\Helpers\\Statistics\\' => array($vendorDir . '/pointybeard/helpers-statistics-slidingaverage/src'),
+    'pointybeard\\Helpers\\Functions\\' => array($vendorDir . '/pointybeard/helpers-functions-arrays/src', $vendorDir . '/pointybeard/helpers-functions-paths/src'),
+    'pointybeard\\Helpers\\Foundation\\' => array($vendorDir . '/pointybeard/helpers-foundation-factory/src'),
+    'pointybeard\\Helpers\\Exceptions\\' => array($vendorDir . '/pointybeard/helpers-exceptions-readabletrace/src'),
+    'pointybeard\\Helpers\\Cli\\' => array($vendorDir . '/pointybeard/helpers-cli-colour/src', $vendorDir . '/pointybeard/helpers-cli-input/src', $vendorDir . '/pointybeard/helpers-cli-message/src', $vendorDir . '/pointybeard/helpers-cli-progressbar/src', $vendorDir . '/pointybeard/helpers-cli-prompt/src'),
 );

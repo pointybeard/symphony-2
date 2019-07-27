@@ -2,6 +2,9 @@
 
     ini_set('display_errors', 1);
 
+    // Turn off preboot when we are installing
+    putenv('symphony_enable_preboot=0');
+
     // Set the current timezone, should that not be available
     // default to GMT.
     if (!date_default_timezone_set(@date_default_timezone_get())) {

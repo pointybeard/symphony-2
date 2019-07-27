@@ -1,0 +1,37 @@
+{
+    "name": "pointybeard/helpers-functions-cli",
+    "version": "1.1.8",
+    "description": "A collection of functions relating to the command-line",
+    "homepage": "https://github.com/pointybeard/helpers-functions-cli",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alannah Kearney",
+            "email": "hi@alannahkearney.com",
+            "homepage": "http://alannahkearney.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "pointybeard/helpers-cli-input": "~1.2.0",
+        "pointybeard/helpers-cli-colour": "~1.0",
+        "pointybeard/helpers-functions-strings": "~1.1",
+        "pointybeard/helpers-functions-flags": "~1.0",
+        "pointybeard/helpers-functions-arrays": "~1.0",
+        "pointybeard/helpers-functions-debug": "~1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    },
+    "support": {
+        "issues": "https://github.com/pointybeard/helpers-functions-cli/issues",
+        "wiki": "https://github.com/pointybeard/helpers-functions-cli/wiki"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "files": [
+            "src/Cli/Cli.php"
+        ]
+    }
+}

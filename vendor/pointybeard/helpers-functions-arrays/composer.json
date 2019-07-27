@@ -1,0 +1,35 @@
+{
+    "name": "pointybeard/helpers-functions-arrays",
+    "version": "1.0.1",
+    "description": "A collection of helpful functions related to arrays and array manipulation",
+    "homepage": "https://github.com/pointybeard/helpers-functions-arrays",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alannah Kearney",
+            "email": "hi@alannahkearney.com",
+            "homepage": "http://alannahkearney.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5",
+        "block8/php-docblock-checker": "~1.10"
+    },
+    "support": {
+        "issues": "https://github.com/pointybeard/helpers-functions-arrays/issues",
+        "wiki": "https://github.com/pointybeard/helpers-functions-arrays/wiki"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "pointybeard\\Helpers\\Functions\\": "src/"
+        },
+        "files": [
+            "src/Arrays/Arrays.php"
+        ]
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "name": "pointybeard/helpers-functions-time",
+    "version": "1.0.1",
+    "description": "A collection of functions used to manipulate time values",
+    "homepage": "https://github.com/pointybeard/helpers-functions-time",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alannah Kearney",
+            "email": "hi@alannahkearney.com",
+            "homepage": "http://alannahkearney.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5",
+        "block8/php-docblock-checker": "~1.10"
+    },
+    "support": {
+        "issues": "https://github.com/pointybeard/helpers-functions-time/issues",
+        "wiki": "https://github.com/pointybeard/helpers-functions-time/wiki"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "files": [
+            "src/Time/Time.php"
+        ]
+    }
+}
