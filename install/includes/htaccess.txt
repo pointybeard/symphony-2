@@ -5,6 +5,10 @@ Options +SymLinksIfOwnerMatch -Indexes
     SetEnv HTTP_MOD_REWRITE No
 </IfModule>
 
+## Pre-boot config (uncomment to enable)
+#SetEnv symphony_enable_preboot 1
+#SetEnv symphony_preboot_config "/some/path/to/preboot.json"
+
 <IfModule mod_rewrite.c>
 
     <IfModule mod_negotiation.c>
