@@ -1,0 +1,32 @@
+{
+    "name": "pointybeard/helpers-statistics-slidingaverage",
+    "version": "1.0.2",
+    "description": "Ring buffer for calculating average of a changing set; helps to reduce jitter.",
+    "homepage": "https://github.com/pointybeard/helpers-statistics-slidingaverage",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alannah Kearney",
+            "email": "hi@alannahkearney.com",
+            "homepage": "http://alannahkearney.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5",
+        "block8/php-docblock-checker": "~1.10"
+    },
+    "support": {
+        "issues": "https://github.com/pointybeard/helpers-statistics-slidingaverage/issues",
+        "wiki": "https://github.com/pointybeard/helpers-statistics-slidingaverage/wiki"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "pointybeard\\Helpers\\Statistics\\": "src/"
+        }
+    }
+}

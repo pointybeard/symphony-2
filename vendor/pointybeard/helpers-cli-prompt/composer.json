@@ -1,0 +1,34 @@
+{
+    "name": "pointybeard/helpers-cli-prompt",
+    "version": "1.0.0",
+    "description": "Class for asking for input on the command-line",
+    "homepage": "https://github.com/pointybeard/helpers-cli-prompt",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alannah Kearney",
+            "email": "hi@alannahkearney.com",
+            "homepage": "http://alannahkearney.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.6",
+        "pointybeard/helpers-cli-message": "~1.0",
+        "pointybeard/helpers-functions-flags": "~1.0",
+        "pointybeard/helpers-functions-cli": "~1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5"
+    },
+    "support": {
+        "issues": "https://github.com/pointybeard/helpers-cli-prompt/issues",
+        "wiki": "https://github.com/pointybeard/helpers-cli-prompt/wiki"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "pointybeard\\Helpers\\Cli\\": "src/"
+        }
+    }
+}

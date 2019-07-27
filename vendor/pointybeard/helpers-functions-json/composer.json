@@ -1,0 +1,28 @@
+{
+    "name": "pointybeard/helpers-functions-json",
+    "description": "A collection of functions for working with JSON files and strings",
+    "homepage": "https://github.com/pointybeard/helpers-functions-json",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alannah Kearney",
+            "email": "hi@alannahkearney.com",
+            "homepage": "http://alannahkearney.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "pointybeard/helpers-functions-flags": "~1.0"
+    },
+    "support": {
+        "issues": "https://github.com/pointybeard/helpers-functions-json/issues",
+        "wiki": "https://github.com/pointybeard/helpers-functions-json/wiki"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "files": [
+            "src/Json/Json.php"
+        ]
+    }
+}

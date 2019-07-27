@@ -7,9 +7,58 @@ namespace Composer\Autoload;
 class ComposerStaticInit5f867b58cbaae676dc2f623c94dcd5ad
 {
     public static $files = array (
+        '2e55bbe4220346b9919fdd303c3da178' => __DIR__ . '/..' . '/pointybeard/helpers-functions-strings/src/Strings/Strings.php',
+        '6d87e2146371afdace29f6f49c28072f' => __DIR__ . '/..' . '/pointybeard/helpers-functions-flags/src/Flags/Flags.php',
+        '38ab4890daa8afb807792cbd9d227126' => __DIR__ . '/..' . '/pointybeard/helpers-functions-paths/src/Paths/Paths.php',
+        '673ee9dbd5408133121ac2228e3dd403' => __DIR__ . '/..' . '/pointybeard/helpers-foundation-factory/src/Factory/Factory.php',
+        '3a62d833aa6faf4143a6a5e5de4b899f' => __DIR__ . '/..' . '/pointybeard/helpers-functions-debug/src/Debug/Debug.php',
+        '9131b2d32561ef4fdf11ee5112180309' => __DIR__ . '/..' . '/pointybeard/helpers-functions-arrays/src/Arrays/Arrays.php',
+        '408ff2770479d48f04d83a5197b23f09' => __DIR__ . '/..' . '/pointybeard/helpers-functions-cli/src/Cli/Cli.php',
+        '9e814fe42a0a7626d27f3a0fefc61fb7' => __DIR__ . '/..' . '/pointybeard/helpers-functions-time/src/Time/Time.php',
+        '2ffb1d3b635cd94550121de29e6d6166' => __DIR__ . '/..' . '/pointybeard/helpers-functions-json/src/Json/Json.php',
+        'ae234a4a83b9b608eb450068977c7b9c' => __DIR__ . '/../..' . '/symphony/lib/boot/preboot.php',
         '2fff7155503ae8062f33ffa21dc0c9d0' => __DIR__ . '/../..' . '/symphony/lib/boot/func.utilities.php',
         '860f97b44e4fec43f50b3b30d589a8c9' => __DIR__ . '/../..' . '/symphony/lib/boot/defines.php',
         'dcba515aa2b31aba0cb05995f45ed9ef' => __DIR__ . '/../..' . '/symphony/lib/toolkit/util.validators.php',
+    );
+
+    public static $prefixLengthsPsr4 = array (
+        'p' => 
+        array (
+            'pointybeard\\Helpers\\Statistics\\' => 31,
+            'pointybeard\\Helpers\\Functions\\' => 30,
+            'pointybeard\\Helpers\\Foundation\\' => 31,
+            'pointybeard\\Helpers\\Exceptions\\' => 31,
+            'pointybeard\\Helpers\\Cli\\' => 24,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'pointybeard\\Helpers\\Statistics\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pointybeard/helpers-statistics-slidingaverage/src',
+        ),
+        'pointybeard\\Helpers\\Functions\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pointybeard/helpers-functions-arrays/src',
+            1 => __DIR__ . '/..' . '/pointybeard/helpers-functions-paths/src',
+        ),
+        'pointybeard\\Helpers\\Foundation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pointybeard/helpers-foundation-factory/src',
+        ),
+        'pointybeard\\Helpers\\Exceptions\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pointybeard/helpers-exceptions-readabletrace/src',
+        ),
+        'pointybeard\\Helpers\\Cli\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pointybeard/helpers-cli-colour/src',
+            1 => __DIR__ . '/..' . '/pointybeard/helpers-cli-input/src',
+            2 => __DIR__ . '/..' . '/pointybeard/helpers-cli-message/src',
+            3 => __DIR__ . '/..' . '/pointybeard/helpers-cli-progressbar/src',
+            4 => __DIR__ . '/..' . '/pointybeard/helpers-cli-prompt/src',
+        ),
     );
 
     public static $classMap = array (
@@ -187,6 +236,8 @@ class ComposerStaticInit5f867b58cbaae676dc2f623c94dcd5ad
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5f867b58cbaae676dc2f623c94dcd5ad::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5f867b58cbaae676dc2f623c94dcd5ad::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInit5f867b58cbaae676dc2f623c94dcd5ad::$classMap;
 
         }, null, ClassLoader::class);
