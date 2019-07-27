@@ -1,0 +1,36 @@
+{
+    "name": "pointybeard/helpers-cli-progressbar",
+    "version": "1.1.0",
+    "description": "Utility for rendering a progress bar to the command line in PHP",
+    "homepage": "https://github.com/pointybeard/helpers-cli-progressbar",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alannah Kearney",
+            "email": "hi@alannahkearney.com",
+            "homepage": "http://alannahkearney.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "pointybeard/helpers-cli-colour": "~1.0",
+        "pointybeard/helpers-statistics-slidingaverage": "~1.0",
+        "pointybeard/helpers-functions-time": "~1.0",
+        "pointybeard/helpers-functions-cli": "~1.1",
+        "pointybeard/helpers-functions-strings": "~1.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    },
+    "support": {
+        "issues": "https://github.com/pointybeard/helpers-cli-progressbar/issues",
+        "wiki": "https://github.com/pointybeard/helpers-cli-progressbar/wiki"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "pointybeard\\Helpers\\Cli\\": "src/"
+        }
+    }
+}

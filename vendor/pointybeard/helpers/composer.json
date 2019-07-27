@@ -1,0 +1,38 @@
+{
+    "name": "pointybeard/helpers",
+    "description": "A meta package containing helpful classes and functions for use in PHP.",
+    "homepage": "https://github.com/pointybeard/helpers",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alannah Kearney",
+            "email": "hi@alannahkearney.com",
+            "homepage": "http://alannahkearney.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "pointybeard/helpers-cli-colour": "^1.0",
+        "pointybeard/helpers-cli-input": "^1.2.0",
+        "pointybeard/helpers-cli-message": "^1.0",
+        "pointybeard/helpers-cli-progressbar": "^1.1.0",
+        "pointybeard/helpers-cli-prompt": "^1.0",
+        "pointybeard/helpers-exceptions-readabletrace": "^1.0",
+        "pointybeard/helpers-foundation-factory": "^1.0",
+        "pointybeard/helpers-functions-arrays": "^1.0",
+        "pointybeard/helpers-functions-cli": "^1.1.0",
+        "pointybeard/helpers-functions-debug": "^1.0",
+        "pointybeard/helpers-functions-flags": "^1.0",
+        "pointybeard/helpers-functions-json": "^1.0",
+        "pointybeard/helpers-functions-paths": "^1.0",
+        "pointybeard/helpers-functions-strings": "^1.1.0",
+        "pointybeard/helpers-functions-time": "^1.0",
+        "pointybeard/helpers-statistics-slidingaverage": "^1.0"
+    },
+    "support": {
+        "issues": "https://github.com/pointybeard/helpers/issues",
+        "wiki": "https://github.com/pointybeard/helpers/wiki"
+    },
+    "minimum-stability": "stable"
+}

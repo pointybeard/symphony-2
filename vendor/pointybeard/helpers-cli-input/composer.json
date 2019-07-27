@@ -1,0 +1,35 @@
+{
+    "name": "pointybeard/helpers-cli-input",
+    "version": "1.2.1",
+    "description": "Collection of classes for handling argv (and other) input when calling command-line scripts. Helps with parsing, collecting and validating arguments, options, and flags.",
+    "homepage": "https://github.com/pointybeard/helpers-cli-input",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alannah Kearney",
+            "email": "hi@alannahkearney.com",
+            "homepage": "http://alannahkearney.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "pointybeard/helpers-foundation-factory": "~1.0",
+        "pointybeard/helpers-functions-flags": "~1.0"
+    },
+    "require-dev": {
+        "pointybeard/helpers-functions-strings": "~1.1.0",
+        "pointybeard/helpers-cli-colour": "~1.0",
+        "pointybeard/helpers-functions-cli": "~1.1.0"
+    },
+    "support": {
+        "issues": "https://github.com/pointybeard/helpers-cli-input/issues",
+        "wiki": "https://github.com/pointybeard/helpers-cli-input/wiki"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "pointybeard\\Helpers\\Cli\\": "src/"
+        }
+    }
+}

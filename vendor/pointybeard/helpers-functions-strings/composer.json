@@ -1,0 +1,30 @@
+{
+    "name": "pointybeard/helpers-functions-strings",
+    "description": "A collection of functions for manipulating strings",
+    "homepage": "https://github.com/pointybeard/helpers-functions-strings",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alannah Kearney",
+            "email": "hi@alannahkearney.com",
+            "homepage": "http://alannahkearney.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    },
+    "support": {
+        "issues": "https://github.com/pointybeard/helpers-functions-strings/issues",
+        "wiki": "https://github.com/pointybeard/helpers-functions-strings/wiki"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "files": [
+            "src/Strings/Strings.php"
+        ]
+    }
+}
