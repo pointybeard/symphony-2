@@ -139,12 +139,12 @@ define_safe('LOGS', MANIFEST . '/logs');
 define_safe('ACTIVITY_LOG', LOGS . '/main');
 
 /**
- * The filesystem path to the `config.php` file which is contained within
+ * The filesystem path to the `config.json` file which is contained within
  * the `manifest` folder. This holds all the Symphony configuration settings
  * for this install.
  * @var string
  */
-define_safe('CONFIG', MANIFEST . '/config.php');
+define_safe('CONFIG', MANIFEST . '/config.json');
 
 /**
  * The filesystem path to the `boot` folder which is contained within

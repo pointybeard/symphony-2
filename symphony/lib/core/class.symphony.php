@@ -152,15 +152,10 @@ abstract class Symphony implements Singleton
      * @param array $data
      *  An array of settings to be stored into the Configuration object
      */
-    public static function initialiseConfiguration(array $data = array())
+    public static function initialiseConfiguration(array $data = null)
     {
-        if (empty($data)) {
-            // Includes the existing CONFIG file and initialises the Configuration
-            // by setting the values with the setArray function.
-            include CONFIG;
 
-            $data = $settings;
-        }
+        $data = $data ?? json_decode(file_get_contents(CONFIG), true);
 
         self::$Configuration = new Configuration(true);
         self::$Configuration->setArray($data);

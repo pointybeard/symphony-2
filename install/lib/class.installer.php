@@ -24,7 +24,13 @@
             }
 
             // Include the default Config for installation.
-            include(INSTALL . '/includes/config_default.php');
+            $settings = json_decode(file_get_contents(
+                INSTALL . '/includes/config_default.json'
+            ), true);
+            $settings['symphony']['version'] = VERSION;
+            $settings['log']['filter'] = E_ALL ^ E_DEPRECATED;
+            $settings['general']['useragent'] = sprintf("Symphony/%s", VERSION);
+
             static::initialiseConfiguration($settings);
 
             // Initialize date/time

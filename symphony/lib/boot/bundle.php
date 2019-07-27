@@ -22,8 +22,7 @@
         }
     } else {
         // Load configuration file:
-        include CONFIG;
-        Symphony::initialiseConfiguration($settings);
+        Symphony::initialiseConfiguration();
         Symphony::initialiseErrorHandler();
         Symphony::initialiseDatabase();
         Symphony::initialiseExtensionManager();

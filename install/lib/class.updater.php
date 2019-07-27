@@ -28,15 +28,6 @@
         }
 
         /**
-         * Initialises the configuration object by loading the existing
-         * website config file
-         */
-        public static function initialiseConfiguration(array $data = array())
-        {
-            parent::initialiseConfiguration();
-        }
-
-        /**
          * Overrides the `initialiseLog()` method and writes
          * logs to manifest/logs/update
          */
