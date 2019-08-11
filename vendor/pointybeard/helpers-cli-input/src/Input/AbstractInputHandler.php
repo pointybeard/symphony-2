@@ -68,17 +68,17 @@ abstract class AbstractInputHandler implements Interfaces\InputHandlerInterface
         if(!Flags\is_flag_set($flags, self::FLAG_VALIDATION_SKIP_REQUIRED)) {
             self::checkRequiredAndRequiredValue($input, $this->input);
         }
-        // There is a default value, input has not been set, and there
-        // is no validator
+        // There is a default value and input has not been set. Assign the
+        // default value to the result.
         if (
             null !== $input->default() &&
-            null === $this->find($input->name()) &&
-            null === $input->validator()
+            null === $this->find($input->name())
         ) {
             $result = $input->default();
 
-        // Input has been set and it has a validator. Skip this if
-        // FLAG_VALIDATION_SKIP_CUSTOM is set
+        // Input has been set AND it has a validator. Run the validator over the
+        // input. Note, this will be skipped if FLAG_VALIDATION_SKIP_CUSTOM is
+        // set
         } elseif (null !== $this->find($input->name()) && null !== $input->validator() && !Flags\is_flag_set($flags, self::FLAG_VALIDATION_SKIP_CUSTOM)) {
             $validator = $input->validator();
 
@@ -94,7 +94,8 @@ abstract class AbstractInputHandler implements Interfaces\InputHandlerInterface
                 throw new Exceptions\InputValidationFailedException($input, 0, $ex);
             }
 
-            // No default, no validator, but may or may not have been set
+        // No default, but may or may not have been set so assign whatever value
+        // it might have to the result
         } else {
             $result = $this->find($input->name());
         }

@@ -1,7 +1,7 @@
 # PHP Helpers: Command-line Input and Input Type Handlers
 
--   Version: v1.2.1
--   Date: June 04 2019
+-   Version: v1.2.2
+-   Date: Aug 06 2019
 -   [Release notes](https://github.com/pointybeard/helpers-cli-input/blob/master/CHANGELOG.md)
 -   [GitHub repository](https://github.com/pointybeard/helpers-cli-input)
 

@@ -1,6 +1,5 @@
 {
     "name": "pointybeard/helpers-cli-input",
-    "version": "1.2.1",
     "description": "Collection of classes for handling argv (and other) input when calling command-line scripts. Helps with parsing, collecting and validating arguments, options, and flags.",
     "homepage": "https://github.com/pointybeard/helpers-cli-input",
     "license": "MIT",

@@ -101,16 +101,16 @@
         },
         {
             "name": "pointybeard/helpers-cli-input",
-            "version": "1.2.1",
+            "version": "1.2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pointybeard/helpers-cli-input.git",
-                "reference": "d501a680ff8a842785a270769d6afffd0d992c3f"
+                "reference": "2d87f04dffa793e32839d32ef0cb153a506671b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pointybeard/helpers-cli-input/zipball/d501a680ff8a842785a270769d6afffd0d992c3f",
-                "reference": "d501a680ff8a842785a270769d6afffd0d992c3f",
+                "url": "https://api.github.com/repos/pointybeard/helpers-cli-input/zipball/2d87f04dffa793e32839d32ef0cb153a506671b2",
+                "reference": "2d87f04dffa793e32839d32ef0cb153a506671b2",
                 "shasum": ""
             },
             "require": {
@@ -136,14 +136,14 @@
             "authors": [
                 {
                     "name": "Alannah Kearney",
+                    "role": "Developer",
                     "email": "hi@alannahkearney.com",
-                    "homepage": "http://alannahkearney.com",
-                    "role": "Developer"
+                    "homepage": "http://alannahkearney.com"
                 }
             ],
             "description": "Collection of classes for handling argv (and other) input when calling command-line scripts. Helps with parsing, collecting and validating arguments, options, and flags.",
             "homepage": "https://github.com/pointybeard/helpers-cli-input",
-            "time": "2019-06-04T13:23:35+00:00"
+            "time": "2019-08-05T23:23:59+00:00"
         },
         {
             "name": "pointybeard/helpers-cli-message",
