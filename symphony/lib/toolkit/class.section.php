@@ -13,11 +13,15 @@
 
 class Section
 {
+
+    public const SORT_ORDER_ASC = "asc";
+    public const SORT_ORDER_DESC = "desc";
+
     /**
      * An array of the Section's settings
      * @var array
      */
-    protected $_data = array();
+    protected $_data = [];
 
     /**
      * A setter function that will save a section's setting into
@@ -92,9 +96,23 @@ class Section
      */
     public function getSortingField()
     {
-        $result = Symphony::Configuration()->get('section_' . $this->get('handle') . '_sortby', 'sorting');
+        $result = trim(Symphony::Configuration()
+            ->get(
+                sprintf('section_%s_sortby', $this->get('handle')),
+                'sorting'
+            )
+        );
 
-        return (is_null($result) ? $this->getDefaultSortingField() : $result);
+        // $result is a field handle, not an ID. Convert to the ID of the field
+        if(false == is_numeric($result)) {
+            $result = \FieldManager::fetchFieldIDFromElementName($result, $this->get('id'));
+        }
+
+        if(empty($result)) {
+            $result = $this->getDefaultSortingField();
+        }
+
+        return $result;
     }
 
     /**
@@ -106,9 +124,17 @@ class Section
      */
     public function getSortingOrder()
     {
-        $result = Symphony::Configuration()->get('section_' . $this->get('handle') . '_order', 'sorting');
+        $result = Symphony::Configuration()
+            ->get(
+                sprintf('section_%s_order', $this->get('handle')),
+                'sorting'
+            )
+        ;
 
-        return (is_null($result) ? 'asc' : $result);
+        return empty($result)
+            ? self::SORT_ORDER_ASC
+            : $result
+        ;
     }
 
     /**
@@ -123,9 +149,28 @@ class Section
      */
     public function setSortingField($sort, $write = true)
     {
-        Symphony::Configuration()->set('section_' . $this->get('handle') . '_sortby', $sort, 'sorting');
 
-        if ($write) {
+        // It is expected that $sort will be an ID. It needs to be converted
+        // to the field's handle instead to make the config more readable
+        // and portable
+        if(true == is_numeric($sort)) {
+            $sortHandle = \FieldManager::fetchHandleFromID((int)$sort);
+
+        // Adding support for passing a field handle to this method, although
+        // generally wont happen.
+        } else {
+            $sortHandle = $sort;
+        }
+
+        Symphony::Configuration()
+            ->set(
+                sprintf('section_%s_sortby', $this->get('handle')),
+                $sortHandle,
+                'sorting'
+            )
+        ;
+
+        if (true == $write) {
             Symphony::Configuration()->write();
         }
     }
@@ -142,9 +187,15 @@ class Section
      */
     public function setSortingOrder($order, $write = true)
     {
-        Symphony::Configuration()->set('section_' . $this->get('handle') . '_order', $order, 'sorting');
+        Symphony::Configuration()
+            ->set(
+                sprintf('section_%s_order', $this->get('handle')),
+                $order,
+                'sorting'
+            )
+        ;
 
-        if ($write) {
+        if (true == $write) {
             Symphony::Configuration()->write();
         }
     }
