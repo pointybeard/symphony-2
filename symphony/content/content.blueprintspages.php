@@ -597,7 +597,7 @@ class contentBlueprintsPages extends AdministrationPage
 
         if (!isset($fields['body']) || trim($fields['body']) == '') {
             $this->_errors['body'] = __('This is a required field.');
-        } elseif (!General::validateXML($fields['body'], $errors, false, new XSLTProcess())) {
+        } elseif (!General::validateXML($fields['body'], $errors, false)) {
             $this->_errors['body'] = __('This document is not well formed.') . ' ' . __('The following error was returned:') . ' <code>' . $errors[0]['message'] . '</code>';
         }
 
