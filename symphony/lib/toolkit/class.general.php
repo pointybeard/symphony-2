@@ -123,7 +123,7 @@ class General
      * @param boolean $isFile (optional)
      *  if this is true, the method will attempt to read from a file, `$data`
      *  instead.
-     * @param XsltProcess $xsltProcessor (optional)
+     * @param XsltProcess $xsltProcessor (optional) DEPRECATED! THIS IS IGNORED
      *  if set, the validation will be done using this XSLT processor rather
      *  than the built in XML parser. the default is null.
      * @param string $encoding (optional)
@@ -132,41 +132,40 @@ class General
      * @return boolean
      *  true if there are no errors in validating the XML, false otherwise.
      */
-    public static function validateXML($data, &$errors, $isFile = true, $xsltProcessor = null, $encoding = 'UTF-8')
+    public static function validateXML($xml, &$errors, $isFile = true, $xsltProcessor = null, $encoding = 'UTF-8')
     {
-        $_data = ($isFile) ? file_get_contents($data) : $data;
-        $_data = preg_replace('/<!DOCTYPE[-.:"\'\/\\w\\s]+>/', null, $_data);
+        $errors = null;
 
-        if (strpos($_data, '<?xml') === false) {
-            $_data = '<?xml version="1.0" encoding="'.$encoding.'"?><rootelement>'.$_data.'</rootelement>';
+        // Remove the DOCTYPE
+        $xml = (true == $isFile) ? file_get_contents($xml) : $xml;
+        $xml = preg_replace('/<!DOCTYPE[-.:"\'\/\\w\\s]+>/', null, $xml);
+        $xml = trim($xml);
+
+        // Set the verson and encoding if it hasn't been set
+        if (false === strpos($xml, "<?xml")) {
+            $xml = sprintf(
+                '<?xml version="1.0" encoding="%s"?><d>%s</d>',
+                $encoding,
+                $xml
+            );
         }
 
-        if (is_object($xsltProcessor)) {
-            $xsl = '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        // Make sure we don't have errors printed
+        libxml_use_internal_errors(true);
 
-            <xsl:template match="/"></xsl:template>
+        // Load the document and check for errors
+        if (!(new DOMDocument)->loadXML($xml)) {
+            $errors = [];
+            foreach (libxml_get_errors() as $error) {
 
-            </xsl:stylesheet>';
-
-            $xsltProcessor->process($_data, $xsl, array());
-
-            if ($xsltProcessor->isErrors()) {
-                $errors = $xsltProcessor->getError(true);
-                return false;
-            }
-        } else {
-            $_parser = xml_parser_create();
-            xml_parser_set_option($_parser, XML_OPTION_SKIP_WHITE, 0);
-            xml_parser_set_option($_parser, XML_OPTION_CASE_FOLDING, 0);
-
-            if (!xml_parse($_parser, $_data)) {
-                $errors = array('error' => xml_get_error_code($_parser) . ': ' . xml_error_string(xml_get_error_code($_parser)),
-                                'col' => xml_get_current_column_number($_parser),
-                                'line' => (xml_get_current_line_number($_parser) - 2));
-                return false;
+                $errors[] = [
+                    'error' => $error->message,
+                    'col' => $error->column,
+                    'line' => $error->line
+                ];
             }
 
-            xml_parser_free($_parser);
+            libxml_clear_errors();
         }
 
         return true;
@@ -924,7 +923,7 @@ class General
                 if ($child->getNumberOfChildren() == 0) {
                     continue;
                 }
-            } elseif ($validate === true && !self::validateXML(self::sanitize($value), $errors, false, new XSLTProcess)) {
+            } elseif ($validate === true && !self::validateXML(self::sanitize($value), $errors, false)) {
                 continue;
             } else {
                 $child->setValue(self::sanitize($value));
