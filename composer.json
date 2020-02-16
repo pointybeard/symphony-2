@@ -24,6 +24,9 @@
     "minimum-stability": "stable",
     "autoload": {
       "classmap": ["symphony/content", "symphony/lib", "symphony/template", "install"],
+      "psr-4": {
+        "Symphony\\": "src"
+      },
       "files": [
         "symphony/lib/boot/preboot.php",
         "symphony/lib/boot/func.utilities.php",
