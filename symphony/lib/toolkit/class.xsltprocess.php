@@ -1,5 +1,7 @@
 <?php
 
+use Symphony\Symphony;
+
 /**
  * @package toolkit
  */
@@ -10,51 +12,17 @@
  * are exposed to the `ExceptionHandler`'s for display to the user.
  */
 
-class XsltProcess
+class XsltProcess extends Symphony\AbstractXSLTProcessor
 {
-    /**
-     * The XML for the transformation to be applied to
-     * @var string
-     */
-    private $_xml;
-
-    /**
-     * The XSL for the transformation
-     * @var string
-     */
-    private $_xsl;
-
-    /**
-     * Any errors that occur during the transformation are stored in this array.
-     * @var array
-     */
-    private $_errors = array();
-
-    /**
-     * The `XsltProcess` constructor takes a two parameters for the
-     * XML and the XSL and initialises the `$this->_xml` and `$this->_xsl` variables.
-     * If an `XSLTProcessor` is not available, this function will return false
-     *
-     * @param string $xml
-     *  The XML for the transformation to be applied to
-     * @param string $xsl
-     *  The XSL for the transformation
-     */
-    public function __construct($xml = null, $xsl = null)
-    {
-        $this->_xml = $xml;
-        $this->_xsl = $xsl;
-    }
-
     /**
      * Checks if there is an available `XSLTProcessor`
      *
      * @return boolean
      *  true if there is an existing `XsltProcessor` class, false otherwise
      */
-    public static function isXSLTProcessorAvailable()
+    public static function isXSLTProcessorAvailable(): bool
     {
-        return (class_exists('XsltProcessor') || function_exists('xslt_process'));
+        return class_exists('XSLTProcessor');
     }
 
     /**
@@ -62,7 +30,7 @@ class XsltProcess
      * the transformation. Any errors will call the error function to log
      * them into the `$_errors` array
      *
-     * @see toolkit.XSLTProcess#__error()
+     * @see toolkit.XSLTProcess#appendError()
      * @see toolkit.XSLTProcess#__process()
      * @param string $xml
      *  The XML for the transformation to be applied to
@@ -70,36 +38,30 @@ class XsltProcess
      *  The XSL for the transformation
      * @param array $parameters
      *  An array of available parameters the XSL will have access to
-     * @param array $register_functions
+     * @param array $registerFunctions
      *  An array of available PHP functions that the XSL can use
      * @return string|boolean
      *  The string of the resulting transform, or false if there was an error
      */
-    public function process($xml = null, $xsl = null, array $parameters = array(), array $register_functions = array())
-    {
-        if ($xml) {
-            $this->_xml = $xml;
-        }
+    public function process(?string $xml = null, ?string $xsl = null, array $parameters = [], array $registerFunctions = []){
 
-        if ($xsl) {
-            $this->_xsl = $xsl;
-        }
+        parent::process($xml, $xsl, $parameters, $registerFunctions);
 
         // dont let process continue if no xsl functionality exists
-        if (!XsltProcess::isXSLTProcessorAvailable()) {
+        if (false == self::isXSLTProcessorAvailable()) {
             return false;
         }
 
-        $XSLProc = new XsltProcessor;
+        $XSLProc = new XSLTProcessor;
 
-        if (!empty($register_functions)) {
-            $XSLProc->registerPHPFunctions($register_functions);
+        if (false == empty($registerFunctions)) {
+            $XSLProc->registerPHPFunctions($registerFunctions);
         }
 
         $result = @$this->__process(
             $XSLProc,
-            $this->_xml,
-            $this->_xsl,
+            $this->xml(),
+            $this->xsl(),
             $parameters
         );
 
@@ -158,7 +120,7 @@ class XsltProcess
         $XSLProc->importStyleSheet($xslDoc);
 
         // Set parameters when defined
-        if (!empty($parameters)) {
+        if (false != empty($parameters)) {
             General::flattenArray($parameters);
 
             $XSLProc->setParameter('', $parameters);
@@ -183,27 +145,26 @@ class XsltProcess
     }
 
     /**
-     * That validate function takes an XSD to valid against `$this->_xml`
+     * That validate function takes an XSD to valid against `$this->xml`
      * returning boolean. Optionally, a second parameter `$xml` can be
-     * passed that will be used instead of `$this->_xml`.
+     * passed that will be used instead of `$this->xml`.
      *
      * @since Symphony 2.3
      * @param string $xsd
-     *  The XSD to validate `$this->_xml` against
+     *  The XSD to validate `$this->xml` against
      * @param string $xml (optional)
      *  If provided, this function will use this `$xml` instead of
-     *  `$this->_xml`.
+     *  `$this->xml`.
      * @return boolean
      *  Returns true if the `$xml` validates against `$xsd`, false otherwise.
      *  If false is returned, the errors can be obtained with `XSLTProcess->getErrors()`
      */
-    public function validate($xsd, $xml = null)
+    public function validate(string $xsd, ?string $xml = null): bool
     {
-        if (is_null($xml) && !is_null($this->_xml)) {
-            $xml = $this->_xml;
-        }
 
-        if (is_null($xsd) || is_null($xml)) {
+        $xml = $xml ?? $this->xml();
+
+        if (null == $xsd || null == $xml) {
             return false;
         }
 
@@ -211,7 +172,7 @@ class XsltProcess
         $xmlDoc = new DomDocument;
 
         // Set up error handling
-        if (function_exists('ini_set')) {
+        if (true == function_exists('ini_set')) {
             $ehOLD = ini_set('html_errors', false);
         }
 
@@ -250,7 +211,7 @@ class XsltProcess
      */
     public function trapXMLError($errno, $errstr, $errfile, $errline)
     {
-        $this->__error($errno, str_replace('DOMDocument::', null, $errstr), $errfile, $errline, 'xml');
+        $this->appendError($errno, str_replace('DOMDocument::', null, $errstr), $errfile, $errline, self::TYPE_XML);
     }
 
     /**
@@ -264,7 +225,7 @@ class XsltProcess
      */
     public function trapXSLError($errno, $errstr, $errfile, $errline)
     {
-        $this->__error($errno, str_replace('DOMDocument::', null, $errstr), $errfile, $errline, 'xsl');
+        $this->appendError($errno, str_replace('DOMDocument::', null, $errstr), $errfile, $errline, self::TYPE_XSL);
     }
 
     /**
@@ -279,72 +240,8 @@ class XsltProcess
      */
     public function trapXSDError($errno, $errstr, $errfile, $errline)
     {
-        $this->__error($errno, str_replace('DOMDocument::', null, $errstr), $errfile, $errline, 'xsd');
+        $this->appendError($errno, str_replace('DOMDocument::', null, $errstr), $errfile, $errline, self::TYPE_XSD);
     }
 
-    /**
-     * Writes an error to the `$_errors` array, which contains the error information
-     * and some basic debugging information.
-     *
-     * @link http://au.php.net/manual/en/function.set-error-handler.php
-     * @param integer $number
-     * @param string $message
-     * @param string $file
-     * @param string $line
-     * @param string $type
-     *  Where the error occurred, can be either 'xml', 'xsl' or `xsd`
-     */
-    public function __error($number, $message, $file = null, $line = null, $type = null)
-    {
-        $context = null;
 
-        if ($type == 'xml' || $type == 'xsd') {
-            $context = $this->_xml;
-        }
-
-        if ($type == 'xsl') {
-            $context = $this->_xsl;
-        }
-
-        $this->_errors[] = array(
-            'number' => $number,
-            'message' => $message,
-            'file' => $file,
-            'line' => $line,
-            'type' => $type,
-            'context' => $context
-        );
-    }
-
-    /**
-     * Returns boolean if any errors occurred during the transformation.
-     *
-     * @see getError
-     * @return boolean
-     */
-    public function isErrors()
-    {
-        return (!empty($this->_errors) ? true : false);
-    }
-
-    /**
-     * Provides an Iterator interface to return an error from the `$_errors`
-     * array. Repeat calls to this function to get all errors
-     *
-     * @param boolean $all
-     *  If true, return all errors instead of one by one. Defaults to false
-     * @param boolean $rewind
-     *  If rewind is true, resets the internal array pointer to the start of
-     *  the `$_errors` array. Defaults to false.
-     * @return array
-     *  Either an array of error array's or just an error array
-     */
-    public function getError($all = false, $rewind = false)
-    {
-        if ($rewind) {
-            reset($this->_errors);
-        }
-
-        return ($all ? $this->_errors : each($this->_errors));
-    }
 }
