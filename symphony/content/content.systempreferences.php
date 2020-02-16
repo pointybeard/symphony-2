@@ -144,6 +144,33 @@ class contentSystemPreferences extends AdministrationPage
             $this->Form->appendChild($group);
         }
 
+        // Get available xslt processors
+        $processors = Symphony::ExtensionManager()->getProvidersOf('xslt_processing');
+        $processors[] = [
+            "class" => "\\XsltProcess", "name" => "Default (XSLT 1.0)"
+        ];
+
+        if (count($processors) > 1) {
+            $group = new XMLElement('fieldset', null, array('class' => 'settings condensed'));
+            $group->appendChild(new XMLElement('legend', __('XSLT')));
+
+            $label = Widget::Label(__('Processor'));
+
+            $options = [];
+            foreach ($processors as $p) {
+                $options[] = [
+                    $p["class"],
+                    Symphony::Configuration()->get('processor', 'xslt') == $p["class"],
+                    $p["name"]
+                ];
+            }
+
+            $select = Widget::Select('settings[xslt][processor]', $options, ['class' => 'picker', 'data-interactive' => 'data-interactive']);
+            $label->appendChild($select);
+            $group->appendChild($label);
+            $this->Form->appendChild($group);
+        }
+
         /**
          * Add Extension custom preferences. Use the $wrapper reference to append objects.
          *
