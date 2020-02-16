@@ -270,14 +270,22 @@ class FrontendPage extends XSLTPage
             Symphony::ExtensionManager()->notifyMembers('FrontendOutputPostGenerate', '/frontend/', array('output' => &$output));
 
             if (is_null($devkit) && !$output) {
-                $errstr = null;
+                $errstrs = [];
 
                 while (list(, $val) = $this->Proc->getError()) {
-                    $errstr .= 'Line: ' . $val['line'] . ' - ' . $val['message'] . PHP_EOL;
+                    $errstrs[] =
+                        (null != $val['line']
+                            ? "Line: {$val['line']} "
+                            : "")
+                        . $val['message']
+                        . (null != $val['file']
+                            ? " in file {$val['file']}"
+                            : "")
+                    ;
                 }
 
                 Frontend::instance()->throwCustomError(
-                    trim($errstr),
+                    implode($errstrs, PHP_EOL),
                     __('XSLT Processing Error'),
                     Page::HTTP_STATUS_ERROR,
                     'xslt',
