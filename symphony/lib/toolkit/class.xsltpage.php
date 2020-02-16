@@ -48,13 +48,21 @@ class XSLTPage extends Page
      * is available, and then sets an instance of it to `$this->Proc`, otherwise
      * it will throw a `SymphonyErrorPage` exception.
      */
-    public function __construct()
+    public function __construct(\Symphony\Symphony\AbstractXSLTProcessor $proc = null)
     {
-        if (!XsltProcess::isXSLTProcessorAvailable()) {
+        if(!($proc instanceof \Symphony\Symphony\AbstractXSLTProcessor)) {
+            // See what the config says. If it's not set, then use the
+            // default libxsl processor (xslt 1.0)
+            $procClass = Symphony::Configuration()->get('processor', 'xslt') ?? "\\XsltProcess";
+
+            $proc = new $procClass;
+        }
+
+        if (!$procClass::isXSLTProcessorAvailable()) {
             Symphony::Engine()->throwCustomError(__('No suitable XSLT processor was found.'));
         }
 
-        $this->Proc = new XsltProcess;
+        $this->Proc = $proc;
     }
 
     /**
