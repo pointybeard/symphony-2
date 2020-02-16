@@ -186,7 +186,10 @@ class DynamicXMLDatasource extends Datasource
         // If `force_empty_result` is false and `$result` is an instance of
         // XMLElement, build the `$result`.
         if (!$this->_force_empty_result && is_object($result)) {
-            $proc = new XsltProcess;
+            $procClass = Symphony::Configuration()->get('processor', 'xslt') ?? "\\XsltProcess";
+
+            $proc = new $procClass;
+
             $ret = $proc->process($data, $xsl);
 
             if ($proc->isErrors()) {
