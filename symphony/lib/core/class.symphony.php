@@ -562,12 +562,12 @@ abstract class Symphony implements Singleton
     public static function isLoggedIn()
     {
         // Check to see if Symphony exists, or if we already have an Author instance.
-        if (is_null(self::$_instance) || self::$Author) {
+        if(self::Author() instanceof \Author) {
             return true;
         }
 
         // No author instance found, attempt to log in with the cookied credentials
-        return self::login(self::$Cookie->get('username'), self::$Cookie->get('pass'), true);
+        return self::$Cookie instanceof \Cookie && self::login(self::$Cookie->get('username'), self::$Cookie->get('pass'), true);
     }
 
     /**
