@@ -120,7 +120,7 @@ class XsltProcess extends Symphony\AbstractXSLTProcessor
         $XSLProc->importStyleSheet($xslDoc);
 
         // Set parameters when defined
-        if (false != empty($parameters)) {
+        if (false == empty($parameters)) {
             General::flattenArray($parameters);
 
             $XSLProc->setParameter('', $parameters);
