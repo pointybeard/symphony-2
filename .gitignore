@@ -1,6 +1,12 @@
-.htaccess
 workspace/
 manifest/
 node_modules/
 install-log.txt
 install/logs/
+vendor/
+symphony/lib/toolkit/fields/*
+.htaccess
+.DS_Store
+.php_cs.cache
+.phpunit.result.cache
+composer.lock
