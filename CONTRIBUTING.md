@@ -4,7 +4,7 @@ We encourage contribution to this project and only ask you follow some simple ru
 
 ## Found a bug?
 
-Please lodge an issue at the GitHub issue tracker for this project -- [https://github.com/pointybeard/crawler/issues](https://github.com/pointybeard/crawler/issues)
+Please lodge an issue at the GitHub issue tracker for this project -- [https://github.com/pointybeard/symphonycms/issues](https://github.com/pointybeard/symphonycms/issues)
 
 Include details on the behaviour you are seeing, and steps needed to reproduce the problem.
 
