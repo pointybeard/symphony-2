@@ -8,6 +8,12 @@
         {
             "name": "Symphony Team",
             "email": "team@getsymphony.com"
+        },
+        {
+            "name": "Alannah Kearney",
+            "email": "hi@alannahkearney.com",
+            "homepage": "http://alannahkearney.com",
+            "role": "Developer"
         }
     ],
     "support": {
