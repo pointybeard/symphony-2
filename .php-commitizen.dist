@@ -10,17 +10,12 @@ return [
         'values' => [
             'feat',
             'fix',
-            'build',
-            'ci',
-            'chore',
             'docs',
-            'feat',
-            'fix',
-            'perf',
+            'chore',
+            'test',
             'refactor',
             'revert',
-            'style',
-            'test',
+            'ci',
         ]
     ],
     'scope' => [
