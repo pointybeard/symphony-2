@@ -26,8 +26,7 @@
         "classmap": [
             "symphony/content",
             "symphony/lib",
-            "symphony/template",
-            "install"
+            "symphony/template"
         ],
         "psr-4": {
             "Symphony\\": "src"
