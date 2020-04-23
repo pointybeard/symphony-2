@@ -5,6 +5,14 @@
  */
 
 /**
+ * This is important to allow Symphony to be included as a composer libarary.
+ * If DOCROOT has already been defined, this won't throw an error or override
+ * that
+ * @var string
+ */
+define_safe('DOCROOT', realpath(__DIR__ . '/../../../'));
+
+/**
  * Used to determine if Symphony has been loaded, useful to prevent
  * files from being accessed directly.
  * @var boolean
