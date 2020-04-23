@@ -15,8 +15,8 @@ This build will continue to be maintained against the official 2.7.10 LTS releas
 
 -   [Requirements](#requirements)
 -   [Installation](#installation)
-    -   [Extended](#extended)
-    -   [Extended Essentials](#extended-essentials)
+    -   [master](#master)
+    -   [essentials](#essentials)
 -   [Key Features](#key-features)
     -   [Pre-boot scripts](#pre-boot-scripts)
     -   [JSON formatted config](#json-formatted-config)
@@ -31,17 +31,26 @@ This build will continue to be maintained against the official 2.7.10 LTS releas
 
 This build of Symphony CMS requirements differ slightly to the official release. Most notably, it will only run on PHP 7.3 or newer. It is suggested that your server is running at least PHP 7.3 to ensure full compatiblity with newer extensions.
 
+It is also assumed that the server has Composer pre-installed. Unlike official builds that come with the composer depencies baked in, you will need to run composer in order to load all the reqired libraries. See the [Composer "Getting Started" documentation](https://getcomposer.org/doc/00-intro.md) for instructions.
+
 ## Installation
 
-There are 2 main branches to the Symphony CMS (Extended) repository.
+There are 2 main branches to the Symphony CMS (Extended) repository `master` and `essentials`. Each follow a slightly different installation pathway.
 
-### Extended
+### master
 
-This version of Symphony CMS can be installed/upgraded as per any other 2.x installation. It is a direct, drop-in, replacement for Symphony CMS 2.7.x. Please follow the instructions contained in the [official 2.7.x release README](https://github.com/symphonycms/symphonycms/blob/2.7.x/README.markdown).
+This is the main branch is a drop-in replacement and can be installed/updated like any other official 2.x release (including migrating from older versions). To clone from git, use the following
 
-### Extended Essentials
+```bash
+$ git clone --depth 1 https://github.com/pointybeard/symphonycms.git symphonycms
+$ composer update -vv --no-dev --profile -d ./symphonycms
+```
 
-This branch removes unnecessary files, such as the install and update scripts, index.php, and a few other things, in order to make it installable as a composer dependency in other projects. Notable examples being [Symphony CMS: Section Builder](https://github.com/pointybeard/symphony-section-builder) and [Orchestra](https://github.com/pointybeard/orchestra).
+Then, follow the instructions contained in the [official 2.7.x release README doc](https://github.com/symphonycms/symphonycms/blob/2.7.x/README.markdown).
+
+### essentials
+
+This branch removes files such as the install and update scripts, index.php, and a few other things, in order to make it installable as a composer dependency in other projects. Notable examples being [Symphony CMS: Section Builder](https://github.com/pointybeard/symphony-section-builder) and [Orchestra](https://github.com/pointybeard/orchestra).
 
 As such, this cannot be installed in the standard way. Add the following to your project's `composer.json` file
 
@@ -52,8 +61,8 @@ As such, this cannot be installed in the standard way. Add the following to your
         "url": "https://github.com/pointybeard/symphonycms.git"
     }
 ],
-"require-dev": {
-    "symphonycms/symphonycms": "dev-2.7.10-extended-essentials"
+"require": {
+    "symphonycms/symphonycms": "dev-essentials"
 }
 ```
 
@@ -79,8 +88,8 @@ To use the pre-boot behaviour, follow these steps:
 2. Set the path to the pre-boot JSON file with the `symphony_preboot_config` environment variable. E.g.
 
 ```bash
-    SetEnv symphony_enable_preboot 1
-    SetEnv symphony_preboot_config "/some/path/to/preboot.json"
+SetEnv symphony_enable_preboot 1
+SetEnv symphony_preboot_config "/some/path/to/preboot.json"
 ```
 
 3. Create the file specified by `symphony_preboot_config` and list files to include. Here is an example of a pre-boot config:
@@ -108,7 +117,7 @@ To add these fields back in, download and install the [Classic Fields Extension]
 
 ### Support for additional XSLT processors
 
-This feature allows extensions to provide additional XSLT processor libaries which are then registered with Symphony and selectable in System Preferences. For example, [Saxon/C](https://github.com/pointybeard/saxon) adds XSLT 3.0 support.
+This feature allows extensions to provide additional XSLT processor libaries which are then registered with Symphony and selectable in System Preferences. For example, [Saxon/C](https://github.com/pointybeard/saxon) adds support for XSLT 3.0.
 
 ## Support
 
@@ -119,12 +128,13 @@ or better yet, fork the library and submit a pull request.
 
 If you would like to contribute to the official Symphony CMS project, [please see the documentation here](https://github.com/symphonycms/symphonycms/wiki/Contributing-to-Symphony).
 
-To contribute to this specific fork, please check out the [Contributing documentation](https://github.com/pointybeard/symphonycms/blob/2.7.10-extended/CONTRIBUTING.md) for guidelines about how to get involved.
+To contribute to this specific fork, please check out the [Contributing documentation](https://github.com/pointybeard/symphonycms/blob/master/CONTRIBUTING.md) for guidelines about how to get involved.
 
-## Author
+## Author & Acknowledgements
 
 -   Alannah Kearney - hi@alannahkearney.com - http://twitter.com/pointybeard
--   See also the list of [contributors][ext-contributor] who participated in this project
+-   Symphony CMS Community - https://github.com/symphonycms/symphonycms/graphs/contributors
+-   See also the list of [contributors][ext-contributor] who participated in this specific fork
 
 ## License
 
