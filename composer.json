@@ -1,5 +1,5 @@
 {
-    "name": "symphonycms/symphonycms-extended",
+    "name": "symphonycms/symphonycms",
     "description": "Fork of the official Symphony CMS 2.7.x release which includes various quality of life improvements, fixes, and feature additions.",
     "homepage": "https://github.com/pointybeard/symphonycms",
     "license": "MIT",
