@@ -12,7 +12,7 @@
 
 class contentPublish extends AdministrationPage
 {
-    public $_errors = array();
+    public $_errors = [];
 
     public function sort(&$sort, &$order, $params)
     {
@@ -126,7 +126,7 @@ class contentPublish extends AdministrationPage
             $filter = $filters[$field->get('element_name')];
 
             // Filter data
-            $data = array();
+            $data = [];
             $data['type'] = $field->get('element_name');
             $data['name'] = $field->get('label');
             $data['filter'] = $filter;
@@ -169,7 +169,7 @@ class contentPublish extends AdministrationPage
             $filter = $filters[$field['type']];
 
             // Filter data
-            $data = array();
+            $data = [];
             $data['type'] = $field['type'];
             $data['name'] = $field['label'];
             $data['filter'] = $filter;
@@ -237,7 +237,7 @@ class contentPublish extends AdministrationPage
     private function createFilterComparisons($data)
     {
         // Default comparison
-        $comparisons = array();
+        $comparisons = [];
 
         // Custom field comparisons
         foreach ($data['operators'] as $operator) {
@@ -378,7 +378,7 @@ class contentPublish extends AdministrationPage
         $this->setPageType('table');
         $this->setTitle(__('%1$s &ndash; %2$s', array(General::sanitize($section->get('name')), __('Symphony'))));
 
-        $filters = array();
+        $filters = [];
         $filter_querystring = $prepopulate_querystring = $where = $joins = null;
         $current_page = (isset($_REQUEST['pg']) && is_numeric($_REQUEST['pg']) ? max(1, intval($_REQUEST['pg'])) : 1);
 
@@ -523,7 +523,7 @@ class contentPublish extends AdministrationPage
         $this->Breadcrumbs->appendChild($filter_stats);
 
         // Build table
-        $columns = array();
+        $columns = [];
 
         if (is_array($visible_columns) && !empty($visible_columns)) {
             foreach ($visible_columns as $column) {
@@ -547,7 +547,7 @@ class contentPublish extends AdministrationPage
 
         $aTableHead = Sortable::buildTableHeaders($columns, $sort, $order, ($filter_querystring) ? "&amp;" . $filter_querystring : '');
 
-        $child_sections = array();
+        $child_sections = [];
         $associated_sections = $section->fetchChildAssociations(true);
 
         if (is_array($associated_sections) && !empty($associated_sections)) {
@@ -574,14 +574,14 @@ class contentPublish extends AdministrationPage
         Symphony::ExtensionManager()->notifyMembers('AddCustomPublishColumn', '/publish/', array('tableHead' => &$aTableHead, 'section_id' => $section->get('id')));
 
         // Table Body
-        $aTableBody = array();
+        $aTableBody = [];
 
         if (!is_array($entries['records']) || empty($entries['records'])) {
             $aTableBody = array(
                 Widget::TableRow(array(Widget::TableData(__('None found.'), 'inactive', null, count($aTableHead))), 'odd')
             );
         } else {
-            $field_pool = array();
+            $field_pool = [];
 
             if (is_array($visible_columns) && !empty($visible_columns)) {
                 foreach ($visible_columns as $column) {
@@ -594,7 +594,7 @@ class contentPublish extends AdministrationPage
             reset($visible_columns);
 
             foreach ($entries['records'] as $entry) {
-                $tableData = array();
+                $tableData = [];
 
                 // Setup each cell
                 if (!is_array($visible_columns) || empty($visible_columns)) {
@@ -1229,7 +1229,7 @@ class contentPublish extends AdministrationPage
             // Editing an entry, so need to create some various objects
         } else {
             $entry = $existingEntry;
-            $fields = array();
+            $fields = [];
 
             if (!$section) {
                 $section = SectionManager::fetch($entry->get('section_id'));
@@ -1693,7 +1693,7 @@ class contentPublish extends AdministrationPage
                         } elseif (isset($_GET['prepopulate']) && is_array($_GET['prepopulate']) && isset($_GET['prepopulate'][$as['child_section_field_id']])) {
                             $entry_ids = array(intval($_GET['prepopulate'][$as['child_section_field_id']]));
                         } else {
-                            $entry_ids = array();
+                            $entry_ids = [];
                         }
 
                         // Use $schema for perf reasons

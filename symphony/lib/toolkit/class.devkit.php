@@ -44,7 +44,7 @@ class DevKit extends HTMLPage
      * An array of the page parameters, including those provided by datasources.
      * @var array
      */
-    protected $_param = array();
+    protected $_param = [];
 
     /**
      * The resulting Page after it has been transformed, as a string. This is

@@ -165,7 +165,7 @@ function cleanup_session_cookies()
     */
     $cookie_params = session_get_cookie_params();
     $list = headers_list();
-    $custom_cookies = array();
+    $custom_cookies = [];
 
     foreach ($list as $hdr) {
         if ((stripos($hdr, 'Set-Cookie') !== false) && (stripos($hdr, session_id()) === false)) {

@@ -29,7 +29,7 @@ class SMTP
     protected $_transport = 'tcp';
     protected $_secure = false;
 
-    protected $_header_fields = array();
+    protected $_header_fields = [];
 
     protected $_from = null;
 
@@ -452,7 +452,7 @@ class SMTP
      */
     protected function _expect($code, $timeout = null)
     {
-        $this->_response = array();
+        $this->_response = [];
         $cmd  = '';
         $more = '';
         $msg  = '';

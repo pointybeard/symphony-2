@@ -207,7 +207,7 @@ class ResourceManager
         }
 
         if (!is_null($order_by) && !empty($resources)) {
-            $author = $label = $source = $name = array();
+            $author = $label = $source = $name = [];
             $order_by = array_map('strtolower', explode(' ', $order_by));
             $order = ($order_by[1] == 'desc') ? SORT_DESC : SORT_ASC;
             $sort = $order_by[0];
@@ -243,10 +243,10 @@ class ResourceManager
             }
         }
 
-        $data = array();
+        $data = [];
 
         foreach ($resources as $i => $res) {
-            $data[$i] = array();
+            $data[$i] = [];
 
             foreach ($res as $key => $value) {
                 // If $select is empty, we assume every field is requested
@@ -423,12 +423,12 @@ class ResourceManager
     public static function setPages($type, $r_handle, $pages = array())
     {
         if (!is_array($pages)) {
-            $pages = array();
+            $pages = [];
         }
 
         // Get attached pages
         $attached_pages = ResourceManager::getAttachedPages($type, $r_handle);
-        $currently_attached_pages = array();
+        $currently_attached_pages = [];
 
         foreach ($attached_pages as $page) {
             $currently_attached_pages[] = $page['id'];

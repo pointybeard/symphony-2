@@ -18,14 +18,14 @@ abstract class SectionEvent extends Event
      * on this event.
      * @var array
      */
-    public $filter_results = array();
+    public $filter_results = [];
 
     /**
      * An associative array of errors from the filters that have run
      * on this event.
      * @var array
      */
-    public $filter_errors = array();
+    public $filter_errors = [];
 
     /**
      * This method will construct XML that represents the result of
@@ -165,7 +165,7 @@ abstract class SectionEvent extends Event
             $parts = preg_split('/\,/i', $needle, -1, PREG_SPLIT_NO_EMPTY);
             $parts = array_map('trim', $parts);
 
-            $stack = array();
+            $stack = [];
 
             foreach ($parts as $p) {
                 $field = str_replace(array('fields[', ']'), '', $p);
@@ -223,7 +223,7 @@ abstract class SectionEvent extends Event
     public function execute()
     {
         if (!isset($this->eParamFILTERS) || !is_array($this->eParamFILTERS)) {
-            $this->eParamFILTERS = array();
+            $this->eParamFILTERS = [];
         }
 
         $result = new XMLElement($this->ROOTELEMENT);
@@ -241,7 +241,7 @@ abstract class SectionEvent extends Event
         $post = General::getPostData();
         $success = true;
         if (!is_array($post['fields'])) {
-            $post['fields'] = array();
+            $post['fields'] = [];
         }
 
         if (in_array('expect-multiple', $this->eParamFILTERS)) {
@@ -255,11 +255,11 @@ abstract class SectionEvent extends Event
                 $entry = new XMLElement('entry', null, array('position' => $position));
 
                 // Reset errors for each entry execution
-                $this->filter_results = $this->filter_errors = array();
+                $this->filter_results = $this->filter_errors = [];
 
                 // Ensure that we are always dealing with an array.
                 if (!is_array($fields)) {
-                    $fields = array();
+                    $fields = [];
                 }
 
                 // Execute the event for this entry
@@ -311,7 +311,7 @@ abstract class SectionEvent extends Event
         $post_values = new XMLElement('post-values');
 
         if (!is_array($this->eParamFILTERS)) {
-            $this->eParamFILTERS = array();
+            $this->eParamFILTERS = [];
         }
 
         // Check to see if the Section of this Event is valid.
@@ -492,7 +492,7 @@ abstract class SectionEvent extends Event
         }
 
         // Reset the filter results to prevent duplicates. RE: #2179
-        $this->filter_results = array();
+        $this->filter_results = [];
         return $can_proceed;
     }
 
@@ -546,7 +546,7 @@ abstract class SectionEvent extends Event
         }
 
         // Reset the filter results to prevent duplicates. RE: #2179
-        $this->filter_results = array();
+        $this->filter_results = [];
         return $result;
     }
 
@@ -607,7 +607,7 @@ abstract class SectionEvent extends Event
         }
 
         // Reset the filter results to prevent duplicates. RE: #2179
-        $this->filter_results = array();
+        $this->filter_results = [];
         return $result;
     }
 
@@ -659,7 +659,7 @@ abstract class SectionEvent extends Event
 
         // Loop over all the recipients and attempt to send them an email
         // Errors will be appended to the Event XML
-        $errors = array();
+        $errors = [];
 
         foreach ($fields['recipient'] as $recipient) {
             $author = AuthorManager::fetchByUsername($recipient);

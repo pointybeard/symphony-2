@@ -16,7 +16,7 @@ class contentAjaxSections extends JSONPage
             $sort = 'sortorder';
         }
         $sections = SectionManager::fetch(null, 'ASC', $sort);
-        $options = array();
+        $options = [];
 
         if (is_array($sections) && !empty($sections)) {
             foreach ($sections as $section) {
@@ -26,7 +26,7 @@ class contentAjaxSections extends JSONPage
                     continue;
                 }
 
-                $fields = array();
+                $fields = [];
 
                 foreach ($section_fields as $f) {
                     if ($f->canPrePopulate()) {

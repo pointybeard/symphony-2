@@ -31,14 +31,14 @@ class Entry
      * An associative array of basic metadata/settings for this Entry
      * @var array
      */
-    protected $_fields = array();
+    protected $_fields = [];
 
     /**
      * An associative array of the data for each of the Fields that make up
      * this Entry. The key is the Field ID, and the value is typically an array
      * @var array
      */
-    protected $_data = array();
+    protected $_data = [];
 
     /**
      * An ISO 8601 representation of when this Entry was created
@@ -385,7 +385,7 @@ class Entry
             return null;
         }
 
-        $counts = array();
+        $counts = [];
 
         foreach ($associated_sections as $as) {
             $field = FieldManager::fetch($as['child_section_field_id']);

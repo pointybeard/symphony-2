@@ -129,7 +129,7 @@ class EmailGatewayManager implements FileResource
      */
     public static function listAll()
     {
-        $result = array();
+        $result = [];
         $structure = General::listStructure(EMAILGATEWAYS, '/email.[\\w-]+.php/', false, 'ASC', EMAILGATEWAYS);
 
         if (is_array($structure['filelist']) && !empty($structure['filelist'])) {

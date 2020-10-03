@@ -150,7 +150,7 @@ class Mutex
     {
         // This function is called from all others, so it is a good point to initialize Mutex handling.
         if (!is_array(self::$lockFiles)) {
-            self::$lockFiles = array();
+            self::$lockFiles = [];
             register_shutdown_function(array(__CLASS__, '__shutdownCleanup'));
         }
 

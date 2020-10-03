@@ -13,7 +13,7 @@
 
 class contentSystemPreferences extends AdministrationPage
 {
-    public $_errors = array();
+    public $_errors = [];
 
     // Overload the parent 'view' function since we dont need the switchboard logic
     public function view()
@@ -53,7 +53,7 @@ class contentSystemPreferences extends AdministrationPage
             // Get language names
             asort($languages);
 
-            $options = array();
+            $options = [];
             foreach ($languages as $code => $name) {
                 $options[] = array($code, $code == Symphony::Configuration()->get('lang', 'symphony'), $name);
             }
@@ -80,7 +80,7 @@ class contentSystemPreferences extends AdministrationPage
             $default_gateway = EmailGatewayManager::getDefaultGateway();
             $selected_is_installed = EmailGatewayManager::__getClassPath($default_gateway);
 
-            $options = array();
+            $options = [];
 
             foreach ($email_gateways as $handle => $details) {
                 $options[] = array($handle, (($handle == $default_gateway) || (($selected_is_installed == false) && $handle == 'sendmail')), $details['name']);

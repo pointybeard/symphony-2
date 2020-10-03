@@ -17,7 +17,7 @@ class SectionManager
      * @var array
      *   Defaults to an empty array.
      */
-    protected static $_pool = array();
+    protected static $_pool = [];
 
     /**
      * Takes an associative array of Section settings and creates a new
@@ -34,7 +34,7 @@ class SectionManager
      */
     public static function add(array $settings)
     {
-        $defaults = array();
+        $defaults = [];
         $defaults['creation_date'] = $defaults['modification_date'] = DateTimeObj::get('Y-m-d H:i:s');
         $defaults['creation_date_gmt'] = $defaults['modification_date_gmt'] = DateTimeObj::getGMT('Y-m-d H:i:s');
         $defaults['author_id'] = 1;
@@ -63,7 +63,7 @@ class SectionManager
      */
     public static function edit($section_id, array $settings)
     {
-        $defaults = array();
+        $defaults = [];
         $defaults['modification_date'] = DateTimeObj::get('Y-m-d H:i:s');
         $defaults['modification_date_gmt'] = DateTimeObj::getGMT('Y-m-d H:i:s');
         $defaults['author_id'] = 1;
@@ -150,7 +150,7 @@ class SectionManager
     public static function fetch($section_id = null, $order = 'ASC', $sortfield = 'name')
     {
         $returnSingle = false;
-        $section_ids = array();
+        $section_ids = [];
 
         if (!is_null($section_id)) {
             if (!is_array($section_id)) {
@@ -180,7 +180,7 @@ class SectionManager
             return ($returnSingle ? false : array());
         }
 
-        $ret = array();
+        $ret = [];
 
         foreach ($sections as $s) {
             $obj = self::create();

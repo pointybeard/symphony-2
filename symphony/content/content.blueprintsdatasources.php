@@ -10,7 +10,7 @@
 
 class contentBlueprintsDatasources extends ResourcesPage
 {
-    public $_errors = array();
+    public $_errors = [];
 
     public function __viewIndex($resource_type)
     {
@@ -84,7 +84,7 @@ class contentBlueprintsDatasources extends ResourcesPage
                 !in_array($fields['source'], array('authors', 'navigation', 'static_xml'))
                 && !empty($fields['filter']) && is_array($fields['filter'])
             ) {
-                $filters = array();
+                $filters = [];
                 foreach ($fields['filter'] as $f) {
                     foreach ($f as $key => $val) {
                         $filters[$key] = $val;
@@ -95,7 +95,7 @@ class contentBlueprintsDatasources extends ResourcesPage
             }
 
             if (!isset($fields['xml_elements']) || !is_array($fields['xml_elements'])) {
-                $fields['xml_elements'] = array();
+                $fields['xml_elements'] = [];
             }
 
             if ($this->_context[0] == 'edit') {
@@ -123,7 +123,7 @@ class contentBlueprintsDatasources extends ResourcesPage
             if (isset($existing->dsParamINCLUDEDELEMENTS) && is_array($existing->dsParamINCLUDEDELEMENTS)) {
                 $fields['xml_elements'] = array_map('stripslashes', $existing->dsParamINCLUDEDELEMENTS);
             } else {
-                $fields['xml_elements'] = array();
+                $fields['xml_elements'] = [];
             }
 
             $fields['sort'] = isset($existing->dsParamSORT) ? stripslashes($existing->dsParamSORT) : null;
@@ -137,7 +137,7 @@ class contentBlueprintsDatasources extends ResourcesPage
             $fields['redirect_on_required'] = isset($existing->dsParamREDIRECTONREQUIRED) ? stripslashes($existing->dsParamREDIRECTONREQUIRED) : 'no';
 
             if (!isset($existing->dsParamFILTERS) || !is_array($existing->dsParamFILTERS)) {
-                $existing->dsParamFILTERS = array();
+                $existing->dsParamFILTERS = [];
             }
 
             if (!empty($existing->dsParamFILTERS)) {
@@ -225,10 +225,10 @@ class contentBlueprintsDatasources extends ResourcesPage
         $sections = SectionManager::fetch(null, 'ASC', 'name');
 
         if (!is_array($sections)) {
-            $sections = array();
+            $sections = [];
         }
 
-        $field_groups = array();
+        $field_groups = [];
 
         foreach ($sections as $section) {
             $field_groups[$section->get('id')] = array('fields' => $section->fetchFields(), 'section' => $section);
@@ -833,7 +833,7 @@ class contentBlueprintsDatasources extends ResourcesPage
 
         // Support multiple parameters
         if (!isset($fields['param'])) {
-            $fields['param'] = array();
+            $fields['param'] = [];
         } elseif (!is_array($fields['param'])) {
             $fields['param'] = array($fields['param']);
         }
@@ -965,13 +965,13 @@ class contentBlueprintsDatasources extends ResourcesPage
         $pages = PageManager::fetch();
         $ds_handle = str_replace('-', '_', Lang::createHandle($fields['name']));
         $connections = ResourceManager::getAttachedPages(ResourceManager::RESOURCE_TYPE_DS, $ds_handle);
-        $selected = array();
+        $selected = [];
 
         foreach ($connections as $connection) {
             $selected[] = $connection['id'];
         }
 
-        $options = array();
+        $options = [];
 
         foreach ($pages as $page) {
             $options[] = array(
@@ -1154,7 +1154,7 @@ class contentBlueprintsDatasources extends ResourcesPage
     public function __formAction()
     {
         $fields = $_POST['fields'];
-        $this->_errors = array();
+        $this->_errors = [];
         $providers = Symphony::ExtensionManager()->getProvidersOf(iProvider::DATASOURCE);
         $providerClass = null;
 
@@ -1241,7 +1241,7 @@ class contentBlueprintsDatasources extends ResourcesPage
         }
 
         if (empty($this->_errors)) {
-            $filters = array();
+            $filters = [];
             $elements = null;
             $source = $fields['source'];
             $params = array(
@@ -1327,7 +1327,7 @@ class contentBlueprintsDatasources extends ResourcesPage
                         $elements = $fields['xml_elements'];
 
                         if (is_array($fields['filter']) && !empty($fields['filter'])) {
-                            $filters = array();
+                            $filters = [];
 
                             foreach ($fields['filter'] as $f) {
                                 foreach ($f as $key => $val) {

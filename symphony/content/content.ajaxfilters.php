@@ -13,8 +13,8 @@ class contentAjaxFilters extends JSONPage
     {
         $handle = General::sanitize($_GET['handle']);
         $section = General::sanitize($_GET['section']);
-        $options = array();
-        $filters = array();
+        $options = [];
+        $filters = [];
 
         if (!empty($handle) && !empty($section)) {
             $section_id = SectionManager::fetchIDFromHandle($section);

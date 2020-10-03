@@ -117,7 +117,7 @@ class EntryManager
 
         // Ignore parameter when not an array
         if (!is_array($field)) {
-            $field = array();
+            $field = [];
         }
 
         $did_lock = false;
@@ -143,7 +143,7 @@ class EntryManager
                 'entry_id' => $entry_id
             );
 
-            $fields = array();
+            $fields = [];
 
             foreach ($field as $key => $value) {
                 if (is_array($value)) {
@@ -269,7 +269,7 @@ class EntryManager
 
             if ($section instanceof Section) {
                 $fields = $section->fetchFields();
-                $data = array();
+                $data = [];
 
                 foreach ($fields as $field) {
                     $reflection = new ReflectionClass($field);
@@ -391,7 +391,7 @@ class EntryManager
         $sortSelectClause = null;
 
         if (!$entry_id && !$section_id) {
-            return array();
+            return [];
         }
 
         if (!$section_id) {
@@ -400,7 +400,7 @@ class EntryManager
 
         $section = SectionManager::fetch($section_id);
         if (!is_object($section)) {
-            return array();
+            return [];
         }
 
         // SORTING
@@ -517,7 +517,7 @@ class EntryManager
      */
     public static function __buildEntries(array $rows, $section_id, $element_names = null)
     {
-        $entries = array();
+        $entries = [];
 
         if (empty($rows)) {
             return $entries;
@@ -529,7 +529,7 @@ class EntryManager
             $schema = array($schema);
         }
 
-        $raw = array();
+        $raw = [];
         $rows_string = '';
 
         // Append meta data:

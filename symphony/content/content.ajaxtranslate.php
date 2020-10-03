@@ -14,7 +14,7 @@ class contentAjaxTranslate extends JSONPage
         $strings = $_GET['strings'];
         $namespace = (empty($_GET['namespace']) ? null : General::sanitize($_GET['namespace']));
 
-        $new = array();
+        $new = [];
 
         foreach ($strings as $key => $value) {
             // Check value

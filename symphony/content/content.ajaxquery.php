@@ -72,7 +72,7 @@ class contentAjaxQuery extends JSONPage
 
     private function getStatic($field_id, $search = null)
     {
-        $options = array();
+        $options = [];
 
         if (!empty($field_id)) {
             $field = FieldManager::fetch($field_id);
@@ -113,7 +113,7 @@ class contentAjaxQuery extends JSONPage
             );
 
             // Build where clauses
-            $where = array();
+            $where = [];
             foreach ($columns as $column) {
                 $where[] = "`$column` LIKE '%$search%'";
             }

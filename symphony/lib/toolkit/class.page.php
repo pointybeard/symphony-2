@@ -120,14 +120,14 @@ abstract class Page
      *
      * @var array
      */
-    protected $_headers = array();
+    protected $_headers = [];
 
     /**
      * Initialises the Page object by setting the headers to empty
      */
     public function __construct()
     {
-        $this->_headers = array();
+        $this->_headers = [];
     }
 
     /**

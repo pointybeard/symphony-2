@@ -23,7 +23,7 @@ $li->appendChild(new XMLElement('h1', __('XSLT Processing Error')));
 $li->appendChild(new XMLElement('p', __('This page could not be rendered due to the following XSLT processing errors:')));
 $ul->appendChild($li);
 
-$errors_grouped = array();
+$errors_grouped = [];
 
 list($key, $val) = $e->getAdditional()->proc->getError(false, true);
 
@@ -58,7 +58,7 @@ foreach ($errors_grouped as $group => $data) {
             foreach ($data as $index => $e) {
 
                 // Highlight error
-                $class = array();
+                $class = [];
                 if (strpos($data[$index + 1]['message'], '^') !== false) {
                     $class = array('class' => 'error');
                 }

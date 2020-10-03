@@ -92,7 +92,7 @@ class EventManager implements FileResource
      */
     public static function listAll()
     {
-        $result = array();
+        $result = [];
         $structure = General::listStructure(EVENTS, '/event.[\\w-]+.php/', false, 'ASC', EVENTS);
 
         if (is_array($structure['filelist']) && !empty($structure['filelist'])) {
@@ -101,7 +101,7 @@ class EventManager implements FileResource
 
                 if ($about = self::about($f)) {
                     $classname = self::__getClassName($f);
-                    $env = array();
+                    $env = [];
                     $class = new $classname($env);
 
                     $about['can_parse'] = method_exists($class, 'allowEditorToParse')
@@ -156,14 +156,14 @@ class EventManager implements FileResource
         require_once $path;
 
         $handle = self::__getHandleFromFilename(basename($path));
-        $env = array();
+        $env = [];
         $class = new $classname($env);
 
         try {
             $method = new ReflectionMethod($classname, 'about');
             $about = $method->invoke($class);
         } catch (ReflectionException $e) {
-            $about = array();
+            $about = [];
         }
 
         return array_merge($about, array('handle' => $handle));

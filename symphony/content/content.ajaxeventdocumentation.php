@@ -21,7 +21,7 @@ class contentAjaxEventDocumentation extends TextPage
         $section = General::sanitize($_REQUEST['section']);
         $filters = self::processFilters($_REQUEST['filters']);
         $rootelement = Lang::createHandle($name);
-        $doc_parts = array();
+        $doc_parts = [];
 
         // Add Documentation (Success/Failure)
         $this->addEntrySuccessDoc($doc_parts, $rootelement, $filters);
@@ -86,7 +86,7 @@ class contentAjaxEventDocumentation extends TextPage
 
     public static function processFilters($filters)
     {
-        $filter_names = array();
+        $filter_names = [];
 
         if (is_array($filters) && !empty($filters)) {
             foreach ($filters as $filter) {

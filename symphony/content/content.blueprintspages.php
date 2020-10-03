@@ -12,8 +12,8 @@
 
 class contentBlueprintsPages extends AdministrationPage
 {
-    public $_errors = array();
-    protected $_hilights = array();
+    public $_errors = [];
+    protected $_hilights = [];
 
     public function insertBreadcrumbsUsingPageIdentifier($page_id, $preserve_last = true)
     {
@@ -95,7 +95,7 @@ class contentBlueprintsPages extends AdministrationPage
             array(__('Parameters'), 'col'),
             array(__('Type'), 'col')
         );
-        $aTableBody = array();
+        $aTableBody = [];
 
         if ($nesting) {
             $aTableHead[] = array(__('Children'), 'col');
@@ -103,7 +103,7 @@ class contentBlueprintsPages extends AdministrationPage
                 'parent ' . (isset($parent) ? " = {$parent['id']} " : ' IS NULL ')
             );
         } else {
-            $where = array();
+            $where = [];
         }
 
         $pages = PageManager::fetch(true, array('*'), $where);
@@ -114,7 +114,7 @@ class contentBlueprintsPages extends AdministrationPage
             ), 'odd'));
         } else {
             foreach ($pages as $page) {
-                $class = array();
+                $class = [];
 
                 $page_title = ($nesting ? $page['title'] : PageManager::resolvePageTitle($page['id']));
                 $page_url = URL . '/' . PageManager::resolvePagePath($page['id']) . '/';
@@ -466,11 +466,11 @@ class contentBlueprintsPages extends AdministrationPage
         $label->setAttribute('class', 'column');
 
         $events = ResourceManager::fetch(ResourceManager::RESOURCE_TYPE_EVENT, array(), array(), 'name ASC');
-        $options = array();
+        $options = [];
 
         if (is_array($events) && !empty($events)) {
             if (!isset($fields['events'])) {
-                $fields['events'] = array();
+                $fields['events'] = [];
             }
 
             foreach ($events as $name => $about) {
@@ -489,11 +489,11 @@ class contentBlueprintsPages extends AdministrationPage
         $label->setAttribute('class', 'column');
 
         $datasources = ResourceManager::fetch(ResourceManager::RESOURCE_TYPE_DS, array(), array(), 'name ASC');
-        $options = array();
+        $options = [];
 
         if (is_array($datasources) && !empty($datasources)) {
             if (!isset($fields['data_sources'])) {
-                $fields['data_sources'] = array();
+                $fields['data_sources'] = [];
             }
 
             foreach ($datasources as $name => $about) {
@@ -593,7 +593,7 @@ class contentBlueprintsPages extends AdministrationPage
         $filename = $this->_context[1] . '.xsl';
         $file_abs = PAGES . '/' . $filename;
         $fields = $_POST['fields'];
-        $this->_errors = array();
+        $this->_errors = [];
 
         if (!isset($fields['body']) || trim($fields['body']) == '') {
             $this->_errors['body'] = __('This is a required field.');
@@ -663,7 +663,7 @@ class contentBlueprintsPages extends AdministrationPage
 
         if (@array_key_exists('save', $_POST['action'])) {
             $fields = $_POST['fields'];
-            $this->_errors = array();
+            $this->_errors = [];
 
             if (!isset($fields['title']) || trim($fields['title']) == '') {
                 $this->_errors['title'] = __('This is a required field');
@@ -736,7 +736,7 @@ class contentBlueprintsPages extends AdministrationPage
                     $fields['sortorder'] = PageManager::fetchNextSortOrder();
                 }
 
-                $where = array();
+                $where = [];
 
                 if (!empty($current)) {
                     $where[] = "p.id != {$page_id}";
@@ -917,7 +917,7 @@ class contentBlueprintsPages extends AdministrationPage
     public function __actionDelete($pages, $redirect)
     {
         $success = true;
-        $deleted_page_ids = array();
+        $deleted_page_ids = [];
 
         if (!is_array($pages)) {
             $pages = array($pages);

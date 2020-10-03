@@ -29,7 +29,7 @@ class XMLElement implements IteratorAggregate
      * The value of this `XMLElement` as a string
      * @var string
      */
-    protected $_value = array();
+    protected $_value = [];
 
     /**
      * Any additional attributes can be included in an associative array
@@ -37,20 +37,20 @@ class XMLElement implements IteratorAggregate
      * attribute.
      * @var array
      */
-    protected $_attributes = array();
+    protected $_attributes = [];
 
     /**
      * Children of this `XMLElement`, which will also be `XMLElement`'s
      * @var array
      */
-    protected $_children = array();
+    protected $_children = [];
 
     /**
      * Any processing instructions that the XSLT should know about when a
      * `XMLElement` is generated
      * @var array
      */
-    protected $_processingInstructions = array();
+    protected $_processingInstructions = [];
 
     /**
      * The DTD the should be output when a `XMLElement` is generated, defaults to null.
@@ -256,7 +256,7 @@ class XMLElement implements IteratorAggregate
      */
     public function getChildrenByName($name)
     {
-        $result = array();
+        $result = [];
 
         foreach ($this as $i => $child) {
             if ($child->getName() != $name) {

@@ -246,7 +246,7 @@ class General
     public static function flattenArray(array &$source, &$output = null, $path = null)
     {
         if (is_null($output)) {
-            $output = array();
+            $output = [];
         }
 
         foreach ($source as $key => $value) {
@@ -688,14 +688,14 @@ class General
      */
     public static function processFilePostData($filedata)
     {
-        $result = array();
+        $result = [];
 
         foreach ($filedata as $key => $data) {
             foreach ($data as $handle => $value) {
                 if (is_array($value)) {
                     foreach ($value as $index => $pair) {
                         if (!is_array($result[$handle][$index])) {
-                            $result[$handle][$index] = array();
+                            $result[$handle][$index] = [];
                         }
 
                         if (!is_array($pair)) {
@@ -731,7 +731,7 @@ class General
             {
                 foreach ($file as $key => $value) {
                     if (!isset($post[$key])) {
-                        $post[$key] = array();
+                        $post[$key] = [];
                     }
 
                     if (is_array($value)) {
@@ -853,7 +853,7 @@ class General
      */
     public static function array_iunique(array $array)
     {
-        $tmp = array();
+        $tmp = [];
 
         foreach ($array as $key => $value) {
             if (!self::in_iarray($value, $tmp)) {
@@ -876,7 +876,7 @@ class General
      */
     public static function array_map_recursive($function, array $array)
     {
-        $tmp = array();
+        $tmp = [];
 
         foreach ($array as $key => $value) {
             if (is_array($value)) {
@@ -1234,7 +1234,7 @@ class General
             return null;
         }
 
-        $files = array();
+        $files = [];
 
         foreach (scandir($dir) as $file) {
             if (
@@ -1306,7 +1306,7 @@ class General
         } else {
             $filter_type = null;
         }
-        $files = array();
+        $files = [];
 
         $prefix = str_replace($strip_root, '', $dir);
 
@@ -1314,8 +1314,8 @@ class General
             $prefix .= "/";
         }
 
-        $files['dirlist'] = array();
-        $files['filelist'] = array();
+        $files['dirlist'] = [];
+        $files['filelist'] = [];
 
         foreach (scandir($dir) as $file) {
             if (

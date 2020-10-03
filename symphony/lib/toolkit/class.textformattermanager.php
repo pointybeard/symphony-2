@@ -18,7 +18,7 @@ class TextformatterManager implements FileResource
      * Defaults to an empty array.
      * @var array
      */
-    protected static $_pool = array();
+    protected static $_pool = [];
 
     /**
      * Given the filename of a Text Formatter return it's handle. This will remove
@@ -101,7 +101,7 @@ class TextformatterManager implements FileResource
      */
     public static function listAll()
     {
-        $result = array();
+        $result = [];
         $structure = General::listStructure(TEXTFORMATTERS, '/formatter.[\\w-]+.php/', false, 'ASC', TEXTFORMATTERS);
 
         if (is_array($structure['filelist']) && !empty($structure['filelist'])) {
@@ -152,7 +152,7 @@ class TextformatterManager implements FileResource
             $about = $method->invoke(new $classname);
             return array_merge($about, array('handle' => $handle));
         } catch (ReflectionException $e) {
-            $about = array();
+            $about = [];
         }
     }
 

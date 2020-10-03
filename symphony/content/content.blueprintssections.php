@@ -10,7 +10,7 @@
 
 class contentBlueprintsSections extends AdministrationPage
 {
-    public $_errors = array();
+    public $_errors = [];
 
     public function build(array $context = array())
     {
@@ -39,7 +39,7 @@ class contentBlueprintsSections extends AdministrationPage
             array(__('Navigation Group'), 'col')
         );
 
-        $aTableBody = array();
+        $aTableBody = [];
 
         if (!is_array($sections) || empty($sections)) {
             $aTableBody = array(
@@ -106,7 +106,7 @@ class contentBlueprintsSections extends AdministrationPage
             $index = 3;
             $options[$index] = array('label' => __('Set navigation group'), 'options' => array());
 
-            $groups = array();
+            $groups = [];
 
             foreach ($sections as $s) {
                 if (in_array($s->get('navigation_group'), $groups)) {
@@ -153,7 +153,7 @@ class contentBlueprintsSections extends AdministrationPage
             Widget::Anchor(__('Sections'), SYMPHONY_URL . '/blueprints/sections/'),
         ));
 
-        $types = array();
+        $types = [];
 
         $fields = (isset($_POST['fields']) && is_array($_POST['fields'])) ? $_POST['fields'] : array();
         $meta = (isset($_POST['meta']) && is_array($_POST['meta'])) ? $_POST['meta'] : array('name'=>null);
@@ -224,7 +224,7 @@ class contentBlueprintsSections extends AdministrationPage
 
         if (is_array($sections) && !empty($sections)) {
             $ul = new XMLElement('ul', null, array('class' => 'tags singular', 'data-interactive' => 'data-interactive'));
-            $groups = array();
+            $groups = [];
 
             foreach ($sections as $s) {
                 if (in_array($s->get('navigation_group'), $groups)) {
@@ -282,7 +282,7 @@ class contentBlueprintsSections extends AdministrationPage
         });
 
         foreach ($types as $type) {
-            $defaults = array();
+            $defaults = [];
 
             $type->findDefaults($defaults);
             $type->setArray($defaults);
@@ -323,7 +323,7 @@ class contentBlueprintsSections extends AdministrationPage
 
         $meta = $section->get();
         $section_id = $meta['id'];
-        $types = array();
+        $types = [];
         $canonical_link = '/blueprints/sections/edit/' . $section_id . '/';
 
         $formHasErrors = (is_array($this->_errors) && !empty($this->_errors));
@@ -358,7 +358,7 @@ class contentBlueprintsSections extends AdministrationPage
         }
 
         if (isset($_POST['fields'])) {
-            $fields = array();
+            $fields = [];
             if (is_array($_POST['fields']) && !empty($_POST['fields'])) {
                 foreach ($_POST['fields'] as $position => $data) {
                     if ($fields[$position] = FieldManager::create($data['type'])) {
@@ -442,7 +442,7 @@ class contentBlueprintsSections extends AdministrationPage
 
         if (is_array($sections) && !empty($sections)) {
             $ul = new XMLElement('ul', null, array('class' => 'tags singular', 'data-interactive' => 'data-interactive'));
-            $groups = array();
+            $groups = [];
 
             foreach ($sections as $s) {
                 if (in_array($s->get('navigation_group'), $groups)) {
@@ -497,7 +497,7 @@ class contentBlueprintsSections extends AdministrationPage
         });
 
         foreach ($types as $type) {
-            $defaults = array();
+            $defaults = [];
 
             $type->findDefaults($defaults);
             $type->setArray($defaults);
@@ -575,7 +575,7 @@ class contentBlueprintsSections extends AdministrationPage
             } elseif ($_POST['with-selected'] == 'delete-entries') {
                 foreach ($checked as $section_id) {
                     $entries = EntryManager::fetch(null, $section_id, null, null, null, null, false, false, null, false);
-                    $entry_ids = array();
+                    $entry_ids = [];
 
                     foreach ($entries as $entry) {
                         $entry_ids[] = $entry['id'];
@@ -616,7 +616,7 @@ class contentBlueprintsSections extends AdministrationPage
         if (@array_key_exists('save', $_POST['action']) || @array_key_exists('done', $_POST['action'])) {
             $canProceed = true;
             $edit = ($this->_context[0] == "edit");
-            $this->_errors = array();
+            $this->_errors = [];
 
             $fields = isset($_POST['fields']) ? $_POST['fields'] : array();
             $meta = $_POST['meta'];
@@ -668,7 +668,7 @@ class contentBlueprintsSections extends AdministrationPage
             if (is_array($fields) && !empty($fields)) {
                 // Check for duplicate CF names
                 if ($canProceed) {
-                    $name_list = array();
+                    $name_list = [];
 
                     foreach ($fields as $position => $data) {
                         if (trim($data['element_name']) == '') {
@@ -686,7 +686,7 @@ class contentBlueprintsSections extends AdministrationPage
                 }
 
                 if ($canProceed) {
-                    $unique = array();
+                    $unique = [];
 
                     foreach ($fields as $position => $data) {
                         $field = FieldManager::create($data['type']);
@@ -704,7 +704,7 @@ class contentBlueprintsSections extends AdministrationPage
                             $this->_errors[$position] = array('label' => __('There is already a field of type %s. There can only be one per section.', array('<code>' . $field->handle() . '</code>')));
                         }
 
-                        $errors = array();
+                        $errors = [];
 
                         if (Field::__OK__ != $field->checkFields($errors, false) && !empty($errors)) {
                             $this->_errors[$position] = $errors;
@@ -778,7 +778,7 @@ class contentBlueprintsSections extends AdministrationPage
                 if ($section_id && $canProceed) {
                     if ($edit) {
                         // Delete missing CF's
-                        $id_list = array();
+                        $id_list = [];
 
                         if (is_array($fields) && !empty($fields)) {
                             foreach ($fields as $position => $data) {

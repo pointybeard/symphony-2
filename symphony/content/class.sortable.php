@@ -82,7 +82,7 @@ class Sortable
      */
     public static function buildTableHeaders($columns, $sort, $order, $extra_url_params = null)
     {
-        $aTableHead = array();
+        $aTableHead = [];
 
         foreach ($columns as $c) {
             if ($c['sortable']) {

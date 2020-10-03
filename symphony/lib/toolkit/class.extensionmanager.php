@@ -17,19 +17,19 @@ class ExtensionManager implements FileResource
      * Defaults to an empty array.
      * @var array
      */
-    protected static $_pool = array();
+    protected static $_pool = [];
 
     /**
      * An array of all extensions whose status is enabled
      * @var array
      */
-    private static $_enabled_extensions = array();
+    private static $_enabled_extensions = [];
 
     /**
      * An array of all the subscriptions to Symphony delegates made by extensions.
      * @var array
      */
-    private static $_subscriptions = array();
+    private static $_subscriptions = [];
 
     /**
      * An associative array of all the extensions in `tbl_extensions` where
@@ -37,7 +37,7 @@ class ExtensionManager implements FileResource
      * representation of it's accompanying database row.
      * @var array
      */
-    private static $_extensions = array();
+    private static $_extensions = [];
 
     /**
      * An associative array of all the providers from the enabled extensions.
@@ -47,7 +47,7 @@ class ExtensionManager implements FileResource
      * @since Symphony 2.3
      * @var array
      */
-    private static $_providers = array();
+    private static $_providers = [];
 
     /**
      * The constructor will populate the `$_subscriptions` variable from
@@ -162,7 +162,7 @@ class ExtensionManager implements FileResource
      */
     public static function fetchStatus($about)
     {
-        $return = array();
+        $return = [];
         self::__buildExtensionList();
 
         if (isset($about['handle']) && array_key_exists($about['handle'], self::$_extensions)) {
@@ -228,7 +228,7 @@ class ExtensionManager implements FileResource
     {
         // Loop over all extensions and build an array of providable objects
         if (empty(self::$_providers)) {
-            self::$_providers = array();
+            self::$_providers = [];
 
             foreach (self::listInstalledHandles() as $handle) {
                 $obj = self::getInstance($handle);
@@ -254,7 +254,7 @@ class ExtensionManager implements FileResource
         }
 
         if (!isset(self::$_providers[$type])) {
-            return array();
+            return [];
         }
 
         return self::$_providers[$type];
@@ -668,7 +668,7 @@ class ExtensionManager implements FileResource
             $page[] = '*';
         }
 
-        $services = array();
+        $services = [];
 
         if (isset(self::$_subscriptions[$delegate])) {
             foreach (self::$_subscriptions[$delegate] as $subscription) {
@@ -740,7 +740,7 @@ class ExtensionManager implements FileResource
      */
     public static function listAll($filter = '/^((?![-^?%:*|"<>]).)*$/')
     {
-        $result = array();
+        $result = [];
         $extensions = General::listDirStructure(EXTENSIONS, $filter, false, EXTENSIONS);
 
         if (is_array($extensions) && !empty($extensions)) {
@@ -811,18 +811,18 @@ class ExtensionManager implements FileResource
     public static function fetch(array $select = array(), array $where = array(), $order_by = null)
     {
         $extensions = self::listAll();
-        $data = array();
+        $data = [];
 
         if (empty($select) && empty($where) && is_null($order_by)) {
             return $extensions;
         }
 
         if (empty($extensions)) {
-            return array();
+            return [];
         }
 
         if (!is_null($order_by)) {
-            $author = $name = $label = array();
+            $author = $name = $label = [];
             $order_by = array_map('strtolower', explode(' ', $order_by));
             $order = ($order_by[1] == 'desc') ? SORT_DESC : SORT_ASC;
             $sort = $order_by[0];
@@ -854,7 +854,7 @@ class ExtensionManager implements FileResource
         }
 
         foreach ($extensions as $i => $e) {
-            $data[$i] = array();
+            $data[$i] = [];
             foreach ($e as $key => $value) {
                 // If $select is empty, we assume every field is requested
                 if (in_array($key, $select) || empty($select)) {
@@ -918,7 +918,7 @@ class ExtensionManager implements FileResource
             // Check to see that the extension is named correctly, if it is
             // not, then return nothing
             if (self::__getClassName($name) !== self::__getClassName($xpath->evaluate('string(@id)', $extension))) {
-                return array();
+                return [];
             }
 
             // If `$rawXML` is set, just return our DOMDocument instance
@@ -1000,7 +1000,7 @@ class ExtensionManager implements FileResource
         } else {
             Symphony::Log()->pushToLog(sprintf('%s does not have an extension.meta.xml file', $name), E_DEPRECATED, true);
 
-            return array();
+            return [];
         }
     }
 

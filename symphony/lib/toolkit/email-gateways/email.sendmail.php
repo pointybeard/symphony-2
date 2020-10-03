@@ -55,7 +55,7 @@ class SendmailGateway extends EmailGateway
 
         try {
             // Encode recipient names (but not any numeric array indexes)
-            $recipients = array();
+            $recipients = [];
             foreach ($this->_recipients as $name => $email) {
                 // Support Bcc header
                 if (isset($this->_header_fields['Bcc']) && $this->_header_fields['Bcc'] == $email) {
@@ -109,7 +109,7 @@ class SendmailGateway extends EmailGateway
             );
 
             // Format header fields
-            $header_fields = array();
+            $header_fields = [];
             foreach ($this->_header_fields as $name => $body) {
                 $header_fields[] = sprintf('%s: %s', $name, $body);
             }

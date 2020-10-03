@@ -120,7 +120,7 @@ class Gateway
      * An array of custom headers to pass with the request
      * @var array
      */
-    private $_headers = array();
+    private $_headers = [];
 
     /**
      * An array of custom options for the CURL request, this
@@ -129,7 +129,7 @@ class Gateway
      * @link http://php.net/manual/en/function.curl-setopt.php
      * @var array
      */
-    private $_custom_opt = array();
+    private $_custom_opt = [];
 
     /**
      * An array of information about the request after it has
@@ -138,7 +138,7 @@ class Gateway
      *
      * @link http://php.net/manual/en/function.curl-getinfo.php
      */
-    private $_info_last = array();
+    private $_info_last = [];
 
     /**
      * Mimics curl_init in that a URL can be provided

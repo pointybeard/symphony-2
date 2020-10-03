@@ -42,7 +42,7 @@ class Frontend extends Symphony
     {
         parent::__construct();
 
-        $this->_env = array();
+        $this->_env = [];
     }
 
     /**

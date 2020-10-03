@@ -64,7 +64,7 @@ abstract class Extension
      * @since Symphony 2.5.0
      * @var array
      */
-    protected static $provides = array();
+    protected static $provides = [];
 
     /**
      * Default constructor for an Extension, at this time it does nothing
@@ -169,7 +169,7 @@ abstract class Extension
      */
     public function getSubscribedDelegates()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -302,7 +302,7 @@ abstract class Extension
      */
     public static function registerProviders()
     {
-        self::$provides = array();
+        self::$provides = [];
 
         return true;
     }
@@ -325,7 +325,7 @@ abstract class Extension
         }
 
         if (!isset(self::$provides[$type])) {
-            return array();
+            return [];
         }
 
         return self::$provides[$type];

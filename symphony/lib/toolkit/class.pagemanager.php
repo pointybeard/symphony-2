@@ -480,7 +480,7 @@ class PageManager
         }
 
         if ($hierarchical) {
-            $output = array();
+            $output = [];
 
             self::__buildTreeView(null, $pages, $output);
             $pages = $output;
@@ -683,7 +683,7 @@ class PageManager
     public static function fetchAllPagesPageTypes()
     {
         $types = Symphony::Database()->fetch("SELECT `page_id`,`type` FROM `tbl_pages_types`");
-        $page_types = array();
+        $page_types = [];
 
         if (is_array($types)) {
             foreach ($types as $type) {

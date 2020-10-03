@@ -192,7 +192,7 @@ class Administration extends Symphony
             }
         } else {
             if (!is_array($this->_callback['context'])) {
-                $this->_callback['context'] = array();
+                $this->_callback['context'] = [];
             }
 
             if ($this->__canAccessAlerts()) {
@@ -327,7 +327,7 @@ class Administration extends Symphony
             } elseif (isset($bits[1])) {
                 $context = preg_split('/\//', $bits[1], -1, PREG_SPLIT_NO_EMPTY);
             } else {
-                $context = array();
+                $context = [];
             }
 
             $callback = array(

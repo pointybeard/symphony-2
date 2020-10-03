@@ -25,7 +25,7 @@ class Profiler implements Singleton
      * memory_get_usage()
      * @var array
      */
-    protected static $_samples = array();
+    protected static $_samples = [];
 
     /**
      * A seed holds a start time to be used in profiling. If this is not null
@@ -142,7 +142,7 @@ class Profiler implements Singleton
             }
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -153,7 +153,7 @@ class Profiler implements Singleton
      */
     public function retrieveGroup($group)
     {
-        $result = array();
+        $result = [];
 
         foreach (Profiler::$_samples as $record) {
             if ($record[3] == $group) {

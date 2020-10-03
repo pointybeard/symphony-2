@@ -33,7 +33,7 @@ class Log
      * An array of log messages to write to the log.
      * @var array
      */
-    private $_log = array();
+    private $_log = [];
 
     /**
      * The maximise size of the log can reach before it is rotated and a new

@@ -20,7 +20,7 @@ class SectionDatasource extends Datasource
      * An array of Field objects that this Datasource has created to display
      * the results.
      */
-    protected static $_fieldPool = array();
+    protected static $_fieldPool = [];
 
     /**
      * An array of the Symphony meta data parameters.
@@ -322,7 +322,7 @@ class SectionDatasource extends Datasource
         $singleParam = count($this->dsParamPARAMOUTPUT) == 1;
 
         if ($singleParam && (!isset($this->_param_pool[$key]) || !is_array($this->_param_pool[$key]))) {
-            $this->_param_pool[$key] = array();
+            $this->_param_pool[$key] = [];
         }
 
         foreach ($this->dsParamPARAMOUTPUT as $param) {
@@ -334,7 +334,7 @@ class SectionDatasource extends Datasource
             $param_key = $key . '.' . str_replace(':', '-', $param);
 
             if (!isset($this->_param_pool[$param_key]) || !is_array($this->_param_pool[$param_key])) {
-                $this->_param_pool[$param_key] = array();
+                $this->_param_pool[$param_key] = [];
             }
 
             $param_pool_values = self::$_fieldPool[$field_id]->getParameterPoolValue($data, $entry->get('id'));
@@ -522,7 +522,7 @@ class SectionDatasource extends Datasource
         if (is_array($this->dsParamINCLUDEDELEMENTS)) {
             $include_pagination_element = in_array('system:pagination', $this->dsParamINCLUDEDELEMENTS);
         } else {
-            $this->dsParamINCLUDEDELEMENTS = array();
+            $this->dsParamINCLUDEDELEMENTS = [];
         }
 
         if (isset($this->dsParamPARAMOUTPUT) && !is_array($this->dsParamPARAMOUTPUT)) {

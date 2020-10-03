@@ -12,7 +12,7 @@ class contentAjaxParameters extends JSONPage
 
     public function view()
     {
-        $params = array();
+        $params = [];
         $filter = $_GET['query'];
 
         if ($_GET['template']) {
@@ -52,7 +52,7 @@ class contentAjaxParameters extends JSONPage
      */
     private function __getEnvParams()
     {
-        $params = array();
+        $params = [];
         $env = array('today', 'current-time', 'this-year', 'this-month', 'this-day', 'timezone', 'website-name', 'page-title', 'root', 'workspace', 'root-page', 'current-page', 'current-page-id', 'current-path', 'current-query-string', 'current-url', 'cookie-username', 'cookie-pass', 'page-types', 'upload-limit');
 
         foreach ($env as $param) {
@@ -64,7 +64,7 @@ class contentAjaxParameters extends JSONPage
 
     private function __getPageParams()
     {
-        $params = array();
+        $params = [];
         $pages = PageManager::fetch(true, array('params'));
 
         foreach ($pages as $key => $pageparams) {
@@ -88,7 +88,7 @@ class contentAjaxParameters extends JSONPage
 
     private function __getDSParams()
     {
-        $params = array();
+        $params = [];
         $datasources = DatasourceManager::listAll();
 
         foreach ($datasources as $datasource) {

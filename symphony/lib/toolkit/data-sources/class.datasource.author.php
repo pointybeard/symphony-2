@@ -32,7 +32,7 @@ class AuthorDatasource extends Datasource
 
     public function execute(array &$param_pool = null)
     {
-        $author_ids = array();
+        $author_ids = [];
 
         if (is_array($this->dsParamFILTERS) && !empty($this->dsParamFILTERS)) {
             foreach ($this->dsParamFILTERS as $field => $value) {
@@ -43,7 +43,7 @@ class AuthorDatasource extends Datasource
                 $ret = $this->__processAuthorFilter($field, $value);
 
                 if (empty($ret)) {
-                    $author_ids = array();
+                    $author_ids = [];
                     break;
                 }
 
@@ -92,14 +92,14 @@ class AuthorDatasource extends Datasource
                         $param_key = $key . '.' . str_replace(':', '-', $param);
 
                         if (!is_array($param_pool[$param_key])) {
-                            $param_pool[$param_key] = array();
+                            $param_pool[$param_key] = [];
                         }
 
                         $param_pool[$param_key][] = ($param === 'name' ? $author->getFullName() : $author->get($param));
 
                         if ($singleParam) {
                             if (!is_array($param_pool[$key])) {
-                                $param_pool[$key] = array();
+                                $param_pool[$key] = [];
                             }
 
                             $param_pool[$key][] = ($param === 'name' ? $author->getFullName() : $author->get($param));

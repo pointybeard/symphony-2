@@ -58,7 +58,7 @@ class SMTPGateway extends EmailGateway
     {
         $this->validate();
 
-        $settings = array();
+        $settings = [];
         $settings['helo_hostname'] = $this->_helo_hostname;
         if ($this->_auth) {
             $settings['username'] = $this->_user;
@@ -72,7 +72,7 @@ class SMTPGateway extends EmailGateway
             }
 
             // Encode recipient names (but not any numeric array indexes)
-            $recipients = array();
+            $recipients = [];
             foreach ($this->_recipients as $name => $email) {
                 // Support Bcc header
                 if (isset($this->_header_fields['Bcc']) && $this->_header_fields['Bcc'] == $email) {
@@ -154,9 +154,9 @@ class SMTPGateway extends EmailGateway
      */
     public function reset()
     {
-        $this->_header_fields = array();
+        $this->_header_fields = [];
         $this->_envelope_from = null;
-        $this->_recipients = array();
+        $this->_recipients = [];
         $this->_subject = null;
         $this->_body = null;
     }

@@ -17,7 +17,7 @@ class AuthorManager
      * Defaults to an empty array.
      * @var array
      */
-    protected static $_pool = array();
+    protected static $_pool = [];
 
     /**
      * Given an associative array of fields, insert them into the database
@@ -120,10 +120,10 @@ class AuthorManager
         ));
 
         if (!is_array($records) || empty($records)) {
-            return array();
+            return [];
         }
 
-        $authors = array();
+        $authors = [];
 
         foreach ($records as $row) {
             $author = new Author;
@@ -170,7 +170,7 @@ class AuthorManager
         }
 
         // Get all the Author ID's that are already in `self::$_pool`
-        $authors = array();
+        $authors = [];
         $pooled_authors = array_intersect($id, array_keys(self::$_pool));
 
         foreach ($pooled_authors as $pool_author) {

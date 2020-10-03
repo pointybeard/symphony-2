@@ -34,14 +34,14 @@ class XSLTPage extends Page
      * transform
      * @var array
      */
-    protected $_param = array();
+    protected $_param = [];
 
     /**
      * An array of the PHP functions to be made available during the XSLT
      * transform
      * @var array
      */
-    protected $_registered_php_functions = array();
+    protected $_registered_php_functions = [];
 
     /**
      * The constructor for the `XSLTPage` ensures that an `XSLTProcessor`

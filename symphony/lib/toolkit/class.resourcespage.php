@@ -137,7 +137,7 @@ abstract class ResourcesPage extends AdministrationPage
 
         $aTableHead = Sortable::buildTableHeaders($columns, $sort, $order, (isset($_REQUEST['filter']) ? '&amp;filter=' . $_REQUEST['filter'] : ''));
 
-        $aTableBody = array();
+        $aTableBody = [];
 
         if (!is_array($resources) || empty($resources)) {
             $aTableBody = array(Widget::TableRow(array(Widget::TableData(__('None found.'), 'inactive', null, count($aTableHead))), 'odd'));
@@ -200,7 +200,7 @@ abstract class ResourcesPage extends AdministrationPage
                 // Attached pages
                 $pages = ResourceManager::getAttachedPages($resource_type, $r['handle']);
 
-                $pagelinks = array();
+                $pagelinks = [];
                 $i = 0;
 
                 foreach ($pages as $p) {

@@ -18,7 +18,7 @@ class Configuration
      * An associative array of the properties for this Configuration object
      * @var array
      */
-    private $_properties = array();
+    private $_properties = [];
 
     /**
      * Whether all properties and group keys will be forced to be lowercase.
@@ -166,7 +166,7 @@ class Configuration
      */
     public function flush()
     {
-        $this->_properties = array();
+        $this->_properties = [];
     }
 
     /**

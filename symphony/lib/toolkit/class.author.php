@@ -13,7 +13,7 @@ class Author
      * the keys map directly to the `tbl_authors` columns.
      * @var array
      */
-    private $_fields = array();
+    private $_fields = [];
 
     /**
      * An array of all the sections an author can have access to. Defaults
@@ -169,7 +169,7 @@ class Author
      */
     public function validate(&$errors)
     {
-        $errors = array();
+        $errors = [];
         $current_author = null;
 
         if (is_null($this->get('first_name'))) {

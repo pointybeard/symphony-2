@@ -99,7 +99,7 @@ class Field
      * An associative array of the settings for this `Field` instance
      * @var array
      */
-    protected $_settings = array();
+    protected $_settings = [];
 
     /**
      * Whether this field is required inherently, defaults to false.
@@ -177,7 +177,7 @@ class Field
      */
     public function getToggleStates()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -606,7 +606,7 @@ class Field
         $label = Widget::Label($label_value);
         $label->setAttribute('class', 'column');
 
-        $options = array();
+        $options = [];
 
         $options[] = array('none', false, __('None'));
 
@@ -742,7 +742,7 @@ class Field
     {
         $context = Symphony::Engine()->Page->getContext();
         $associations = $context['associations']['parent'];
-        $field_association = array();
+        $field_association = [];
         $count = 0;
 
         if (!empty($associations)) {
@@ -1722,7 +1722,7 @@ class Field
      */
     public function commit()
     {
-        $fields = array();
+        $fields = [];
 
         $fields['label'] = General::sanitize($this->get('label'));
         $fields['element_name'] = ($this->get('element_name') ? $this->get('element_name') : Lang::createHandle($this->get('label')));
@@ -1961,7 +1961,7 @@ class Field
                 AND `entry_id` IS NOT NULL
             ", $this->get('id'), $entry_id));
         } catch (Exception $e) {
-            return array();
+            return [];
         }
 
         return $ids;
@@ -1987,7 +1987,7 @@ class Field
                 AND `relation_id` IS NOT NULL
             ", $this->get('id') , $entry_id));
         } catch (Exception $e) {
-            return array();
+            return [];
         }
 
         return $ids;

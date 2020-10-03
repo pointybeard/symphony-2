@@ -65,7 +65,7 @@ class contentSystemExtensions extends AdministrationPage
             (isset($_REQUEST['filter']) ? '&amp;filter=' . $_REQUEST['filter'] : '')
         );
 
-        $aTableBody = array();
+        $aTableBody = [];
 
         if (!is_array($extensions) || empty($extensions)) {
             $aTableBody = array(
@@ -96,7 +96,7 @@ class contentSystemExtensions extends AdministrationPage
                 }
 
                 // Status
-                $trClasses = array();
+                $trClasses = [];
                 $trStatus = '';
                 $tdMessage = __('Status unavailable');
 
@@ -130,7 +130,7 @@ class contentSystemExtensions extends AdministrationPage
                 $td3 = Widget::TableData($tdMessage);
 
                 // Links
-                $tdLinks = array();
+                $tdLinks = [];
 
                 if ($about['github'] != '') {
                     $tdLinks['github'] = Widget::Anchor(__('GitHub'), General::validateURL($about['github']))->generate();
@@ -157,7 +157,7 @@ class contentSystemExtensions extends AdministrationPage
                 $td4 = Widget::TableData($tdLinks);
 
                 // Authors
-                $tdAuthors = array();
+                $tdAuthors = [];
 
                 if (!is_array($about['author'])) {
                     $about['author'] = array($about['author']);

@@ -49,18 +49,18 @@ class EmailValidationException extends EmailGatewayException
  */
 abstract class EmailGateway
 {
-    protected $_recipients = array();
+    protected $_recipients = [];
     protected $_sender_name;
     protected $_sender_email_address;
     protected $_subject;
     protected $_body;
     protected $_text_plain;
     protected $_text_html;
-    protected $_attachments = array();
+    protected $_attachments = [];
     protected $_validate_attachment_errors = true;
     protected $_reply_to_name;
     protected $_reply_to_email_address;
-    protected $_header_fields = array();
+    protected $_header_fields = [];
     protected $_boundary_mixed;
     protected $_boundary_alter;
     protected $_text_encoding = 'quoted-printable';
@@ -276,7 +276,7 @@ abstract class EmailGateway
     public function setAttachments($files)
     {
         // Always erase
-        $this->_attachments = array();
+        $this->_attachments = [];
 
         // check if we have an input value
         if ($files == null) {
@@ -766,7 +766,7 @@ abstract class EmailGateway
     protected function contentInfoString($type = null, $file = null, $filename = null, $charset = null)
     {
         $data = $this->contentInfoArray($type, $file, $filename, $charset);
-        $fields = array();
+        $fields = [];
 
         foreach ($data as $key => $value) {
             $fields[] = EmailHelper::fold(sprintf('%s: %s', $key, $value));

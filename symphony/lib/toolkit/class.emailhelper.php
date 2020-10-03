@@ -253,7 +253,7 @@ abstract class EmailHelper
      */
     public static function arrayToList(array $array = array())
     {
-        $return = array();
+        $return = [];
         foreach ($array as $name => $email) {
             $return[] = empty($name) || General::intval($name) > -1
                         ? $email

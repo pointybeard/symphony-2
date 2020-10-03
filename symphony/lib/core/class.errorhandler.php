@@ -56,7 +56,7 @@ class GenericExceptionHandler
     protected static function __nearbyLines($line, $file, $window = 5)
     {
         if (!file_exists($file)) {
-            return array();
+            return [];
         }
 
         return array_slice(file($file), ($line - 1) - $window, $window * 2, true);

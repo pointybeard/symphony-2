@@ -44,7 +44,7 @@ class Datasource
      * other Datasources or Events.
      * @var array
      */
-    protected $_env = array();
+    protected $_env = [];
 
     /**
      * If true, this datasource only will be outputting parameters from the
@@ -58,7 +58,7 @@ class Datasource
      * run first for this datasource to be able to execute correctly
      * @var array
      */
-    protected $_dependencies = array();
+    protected $_dependencies = [];
 
     /**
      * When there is no entries found by the Datasource, this parameter will
@@ -150,7 +150,7 @@ class Datasource
      */
     public function about()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -412,7 +412,7 @@ class Datasource
         }
 
         // urlencode parameters
-        $params = array();
+        $params = [];
 
         if (preg_match_all('@{([^}]+)}@i', $url, $matches, PREG_SET_ORDER)) {
             foreach ($matches as $m) {

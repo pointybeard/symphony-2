@@ -98,7 +98,7 @@ class Lang
      */
     public static function initialize()
     {
-        self::$_dictionary = array();
+        self::$_dictionary = [];
 
         // Load default datetime strings
         if (empty(self::$_datetime_dictionary)) {
@@ -192,7 +192,7 @@ class Lang
                     $code = substr($file->getFilename(), 5, -4);
                     $lang = null;
                     $handle = null;
-                    $extensions = array();
+                    $extensions = [];
 
                     // Set lang, handle and extensions if defined.
                     if (isset(self::$_languages[$code])) {
@@ -257,7 +257,7 @@ class Lang
             self::$_lang = $code;
 
             // Clear dictionary
-            self::$_dictionary = array();
+            self::$_dictionary = [];
 
             // Load core translations
             self::load(vsprintf('%s/lang_%s/lang/lang.%s.php', array(
@@ -304,7 +304,7 @@ class Lang
         }
 
         $handle = (isset(self::$_languages[$code])) ? self::$_languages[$code]['handle'] : '';
-        $enabled_extensions = array();
+        $enabled_extensions = [];
 
         // Fetch list of active extensions
         if (class_exists('Symphony', false) && (!is_null(Symphony::ExtensionManager()))) {
@@ -400,7 +400,7 @@ class Lang
      */
     public static function getAvailableLanguages($checkStatus = true)
     {
-        $languages = array();
+        $languages = [];
 
         // Get available languages
         foreach (self::$_languages as $key => $language) {

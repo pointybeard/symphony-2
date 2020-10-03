@@ -383,7 +383,7 @@ class DateTimeObj
     public static function getTimezonesSelectOptions($selected = null)
     {
         $zones = self::getZones();
-        $groups = array();
+        $groups = [];
 
         foreach ($zones as $zone => $value) {
             if ($value >= 1024) {
@@ -391,7 +391,7 @@ class DateTimeObj
             }
 
             $timezones = self::getTimezones($zone);
-            $options = array();
+            $options = [];
 
             foreach ($timezones as $timezone) {
                 $tz = new DateTime('now', new DateTimeZone($timezone));
@@ -489,7 +489,7 @@ class DateTimeObj
     public static function getDateFormatsSelectOptions($selected = null)
     {
         $formats = self::getDateFormats();
-        $options = array();
+        $options = [];
 
         foreach ($formats as $option) {
             $leadingZero = '';
@@ -571,7 +571,7 @@ class DateTimeObj
     public static function getTimeFormatsSelectOptions($selected = null)
     {
         $formats = self::getTimeFormats();
-        $options = array();
+        $options = [];
 
         foreach ($formats as $option) {
             $options[] = array($option, $option == $selected, self::get($option));

@@ -25,7 +25,7 @@ abstract class JSONPage extends TextPage
      */
     public function __construct()
     {
-        $this->_Result = array();
+        $this->_Result = [];
 
         $this->setHttpStatus(self::HTTP_STATUS_OK);
         $this->addHeaderToPage('Content-Type', 'application/json');

@@ -16,13 +16,13 @@ class FieldManager implements FileResource
      * Defaults to an empty array.
      * @var array
      */
-    protected static $_pool = array();
+    protected static $_pool = [];
 
     /**
      * An array of all fields whose have been created by ID
      * @var array
      */
-    private static $_initialiased_fields = array();
+    private static $_initialiased_fields = [];
 
     /**
      * Given the filename of a Field, return it's handle. This will remove
@@ -247,10 +247,10 @@ class FieldManager implements FileResource
      */
     public static function fetch($id = null, $section_id = null, $order = 'ASC', $sortfield = 'sortorder', $type = null, $location = null, $where = null, $restrict = Field::__FIELD_ALL__)
     {
-        $fields = array();
+        $fields = [];
         $returnSingle = false;
-        $ids = array();
-        $field_contexts = array();
+        $ids = [];
+        $field_contexts = [];
 
         if (!is_null($id)) {
             if (is_numeric($id)) {
@@ -529,7 +529,7 @@ class FieldManager implements FileResource
     {
         $structure = General::listStructure(TOOLKIT . '/fields', '/field.[a-z0-9_-]+.php/i', false, 'asc', TOOLKIT . '/fields');
         $extensions = Symphony::ExtensionManager()->listInstalledHandles();
-        $types = array();
+        $types = [];
 
         if (is_array($extensions) && !empty($extensions)) {
             foreach ($extensions as $handle) {

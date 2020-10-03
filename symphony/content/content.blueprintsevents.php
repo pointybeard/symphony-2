@@ -10,7 +10,7 @@
 
 class contentBlueprintsEvents extends ResourcesPage
 {
-    public $_errors = array();
+    public $_errors = [];
 
     public function __viewIndex($resource_type)
     {
@@ -147,8 +147,8 @@ class contentBlueprintsEvents extends ResourcesPage
             $sources->appendChild($div);
 
             $sections = SectionManager::fetch(null, 'ASC', 'name');
-            $options = array();
-            $section_options = array();
+            $options = [];
+            $section_options = [];
             $source = isset($fields['source']) ? $fields['source'] : null;
 
             if (is_array($sections) && !empty($sections)) {
@@ -253,13 +253,13 @@ class contentBlueprintsEvents extends ResourcesPage
             $pages = PageManager::fetch();
             $event_handle = str_replace('-', '_', Lang::createHandle($fields['name']));
             $connections = ResourceManager::getAttachedPages(ResourceManager::RESOURCE_TYPE_EVENT, $event_handle);
-            $selected = array();
+            $selected = [];
 
             foreach ($connections as $connection) {
                 $selected[] = $connection['id'];
             }
 
-            $options = array();
+            $options = [];
 
             foreach ($pages as $page) {
                 $options[] = array(
@@ -409,7 +409,7 @@ class contentBlueprintsEvents extends ResourcesPage
     public function __formAction()
     {
         $fields = $_POST['fields'];
-        $this->_errors = array();
+        $this->_errors = [];
         $providers = Symphony::ExtensionManager()->getProvidersOf(iProvider::EVENT);
         $providerClass = null;
 
@@ -505,7 +505,7 @@ class contentBlueprintsEvents extends ResourcesPage
 
                 // Add Documentation
                 $ajaxEventDoc = new contentAjaxEventDocumentation();
-                $doc_parts = array();
+                $doc_parts = [];
 
                 // Add Documentation (Success/Failure)
                 $ajaxEventDoc->addEntrySuccessDoc($doc_parts, $rootelement, $filters);

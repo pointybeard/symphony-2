@@ -42,7 +42,7 @@ class HTMLPage extends Page
      * Defaults to an empty array.
      * @var array
      */
-    protected $_head = array();
+    protected $_head = [];
 
     /**
      * Accessor function for `$this->_head`. Returns all the XMLElements that are

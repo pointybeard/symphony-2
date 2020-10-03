@@ -23,7 +23,7 @@ class FrontendPage extends XSLTPage
      * parameters
      * @var array
      */
-    public $_param = array();
+    public $_param = [];
 
     /**
      * The URL of the current page that is being Rendered as returned
@@ -70,7 +70,7 @@ class FrontendPage extends XSLTPage
      * other Datasources or Events.
      * @var array
      */
-    private $_env = array();
+    private $_env = [];
 
     /**
      * Constructor function sets the `$is_logged_in` variable.
@@ -597,7 +597,7 @@ class FrontendPage extends XSLTPage
 
             // Not the index page (or at least not on first impression)
         } elseif (is_null($row)) {
-            $page_extra_bits = array();
+            $page_extra_bits = [];
             $pathArr = preg_split('/\//', trim($this->_page, '/'), -1, PREG_SPLIT_NO_EMPTY);
             $handle = array_pop($pathArr);
 
@@ -749,7 +749,7 @@ class FrontendPage extends XSLTPage
                 return;
             }
 
-            $pool = array();
+            $pool = [];
 
             foreach ($events as $handle) {
                 $pool[$handle] = EventManager::create($handle, array('env' => $this->_env, 'param' => $this->_param));
@@ -850,7 +850,7 @@ class FrontendPage extends XSLTPage
 
         $this->_env['pool'] = $params;
         $pool = $params;
-        $dependencies = array();
+        $dependencies = [];
 
         foreach ($datasources as $handle) {
             $pool[$handle] = DatasourceManager::create($handle, array(), false);
@@ -966,7 +966,7 @@ class FrontendPage extends XSLTPage
             }
         }
 
-        $orderedList = array();
+        $orderedList = [];
         $dsKeyArray = $this->__buildDatasourcePooledParamList(array_keys($dependenciesList));
 
         // 1. First do a cleanup of each dependency list, removing non-existant DS's and find
@@ -1014,10 +1014,10 @@ class FrontendPage extends XSLTPage
     private function __buildDatasourcePooledParamList($datasources)
     {
         if (!is_array($datasources) || empty($datasources)) {
-            return array();
+            return [];
         }
 
-        $list = array();
+        $list = [];
 
         foreach ($datasources as $handle) {
             $rootelement = str_replace('_', '-', $handle);

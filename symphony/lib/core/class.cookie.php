@@ -131,7 +131,7 @@ class Cookie
         }
 
         if (!isset($_SESSION[$this->_index])) {
-            $_SESSION[$this->_index] = array();
+            $_SESSION[$this->_index] = [];
         }
 
         // Class FrontendPage uses $_COOKIE directly (inside it's __buildPage() function), so try to emulate it.

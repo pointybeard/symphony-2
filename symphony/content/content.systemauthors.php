@@ -13,7 +13,7 @@
 class contentSystemAuthors extends AdministrationPage
 {
     public $_Author;
-    public $_errors = array();
+    public $_errors = [];
 
     public function sort(&$sort, &$order, $params)
     {
@@ -89,7 +89,7 @@ class contentSystemAuthors extends AdministrationPage
 
         $aTableHead = Sortable::buildTableHeaders($columns, $sort, $order, (isset($_REQUEST['filter']) ? '&amp;filter=' . $_REQUEST['filter'] : ''));
 
-        $aTableBody = array();
+        $aTableBody = [];
 
         if (!is_array($authors) || empty($authors)) {
             $aTableBody = array(
@@ -145,7 +145,7 @@ class contentSystemAuthors extends AdministrationPage
 
                 $td5 = Widget::TableData($a->get("language") == null ? __("System Default") : $languages[$a->get("language")]);
 
-                $tableData = array();
+                $tableData = [];
                 // Add a row to the body array, assigning each cell to the row
                 if (Symphony::Author()->isDeveloper() || Symphony::Author()->isManager()) {
                     $tableData = array($td1, $td2, $td3, $td4, $td5);
@@ -420,7 +420,7 @@ class contentSystemAuthors extends AdministrationPage
 
         $sections = SectionManager::fetch(null, 'ASC', 'sortorder');
 
-        $options = array();
+        $options = [];
 
         // If the Author is the Developer, allow them to set the Default Area to
         // be the Sections Index.

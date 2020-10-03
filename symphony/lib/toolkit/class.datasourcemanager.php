@@ -95,7 +95,7 @@ class DatasourceManager implements FileResource
      */
     public static function listAll()
     {
-        $result = array();
+        $result = [];
         $structure = General::listStructure(DATASOURCES, '/data.[\\w-]+.php/', false, 'ASC', DATASOURCES);
 
         if (is_array($structure['filelist']) && !empty($structure['filelist'])) {
@@ -104,7 +104,7 @@ class DatasourceManager implements FileResource
 
                 if ($about = self::about($f)) {
                     $classname = self::__getClassName($f);
-                    $env = array();
+                    $env = [];
                     $class = new $classname($env, false);
 
                     $about['can_parse'] = method_exists($class, 'allowEditorToParse')
@@ -160,14 +160,14 @@ class DatasourceManager implements FileResource
         require_once($path);
 
         $handle = self::__getHandleFromFilename(basename($path));
-        $env = array();
+        $env = [];
         $class = new $classname($env, false);
 
         try {
             $method = new ReflectionMethod($classname, 'about');
             $about = $method->invoke($class);
         } catch (ReflectionException $e) {
-            $about = array();
+            $about = [];
         }
 
         return array_merge($about, array('handle' => $handle));

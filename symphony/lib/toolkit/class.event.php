@@ -41,7 +41,7 @@ abstract class Event
      * by other Datasources or Events.
      * @var array
      */
-    protected $_env = array();
+    protected $_env = [];
 
     /**
      * The constructor for an Event sets `$this->_env` from the given parameters

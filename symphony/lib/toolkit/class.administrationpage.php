@@ -20,7 +20,7 @@ class AdministrationPage extends HTMLPage
      * this variable only held a single `Alert` object.
      * @var array
      */
-    public $Alert = array();
+    public $Alert = [];
 
     /**
      * As the name suggests, a `<div>` that holds the following `$Header`,
@@ -57,7 +57,7 @@ class AdministrationPage extends HTMLPage
      * @since Symphony 2.3
      * @var array
      */
-    public $Drawer = array();
+    public $Drawer = [];
 
     /**
      * A `<div>` that contains the content of a Symphony backend page.
@@ -77,7 +77,7 @@ class AdministrationPage extends HTMLPage
      * absolute link by providing a key, 'relative' with the value false.
      * @var array
      */
-    public $_navigation = array();
+    public $_navigation = [];
 
     /**
      *  An associative array describing this pages context. This
@@ -1251,7 +1251,7 @@ class AdministrationPage extends HTMLPage
      */
     public function __buildNavigation()
     {
-        $nav = array();
+        $nav = [];
 
         $this->buildXmlNavigation($nav);
         $this->buildSectionNavigation($nav);

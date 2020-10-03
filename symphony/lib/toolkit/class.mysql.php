@@ -17,7 +17,7 @@ class DatabaseException extends Exception
      * An associative array with three keys, 'query', 'msg' and 'num'
      * @var array
      */
-    private $_error = array();
+    private $_error = [];
 
     /**
      * Constructor takes a message and an associative array to set to
@@ -93,7 +93,7 @@ class MySQL
      *
      * @var array
      */
-    private static $_log = array();
+    private static $_log = [];
 
     /**
      * The number of queries this class has executed, defaults to 0.
@@ -125,7 +125,7 @@ class MySQL
      *
      * @var array
      */
-    private static $_connection = array();
+    private static $_connection = [];
 
     /**
      * The resource of the last result returned from mysqli_query
@@ -154,7 +154,7 @@ class MySQL
      * By default, an array of arrays or objects representing the result set
      * from the `$this->_lastQuery`
      */
-    private $_lastResult = array();
+    private $_lastResult = [];
 
     /**
      * Magic function that will flush the MySQL log and close the MySQL
@@ -175,7 +175,7 @@ class MySQL
     public function flush()
     {
         $this->_result = null;
-        $this->_lastResult = array();
+        $this->_lastResult = [];
         $this->_lastQuery = null;
         $this->_lastQueryHash = null;
     }
@@ -185,7 +185,7 @@ class MySQL
      */
     public static function flushLog()
     {
-        self::$_log = array();
+        self::$_log = [];
     }
 
     /**
@@ -657,7 +657,7 @@ class MySQL
         // Multiple Insert
         if (is_array(current($fields))) {
             $sql  = "INSERT INTO `$table` (`".implode('`, `', array_keys(current($fields))).'`) VALUES ';
-            $rows = array();
+            $rows = [];
 
             foreach ($fields as $key => $array) {
                 // Sanity check: Make sure we dont end up with ',()' in the SQL.
@@ -712,7 +712,7 @@ class MySQL
     {
         self::cleanFields($fields);
         $sql = "UPDATE $table SET ";
-        $rows = array();
+        $rows = [];
 
         foreach ($fields as $key => $val) {
             $rows[] = " `$key` = $val";
@@ -769,13 +769,13 @@ class MySQL
         if (!is_null($query)) {
             $this->query($query, "ASSOC");
         } elseif (is_null($this->_lastResult)) {
-            return array();
+            return [];
         }
 
         $result = $this->_lastResult;
 
         if (!is_null($index_by_column) && isset($result[0][$index_by_column])) {
-            $n = array();
+            $n = [];
 
             foreach ($result as $ii) {
                 $n[$ii[$index_by_column]] = $ii;
@@ -831,10 +831,10 @@ class MySQL
         $result = $this->fetch($query);
 
         if (empty($result)) {
-            return array();
+            return [];
         }
 
-        $rows = array();
+        $rows = [];
         foreach ($result as $row) {
             $rows[] = $row[$column];
         }
@@ -1003,7 +1003,7 @@ class MySQL
     public function getStatistics()
     {
         $query_timer = 0.0;
-        $slow_queries = array();
+        $slow_queries = [];
 
         foreach (self::$_log as $key => $val) {
             $query_timer += $val['execution_time'];
