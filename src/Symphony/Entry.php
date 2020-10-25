@@ -193,7 +193,7 @@ class Entry
 
             $result = $field->processRawFieldData((isset($data[$info['element_name']]) ? $data[$info['element_name']] : null), $s, $message, $simulate, $this->get('id'));
 
-            if (Field::__OK__ !== $s) {
+            if (AbstractField::__OK__ !== $s) {
                 $status = self::__ENTRY_FIELD_ERROR__;
                 $errors[$info['id']] = $message;
             }
@@ -302,7 +302,7 @@ class Entry
                 continue;
             }
 
-            if (Field::__OK__ !== $field->checkPostFieldData((isset($data[$info['element_name']]) ? $data[$info['element_name']] : null), $message, $this->get('id'))) {
+            if (AbstractField::__OK__ !== $field->checkPostFieldData((isset($data[$info['element_name']]) ? $data[$info['element_name']] : null), $message, $this->get('id'))) {
                 $status = self::__ENTRY_FIELD_ERROR__;
                 $errors[$info['id']] = $message;
             }

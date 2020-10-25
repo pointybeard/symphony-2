@@ -1393,7 +1393,7 @@ class contentPublish extends AdministrationPage
             $div->appendChild($button);
 
             $div->appendChild(Widget::Input('action[timestamp]', $timestamp, 'hidden'));
-            $div->appendChild(Widget::Input('action[ignore-timestamp]', 'yes', 'checkbox', array('class' => 'irrelevant')));
+            $div->appendChild(Widget::Input('action[ignore-timestamp]', 'yes', 'checkbox', ['class' => 'irrelevant']));
 
             $this->Form->appendChild($div);
 

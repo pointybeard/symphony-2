@@ -505,8 +505,8 @@ class EntryManager extends Symphony\AbstractManager
 
         // Create UNIX timestamps, as it has always been (Re: #2501)
         foreach ($rows as &$entry) {
-            $entry['creation_date'] = DateTimeObj::get('U', $entry['creation_date']);
-            $entry['modification_date'] = DateTimeObj::get('U', $entry['modification_date']);
+            $entry['creation_date'] = Symphony\DateTimeObj::get('U', $entry['creation_date']);
+            $entry['modification_date'] = Symphony\DateTimeObj::get('U', $entry['modification_date']);
         }
         unset($entry);
 

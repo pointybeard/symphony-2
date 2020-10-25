@@ -267,7 +267,7 @@ class FieldManager extends Symphony\AbstractManager implements Interfaces\FileRe
      * @return array
      *               An array of Field objects. If no Field are found, null is returned.
      */
-    public static function fetch($id = null, $section_id = null, $order = 'ASC', $sortfield = 'sortorder', $type = null, $location = null, $where = null, $restrict = Symphony\Field::__FIELD_ALL__)
+    public static function fetch($id = null, $section_id = null, $order = 'ASC', $sortfield = 'sortorder', $type = null, $location = null, $where = null, $restrict = Symphony\AbstractField::__FIELD_ALL__)
     {
         $fields = [];
         $returnSingle = false;
@@ -290,7 +290,7 @@ class FieldManager extends Symphony\AbstractManager implements Interfaces\FileRe
             foreach ($field_ids as $key => $field_id) {
                 if (
                     isset(self::$initialiasedFields[$field_id])
-                    && self::$initialiasedFields[$field_id] instanceof Symphony\Field
+                    && self::$initialiasedFields[$field_id] instanceof Symphony\AbstractField
                 ) {
                     $fields[$field_id] = self::$initialiasedFields[$field_id];
                     unset($field_ids[$key]);
@@ -337,7 +337,7 @@ class FieldManager extends Symphony\AbstractManager implements Interfaces\FileRe
                 // We already have this field in our static store
                 if (
                     isset(self::$initialiasedFields[$f['id']])
-                    && self::$initialiasedFields[$f['id']] instanceof Symphony\Field
+                    && self::$initialiasedFields[$f['id']] instanceof Symphony\AbstractField
                 ) {
                     $field = self::$initialiasedFields[$f['id']];
 
@@ -372,11 +372,11 @@ class FieldManager extends Symphony\AbstractManager implements Interfaces\FileRe
 
                 // Check to see if there was any restricts imposed on the fields
                 if (
-                    Symphony\Field::__FIELD_ALL__ == $restrict
-                    || (Symphony\Field::__TOGGLEABLE_ONLY__ == $restrict && $field->canToggle())
-                    || (Symphony\Field::__UNTOGGLEABLE_ONLY__ == $restrict && !$field->canToggle())
-                    || (Symphony\Field::__FILTERABLE_ONLY__ == $restrict && $field->canFilter())
-                    || (Symphony\Field::__UNFILTERABLE_ONLY__ == $restrict && !$field->canFilter())
+                    Symphony\AbstractField::__FIELD_ALL__ == $restrict
+                    || (Symphony\AbstractField::__TOGGLEABLE_ONLY__ == $restrict && $field->canToggle())
+                    || (Symphony\AbstractField::__UNTOGGLEABLE_ONLY__ == $restrict && !$field->canToggle())
+                    || (Symphony\AbstractField::__FILTERABLE_ONLY__ == $restrict && $field->canFilter())
+                    || (Symphony\AbstractField::__UNFILTERABLE_ONLY__ == $restrict && !$field->canFilter())
                 ) {
                     $fields[$f['id']] = $field;
                 }

@@ -5,6 +5,7 @@
 namespace Symphony\Symphony;
 
 use Symphony\Symphony\Exceptions;
+use Symphony\Symphony\Interfaces;
 
 /**
  * The Field class represents a Symphony Field object. Fields are the building
@@ -396,7 +397,7 @@ class AbstractField
      * @param array $array
      *                     the associative array of settings for this field
      */
-    public function setArray(array $array = array())
+    public function setArray(array $array = [])
     {
         if (empty($array)) {
             return;
@@ -416,7 +417,7 @@ class AbstractField
      * @param array $settings
      *                        the data array to initialize if necessary
      */
-    public function setFromPOST(array $settings = array())
+    public function setFromPOST(array $settings = [])
     {
         $settings['location'] = (isset($settings['location']) ? $settings['location'] : 'main');
         $settings['required'] = (isset($settings['required']) && 'yes' === $settings['required'] ? 'yes' : 'no');
@@ -493,31 +494,31 @@ class AbstractField
      *
      * @see buildSummaryBlock()
      *
-     * @param \XMLElement $wrapper
-     *                            the input \XMLElement to which the display of this will be appended
+     * @param XmlElement $wrapper
+     *                            the input XmlElement to which the display of this will be appended
      * @param mixed      $errors
      *                            the input error collection. this defaults to null.
      *
      * @throws InvalidArgumentException
      */
-    public function displaySettingsPanel(\XMLElement &$wrapper, $errors = null)
+    public function displaySettingsPanel(XmlElement &$wrapper, $errors = null)
     {
         // Create header
         $location = ($this->get('location') ? $this->get('location') : 'main');
-        $header = new \XMLElement('header', null, array(
+        $header = new XmlElement('header', null, array(
             'class' => 'frame-header '.$location,
             'data-name' => $this->name(),
             'title' => $this->get('id'),
         ));
         $label = (($this->get('label')) ? $this->get('label') : __('New Field'));
-        $header->appendChild(new \XMLElement('h4', '<strong>'.$label.'</strong> <span class="type">'.$this->name().'</span>'));
+        $header->appendChild(new XmlElement('h4', '<strong>'.$label.'</strong> <span class="type">'.$this->name().'</span>'));
         $wrapper->appendChild($header);
 
         // Create content
-        $wrapper->appendChild(\Widget::Input('fields['.$this->get('sortorder').'][type]', $this->handle(), 'hidden'));
+        $wrapper->appendChild(Widget::Input('fields['.$this->get('sortorder').'][type]', $this->handle(), 'hidden'));
 
         if ($this->get('id')) {
-            $wrapper->appendChild(\Widget::Input('fields['.$this->get('sortorder').'][id]', $this->get('id'), 'hidden'));
+            $wrapper->appendChild(Widget::Input('fields['.$this->get('sortorder').'][id]', $this->get('id'), 'hidden'));
         }
 
         $wrapper->appendChild($this->buildSummaryBlock($errors));
@@ -541,30 +542,30 @@ class AbstractField
      */
     public function buildSummaryBlock($errors = null)
     {
-        $div = new \XMLElement('div');
+        $div = new XmlElement('div');
 
         // Publish label
-        $label = \Widget::Label(__('Label'));
+        $label = Widget::Label(__('Label'));
         $label->appendChild(
-            \Widget::Input('fields['.$this->get('sortorder').'][label]', $this->get('label'))
+            Widget::Input('fields['.$this->get('sortorder').'][label]', $this->get('label'))
         );
         if (isset($errors['label'])) {
-            $div->appendChild(\Widget::Error($label, $errors['label']));
+            $div->appendChild(Widget::Error($label, $errors['label']));
         } else {
             $div->appendChild($label);
         }
 
         // Handle + placement
-        $group = new \XMLElement('div');
+        $group = new XmlElement('div');
         $group->setAttribute('class', 'two columns');
 
-        $label = \Widget::Label(__('Handle'));
+        $label = Widget::Label(__('Handle'));
         $label->setAttribute('class', 'column');
 
-        $label->appendChild(\Widget::Input('fields['.$this->get('sortorder').'][element_name]', $this->get('element_name')));
+        $label->appendChild(Widget::Input('fields['.$this->get('sortorder').'][element_name]', $this->get('element_name')));
 
         if (isset($errors['element_name'])) {
-            $group->appendChild(\Widget::Error($label, $errors['element_name']));
+            $group->appendChild(Widget::Error($label, $errors['element_name']));
         } else {
             $group->appendChild($label);
         }
@@ -593,7 +594,7 @@ class AbstractField
      * @throws InvalidArgumentException
      *
      * @return XMLElement
-     *                    An \XMLElement representing a `<select>` field containing the options
+     *                    An XmlElement representing a `<select>` field containing the options
      */
     public function buildLocationSelect($selected = null, $name = 'fields[location]', $label_value = null)
     {
@@ -601,14 +602,14 @@ class AbstractField
             $label_value = __('Placement');
         }
 
-        $label = \Widget::Label($label_value);
+        $label = Widget::Label($label_value);
         $label->setAttribute('class', 'column');
 
         $options = array(
             array('main', 'main' == $selected, __('Main content')),
             array('sidebar', 'sidebar' == $selected, __('Sidebar')),
         );
-        $label->appendChild(\Widget::Select($name, $options));
+        $label->appendChild(Widget::Select($name, $options));
 
         return $label;
     }
@@ -629,17 +630,17 @@ class AbstractField
      * @throws InvalidArgumentException
      *
      * @return XMLElement
-     *                    An \XMLElement representing a `<select>` field containing the options
+     *                    An XmlElement representing a `<select>` field containing the options
      */
     public function buildFormatterSelect($selected = null, $name = 'fields[format]', $label_value)
     {
-        $formatters = TextformatterManager::listAll();
+        $formatters = Managers\TextFormatterManager::listAll();
 
         if (!$label_value) {
             $label_value = __('Formatting');
         }
 
-        $label = \Widget::Label($label_value);
+        $label = Widget::Label($label_value);
         $label->setAttribute('class', 'column');
 
         $options = [];
@@ -652,7 +653,7 @@ class AbstractField
             }
         }
 
-        $label->appendChild(\Widget::Select($name, $options));
+        $label->appendChild(Widget::Select($name, $options));
 
         return $label;
     }
@@ -663,8 +664,8 @@ class AbstractField
      * that it takes an `XMLElement` to append the Validator to as a parameter,
      * and does not return anything.
      *
-     * @param \XMLElement $wrapper
-     *                             the parent element to append the \XMLElement of the Validation select to,
+     * @param XmlElement $wrapper
+     *                             the parent element to append the XmlElement of the Validation select to,
      *                             passed by reference
      * @param string     $selected (optional)
      *                             the current validator selection if there is one. defaults to null if there
@@ -679,28 +680,28 @@ class AbstractField
      *
      * @throws InvalidArgumentException
      */
-    public function buildValidationSelect(\XMLElement &$wrapper, $selected = null, $name = 'fields[validator]', $type = 'input', array $errors = null)
+    public function buildValidationSelect(XmlElement &$wrapper, $selected = null, $name = 'fields[validator]', $type = 'input', array $errors = null)
     {
         include DOCROOT.'/src/Includes/Validators.php';
 
         $rules = ('upload' == $type ? $upload : $validators);
 
-        $label = \Widget::Label(__('Validation Rule'));
+        $label = Widget::Label(__('Validation Rule'));
         $label->setAttribute('class', 'column');
-        $label->appendChild(new \XMLElement('i', __('Optional')));
-        $label->appendChild(\Widget::Input($name, $selected));
+        $label->appendChild(new XmlElement('i', __('Optional')));
+        $label->appendChild(Widget::Input($name, $selected));
 
-        $ul = new \XMLElement('ul', null, array('class' => 'tags singular', 'data-interactive' => 'data-interactive'));
+        $ul = new XmlElement('ul', null, array('class' => 'tags singular', 'data-interactive' => 'data-interactive'));
         foreach ($rules as $name => $rule) {
-            $ul->appendChild(new \XMLElement('li', $name, array('class' => $rule)));
+            $ul->appendChild(new XmlElement('li', $name, array('class' => $rule)));
         }
 
         if (isset($errors['validator'])) {
-            $div = new \XMLElement('div');
+            $div = new XmlElement('div');
             $div->appendChild($label);
             $div->appendChild($ul);
 
-            $wrapper->appendChild(\Widget::Error($div, $errors['validator']));
+            $wrapper->appendChild(Widget::Error($div, $errors['validator']));
         } else {
             $wrapper->appendChild($label);
             $wrapper->appendChild($ul);
@@ -711,31 +712,31 @@ class AbstractField
      * Append the html widget for selecting an association interface and editor
      * for this field.
      *
-     * @param \XMLElement $wrapper
+     * @param XmlElement $wrapper
      *                            the parent XML element to append the association interface selection to,
      *                            if either interfaces or editors are provided to the system
      *
      * @since Symphony 2.5.0
      */
-    public function appendAssociationInterfaceSelect(\XMLElement &$wrapper)
+    public function appendAssociationInterfaceSelect(XmlElement &$wrapper)
     {
         $wrapper->setAttribute('data-condition', 'associative');
 
-        $interfaces = \Symphony::ExtensionManager()->getProvidersOf(iProvider::ASSOCIATION_UI);
-        $editors = \Symphony::ExtensionManager()->getProvidersOf(iProvider::ASSOCIATION_EDITOR);
+        $interfaces = \Symphony::ExtensionManager()->getProvidersOf(Interfaces\ProviderInterface::ASSOCIATION_UI);
+        $editors = \Symphony::ExtensionManager()->getProvidersOf(Interfaces\ProviderInterface::ASSOCIATION_EDITOR);
 
         if (!empty($interfaces) || !empty($editors)) {
             $association_context = $this->getAssociationContext();
 
-            $group = new \XMLElement('div');
+            $group = new XmlElement('div');
             if (!empty($interfaces) && !empty($editors)) {
                 $group->setAttribute('class', 'two columns');
             }
 
             // Create interface select
             if (!empty($interfaces)) {
-                $label = \Widget::Label(__('Association Interface'), null, 'column');
-                $label->appendChild(new \XMLElement('i', __('Optional')));
+                $label = Widget::Label(__('Association Interface'), null, 'column');
+                $label->appendChild(new XmlElement('i', __('Optional')));
 
                 $options = array(
                     array(null, false, __('None')),
@@ -744,15 +745,15 @@ class AbstractField
                     $options[] = array($id, ($association_context['interface'] === $id), $name);
                 }
 
-                $select = \Widget::Select('fields['.$this->get('sortorder').'][association_ui]', $options);
+                $select = Widget::Select('fields['.$this->get('sortorder').'][association_ui]', $options);
                 $label->appendChild($select);
                 $group->appendChild($label);
             }
 
             // Create editor select
             if (!empty($editors)) {
-                $label = \Widget::Label(__('Association Editor'), null, 'column');
-                $label->appendChild(new \XMLElement('i', __('Optional')));
+                $label = Widget::Label(__('Association Editor'), null, 'column');
+                $label->appendChild(new XmlElement('i', __('Optional')));
 
                 $options = array(
                     array(null, false, __('None')),
@@ -761,7 +762,7 @@ class AbstractField
                     $options[] = array($id, ($association_context['editor'] === $id), $name);
                 }
 
-                $select = \Widget::Select('fields['.$this->get('sortorder').'][association_editor]', $options);
+                $select = Widget::Select('fields['.$this->get('sortorder').'][association_editor]', $options);
                 $label->appendChild($select);
                 $group->appendChild($label);
             }
@@ -807,9 +808,9 @@ class AbstractField
      *
      * @since Symphony 2.5.0
      *
-     * @param \XMLElement $wrapper
+     * @param XmlElement $wrapper
      */
-    public function setAssociationContext(\XMLElement &$wrapper)
+    public function setAssociationContext(XmlElement &$wrapper)
     {
         $association_context = $this->getAssociationContext();
 
@@ -829,13 +830,13 @@ class AbstractField
      * Append and set a labeled html checkbox to the input XML element if this
      * field is set as a required field.
      *
-     * @param \XMLElement $wrapper
+     * @param XmlElement $wrapper
      *                            the parent XML element to append the constructed html checkbox to if
      *                            necessary
      *
      * @throws InvalidArgumentException
      */
-    public function appendRequiredCheckbox(\XMLElement &$wrapper)
+    public function appendRequiredCheckbox(XmlElement &$wrapper)
     {
         if (!$this->_required) {
             return;
@@ -848,12 +849,12 @@ class AbstractField
      * Append the show column html widget to the input parent XML element. This
      * displays a column in the entries table or not.
      *
-     * @param \XMLElement $wrapper
+     * @param XmlElement $wrapper
      *                            the parent XML element to append the checkbox to
      *
      * @throws InvalidArgumentException
      */
-    public function appendShowColumnCheckbox(\XMLElement &$wrapper)
+    public function appendShowColumnCheckbox(XmlElement &$wrapper)
     {
         if (!$this->_showcolumn) {
             return;
@@ -868,14 +869,14 @@ class AbstractField
      * section, similar to how the Show Column functionality works, but for the linked
      * section.
      *
-     * @param \XMLElement $wrapper
+     * @param XmlElement $wrapper
      *                            the parent XML element to append the checkbox to
      * @param string     $help    (optional)
      *                            a help message to show below the checkbox
      *
      * @throws InvalidArgumentException
      */
-    public function appendShowAssociationCheckbox(\XMLElement &$wrapper, $help = null)
+    public function appendShowAssociationCheckbox(XmlElement &$wrapper, $help = null)
     {
         if (!$this->_showassociation) {
             return;
@@ -891,7 +892,7 @@ class AbstractField
      *
      * @since Symphony 2.5.2
      *
-     * @param \XMLElement $wrapper
+     * @param XmlElement $wrapper
      *                                      Passed by reference, this will have the resulting markup appended to it
      * @param string     $setting
      *                                      This will be used with $this->get() to get the existing value
@@ -904,12 +905,12 @@ class AbstractField
      * @return XMLElement
      *                    The Label and Checkbox that was just added to the `$wrapper`
      */
-    public function createCheckboxSetting(\XMLElement &$wrapper, $setting, $label_description, $help = null)
+    public function createCheckboxSetting(XmlElement &$wrapper, $setting, $label_description, $help = null)
     {
         $order = $this->get('sortorder');
         $name = "fields[$order][$setting]";
 
-        $label = \Widget::Checkbox($name, $this->get($setting), $label_description, $wrapper, $help);
+        $label = Widget::Checkbox($name, $this->get($setting), $label_description, $wrapper, $help);
         $label->addClass('column');
 
         return $label;
@@ -919,15 +920,15 @@ class AbstractField
      * Append the default status footer to the field settings panel.
      * Displays the required and show column checkboxes.
      *
-     * @param \XMLElement $wrapper
+     * @param XmlElement $wrapper
      *                            the parent XML element to append the checkbox to
      *
      * @throws InvalidArgumentException
      */
-    public function appendStatusFooter(\XMLElement &$wrapper)
+    public function appendStatusFooter(XmlElement &$wrapper)
     {
-        $fieldset = new \XMLElement('fieldset');
-        $div = new \XMLElement('div', null, array('class' => 'two columns'));
+        $fieldset = new XmlElement('fieldset');
+        $div = new XmlElement('div', null, array('class' => 'two columns'));
 
         $this->appendRequiredCheckbox($div);
         $this->appendShowColumnCheckbox($div);
@@ -975,7 +976,7 @@ class AbstractField
         } elseif (!$valid_name) {
             $errors['element_name'] = __('Invalid element name. Must be valid %s.', array('<code>QName</code>'));
         } elseif ($checkForDuplicates) {
-            if (\FieldManager::fetchFieldIDFromElementName($element_name, $parent_section) !== $this->get('id')) {
+            if (Managers\FieldManager::fetchFieldIDFromElementName($element_name, $parent_section) !== $this->get('id')) {
                 $errors['element_name'] = __('A field with that element name already exists. Please choose another.');
             }
         }
@@ -999,7 +1000,7 @@ class AbstractField
      * @param array      $data
      *                             an associative array of data for this string. At minimum this requires a
      *                             key of 'value'.
-     * @param \XMLElement $link     (optional)
+     * @param XmlElement $link     (optional)
      *                             an XML link structure to append the content of this to provided it is not
      *                             null. it defaults to null.
      * @param int        $entry_id (optional)
@@ -1008,7 +1009,7 @@ class AbstractField
      * @return string
      *                the formatted string summary of the values of this field instance
      */
-    public function prepareTableValue($data, \XMLElement $link = null, $entry_id = null)
+    public function prepareTableValue($data, XmlElement $link = null, $entry_id = null)
     {
         $value = $this->prepareReadableValue($data, $entry_id, true, __('None'));
 
@@ -1050,10 +1051,10 @@ class AbstractField
             $max_length = \Symphony::Configuration()->get('cell_truncation_length', 'symphony');
             $max_length = ($max_length ? $max_length : 75);
 
-            $value = (\General::strlen($value) <= $max_length ? $value : \General::substr($value, 0, $max_length).'…');
+            $value = (General::strlen($value) <= $max_length ? $value : General::substr($value, 0, $max_length).'…');
         }
 
-        if (0 == \General::strlen($value) && null != $defaultValue) {
+        if (0 == General::strlen($value) && null != $defaultValue) {
             $value = $defaultValue;
         }
 
@@ -1096,12 +1097,12 @@ class AbstractField
      *                                   A string containing prepopulate parameter to append to the association url
      *
      * @return XMLElement
-     *                    The \XMLElement must be a li node, since it will be added an ul node
+     *                    The XmlElement must be a li node, since it will be added an ul node
      */
     public static function createAssociationsDrawerXMLElement($value, Entry $e, array $parent_association, $prepopulate = '')
     {
-        $li = new \XMLElement('li');
-        $a = new \XMLElement('a', $value);
+        $li = new XmlElement('li');
+        $a = new XmlElement('a', $value);
         $a->setAttribute('href', SYMPHONY_URL.'/publish/'.$parent_association['handle'].'/edit/'.$e->get('id').'/'.$prepopulate);
         $li->appendChild($a);
 
@@ -1123,7 +1124,7 @@ class AbstractField
      *                                   A string containing prepopulate parameter to append to the association url
      *
      * @return XMLElement
-     *                    The \XMLElement must be a li node, since it will be added an ul node
+     *                    The XmlElement must be a li node, since it will be added an ul node
      */
     public function prepareAssociationsDrawerXMLElement(Entry $e, array $parent_association, $prepopulate = '')
     {
@@ -1149,7 +1150,7 @@ class AbstractField
      * interface shown to Authors that allow them to input data into this
      * field for an `Entry`.
      *
-     * @param \XMLElement $wrapper
+     * @param XmlElement $wrapper
      *                                     the XML element to append the html defined user interface to this
      *                                     field
      * @param array      $data             (optional)
@@ -1168,7 +1169,7 @@ class AbstractField
      * @param int        $entry_id         (optional)
      *                                     the entry id of this field. this defaults to null.
      */
-    public function displayPublishPanel(\XMLElement &$wrapper, $data = null, $flagWithError = null, $fieldnamePrefix = null, $fieldnamePostfix = null, $entry_id = null)
+    public function displayPublishPanel(XmlElement &$wrapper, $data = null, $flagWithError = null, $fieldnamePrefix = null, $fieldnamePostfix = null, $entry_id = null)
     {
     }
 
@@ -1301,8 +1302,8 @@ class AbstractField
     /**
      * Display the default data source filter panel.
      *
-     * @param \XMLElement $wrapper
-     *                                     the input \XMLElement to which the display of this will be appended
+     * @param XmlElement $wrapper
+     *                                     the input XmlElement to which the display of this will be appended
      * @param mixed      $data             (optional)
      *                                     the input data. this defaults to null.
      * @param null       $errors
@@ -1314,14 +1315,14 @@ class AbstractField
      *
      * @throws InvalidArgumentException
      */
-    public function displayDatasourceFilterPanel(\XMLElement &$wrapper, $data = null, $errors = null, $fieldnamePrefix = null, $fieldnamePostfix = null)
+    public function displayDatasourceFilterPanel(XmlElement &$wrapper, $data = null, $errors = null, $fieldnamePrefix = null, $fieldnamePostfix = null)
     {
-        $wrapper->appendChild(new \XMLElement('header', '<h4>'.$this->get('label').'</h4> <span>'.$this->name().'</span>', array(
+        $wrapper->appendChild(new XmlElement('header', '<h4>'.$this->get('label').'</h4> <span>'.$this->name().'</span>', array(
             'data-name' => $this->get('label').' ('.$this->name().')',
         )));
 
-        $label = \Widget::Label(__('Value'));
-        $input = \Widget::Input('fields[filter]'.($fieldnamePrefix ? '['.$fieldnamePrefix.']' : '').'['.$this->get('id').']'.($fieldnamePostfix ? '['.$fieldnamePostfix.']' : ''), ($data ? \General::sanitize($data) : null));
+        $label = Widget::Label(__('Value'));
+        $input = Widget::Input('fields[filter]'.($fieldnamePrefix ? '['.$fieldnamePrefix.']' : '').'['.$this->get('id').']'.($fieldnamePostfix ? '['.$fieldnamePostfix.']' : ''), ($data ? General::sanitize($data) : null));
         $input->setAttribute('autocomplete', 'off');
         $input->setAttribute('data-search-types', 'parameters');
         $input->setAttribute('data-trigger', '{$');
@@ -1336,29 +1337,29 @@ class AbstractField
      *
      * @since Symphony 2.6.0
      *
-     * @param \XMLElement $wrapper
+     * @param XmlElement $wrapper
      */
-    public function displayFilteringOptions(\XMLElement &$wrapper)
+    public function displayFilteringOptions(XmlElement &$wrapper)
     {
         // Add filter tags
-        $filterTags = new \XMLElement('ul');
+        $filterTags = new XmlElement('ul');
         $filterTags->setAttribute('class', 'tags singular');
         $filterTags->setAttribute('data-interactive', 'data-interactive');
 
         $filters = $this->fetchFilterableOperators();
         foreach ($filters as $value) {
-            $item = new \XMLElement('li', $value['title']);
+            $item = new XmlElement('li', $value['title']);
             $item->setAttribute('data-value', $value['filter']);
 
             if (isset($value['help'])) {
-                $item->setAttribute('data-help', \General::sanitize($value['help']));
+                $item->setAttribute('data-help', General::sanitize($value['help']));
             }
 
             $filterTags->appendChild($item);
         }
         $wrapper->appendChild($filterTags);
 
-        $help = new \XMLElement('p');
+        $help = new XmlElement('p');
         $help->setAttribute('class', 'help');
         $first = array_shift($filters);
         $help->setValue($first['help']);
@@ -1749,7 +1750,7 @@ class AbstractField
      *
      * Since Symphony 2.5.0, it will defaults to `prepareReadableValue` return value.
      *
-     * @param \XMLElement $wrapper
+     * @param XmlElement $wrapper
      *                             the XML element to append the XML representation of this to
      * @param array      $data
      *                             the current set of values for this field. the values are structured as
@@ -1765,10 +1766,10 @@ class AbstractField
      * @param int        $entry_id (optional)
      *                             the identifier of this field entry instance. defaults to null.
      */
-    public function appendFormattedElement(\XMLElement &$wrapper, $data, $encode = false, $mode = null, $entry_id = null)
+    public function appendFormattedElement(XmlElement &$wrapper, $data, $encode = false, $mode = null, $entry_id = null)
     {
-        $wrapper->appendChild(new \XMLElement($this->get('element_name'), ($encode ?
-                              \General::sanitize($this->prepareReadableValue($data, $entry_id)) :
+        $wrapper->appendChild(new XmlElement($this->get('element_name'), ($encode ?
+                              General::sanitize($this->prepareReadableValue($data, $entry_id)) :
                               $this->prepareReadableValue($data, $entry_id))));
     }
 
@@ -1785,8 +1786,8 @@ class AbstractField
      */
     public function getExampleFormMarkup()
     {
-        $label = \Widget::Label($this->get('label'));
-        $label->appendChild(\Widget::Input('fields['.$this->get('element_name').']'));
+        $label = Widget::Label($this->get('label'));
+        $label->appendChild(Widget::Input('fields['.$this->get('element_name').']'));
 
         return $label;
     }
@@ -1802,7 +1803,7 @@ class AbstractField
     {
         $fields = [];
 
-        $fields['label'] = \General::sanitize($this->get('label'));
+        $fields['label'] = General::sanitize($this->get('label'));
         $fields['element_name'] = ($this->get('element_name') ? $this->get('element_name') : Lang::createHandle($this->get('label')));
         $fields['parent_section'] = $this->get('parent_section');
         $fields['location'] = $this->get('location');
@@ -1812,8 +1813,8 @@ class AbstractField
         $fields['sortorder'] = (string) $this->get('sortorder');
 
         if ($id = $this->get('id')) {
-            return \FieldManager::edit($id, $fields);
-        } elseif ($id = \FieldManager::add($fields)) {
+            return Managers\FieldManager::edit($id, $fields);
+        } elseif ($id = Managers\FieldManager::add($fields)) {
             $this->set('id', $id);
             if ($this->requiresTable()) {
                 return $this->createTable();
@@ -1911,7 +1912,7 @@ class AbstractField
         $row = \Symphony::Database()->fetch(sprintf(
             'SELECT `id` FROM `tbl_fields_%s` WHERE `field_id` = %d',
             $this->_handle,
-            \General::intval($this->get('id'))
+            General::intval($this->get('id'))
         ));
         if (empty($row)) {
             // Some fields do not create any records in their settings table because they do not
