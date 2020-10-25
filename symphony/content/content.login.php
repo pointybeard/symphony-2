@@ -1,10 +1,6 @@
 <?php
 
 /**
- * @package content
- */
-
-/**
  * The default Symphony login page that is shown to users who attempt
  * to access `SYMPHONY_URL` but are not logged in. This page has logic
  * to allow users to reset their passwords should they forget.
@@ -27,7 +23,7 @@ class contentLogin extends HTMLPage
         $this->addElementToHead(new XMLElement('meta', null, array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1')), 2);
         $this->addElementToHead(new XMLElement('meta', null, array('name' => 'robots', 'content' => 'noindex')), 3);
 
-        parent::addStylesheetToHead(ASSETS_URL . '/css/symphony.min.css', 'screen', null, false);
+        parent::addStylesheetToHead(ASSETS_URL.'/css/symphony.min.css', 'screen', null, false);
 
         $this->setTitle(__('%1$s &ndash; %2$s', array(__('Login'), Symphony::Configuration()->get('sitename', 'general'))));
 
@@ -65,30 +61,32 @@ class contentLogin extends HTMLPage
             if (!$this->__loginFromToken($this->_context[0])) {
                 if (Administration::instance()->isLoggedIn()) {
                     // Redirect to the Author's profile. RE: #1801
-                    redirect(SYMPHONY_URL . '/system/authors/edit/' . Symphony::Author()->get('id') . '/reset-password/');
+                    redirect(SYMPHONY_URL.'/system/authors/edit/'.Symphony::Author()->get('id').'/reset-password/');
                 }
             }
         }
 
-        $this->Form = Widget::Form(SYMPHONY_URL . '/login/', 'post');
+        $this->Form = Widget::Form(SYMPHONY_URL.'/login/', 'post');
         $this->Form->setAttribute('class', 'frame');
         $this->Form->appendChild(new XMLElement('h1', Symphony::Configuration()->get('sitename', 'general')));
 
         $fieldset = new XMLElement('fieldset');
 
         // Display retrieve password UI
-        if (isset($this->_context[0]) && $this->_context[0] == 'retrieve-password') {
+        if (isset($this->_context[0]) && 'retrieve-password' == $this->_context[0]) {
             $this->Form->setAttribute('action', SYMPHONY_URL.'/login/retrieve-password/');
 
             // Successful reset
             if (isset($this->_email_sent) && $this->_email_sent) {
-                $fieldset->appendChild(new XMLElement('p', __('An email containing a customised login link has been sent to %s. It will expire in 2 hours.', array(
-                    '<code>' . $this->_email_sent_to . '</code>')
+                $fieldset->appendChild(new XMLElement('p', __(
+                    'An email containing a customised login link has been sent to %s. It will expire in 2 hours.',
+                    array(
+                    '<code>'.$this->_email_sent_to.'</code>', )
                 )));
                 $fieldset->appendChild(new XMLElement('p', Widget::Anchor(__('Login'), SYMPHONY_URL.'/login/', null)));
                 $this->Form->appendChild($fieldset);
 
-                // Default, get the email address for reset
+            // Default, get the email address for reset
             } else {
                 $fieldset->appendChild(new XMLElement('p', __('Enter your email address or username to be sent further instructions for logging in.')));
 
@@ -100,7 +98,7 @@ class contentLogin extends HTMLPage
                 } else {
                     // Email exception
                     if (isset($this->_email_error) && $this->_email_error) {
-                        $label = Widget::Error($label, __('This Symphony instance has not been set up for emailing, %s', array('<code>' . General::sanitize($this->_email_error) . '</code>')));
+                        $label = Widget::Error($label, __('This Symphony instance has not been set up for emailing, %s', array('<code>'.General::sanitize($this->_email_error).'</code>')));
                     }
                 }
 
@@ -173,7 +171,7 @@ class contentLogin extends HTMLPage
 
             if (isset($this->_context['redirect'])) {
                 $this->Form->appendChild(
-                    Widget::Input('redirect', SYMPHONY_URL . General::sanitize($this->_context['redirect']), 'hidden')
+                    Widget::Input('redirect', SYMPHONY_URL.General::sanitize($this->_context['redirect']), 'hidden')
                 );
             }
         }
@@ -188,9 +186,9 @@ class contentLogin extends HTMLPage
             $action = end($actionParts);
 
             // Login Attempted
-            if ($action == 'login') {
+            if ('login' == $action) {
                 if (empty($_POST['username']) || empty($_POST['password']) || !Administration::instance()->login($_POST['username'], $_POST['password'])) {
-                    /**
+                    /*
                      * A failed login attempt into the Symphony backend
                      *
                      * @delegate AuthorLoginFailure
@@ -203,7 +201,7 @@ class contentLogin extends HTMLPage
                     Symphony::ExtensionManager()->notifyMembers('AuthorLoginFailure', '/login/', array('username' => Symphony::Database()->cleanValue($_POST['username'])));
                     $this->failedLoginAttempt = true;
                 } else {
-                    /**
+                    /*
                      * A successful login attempt into the Symphony backend
                      *
                      * @delegate AuthorLoginSuccess
@@ -215,27 +213,32 @@ class contentLogin extends HTMLPage
                      */
                     Symphony::ExtensionManager()->notifyMembers('AuthorLoginSuccess', '/login/', array('username' => Symphony::Database()->cleanValue($_POST['username'])));
 
-                    isset($_POST['redirect']) ? redirect($_POST['redirect']) : redirect(SYMPHONY_URL . '/');
+                    isset($_POST['redirect']) ? redirect($_POST['redirect']) : redirect(SYMPHONY_URL.'/');
                 }
 
                 // Reset of password requested
-            } elseif ($action == 'reset') {
-                $author = Symphony::Database()->fetchRow(0, sprintf("
+            } elseif ('reset' == $action) {
+                $author = Symphony::Database()->fetchRow(0, sprintf(
+                    "
                         SELECT `id`, `email`, `first_name`
                         FROM `tbl_authors`
                         WHERE `email` = '%1\$s' OR `username` = '%1\$s'
-                    ", Symphony::Database()->cleanValue($_POST['email'])
+                    ",
+                    Symphony::Database()->cleanValue($_POST['email'])
                 ));
 
                 if (!empty($author)) {
                     // Delete all expired tokens
-                    Symphony::Database()->delete('tbl_forgotpass', sprintf("
-                        `expiry` < '%s'", DateTimeObj::getGMT('c')
+                    Symphony::Database()->delete('tbl_forgotpass', sprintf(
+                        "
+                        `expiry` < '%s'",
+                        DateTimeObj::getGMT('c')
                     ));
 
                     // Attempt to retrieve the token that is not expired for this Author ID,
                     // otherwise generate one.
-                    if (!$token = Symphony::Database()->fetchVar('token', 0, sprintf("
+                    if (!$token = Symphony::Database()->fetchVar('token', 0, sprintf(
+                        "
                             SELECT `token`
                             FROM `tbl_forgotpass`
                             WHERE `expiry` > '%s' AND `author_id` = %d
@@ -255,7 +258,7 @@ class contentLogin extends HTMLPage
                         Symphony::Database()->insert(array(
                             'author_id' => $author['id'],
                             'token' => $token,
-                            'expiry' => DateTimeObj::getGMT('c', time() + (120 * 60))
+                            'expiry' => DateTimeObj::getGMT('c', time() + (120 * 60)),
                         ), 'tbl_forgotpass');
                     }
 
@@ -264,11 +267,11 @@ class contentLogin extends HTMLPage
 
                         $email->recipients = $author['email'];
                         $email->subject = __('New Symphony Account Password');
-                        $email->text_plain = __('Hi %s,', array($author['first_name'])) . PHP_EOL .
-                                __('A new password has been requested for your account. Login using the following link, and change your password via the Authors area:') . PHP_EOL .
-                                PHP_EOL . '    ' . SYMPHONY_URL . "/login/{$token}/" . PHP_EOL . PHP_EOL .
-                                __('It will expire in 2 hours. If you did not ask for a new password, please disregard this email.') . PHP_EOL . PHP_EOL .
-                                __('Best Regards,') . PHP_EOL .
+                        $email->text_plain = __('Hi %s,', array($author['first_name'])).PHP_EOL.
+                                __('A new password has been requested for your account. Login using the following link, and change your password via the Authors area:').PHP_EOL.
+                                PHP_EOL.'    '.SYMPHONY_URL."/login/{$token}/".PHP_EOL.PHP_EOL.
+                                __('It will expire in 2 hours. If you did not ask for a new password, please disregard this email.').PHP_EOL.PHP_EOL.
+                                __('Best Regards,').PHP_EOL.
                                 __('The Symphony Team');
 
                         $email->send();
@@ -279,7 +282,7 @@ class contentLogin extends HTMLPage
                         Symphony::Log()->pushExceptionToLog($e, true);
                     }
 
-                    /**
+                    /*
                      * When a password reset has occurred and after the Password
                      * Reset email has been sent.
                      *
@@ -292,8 +295,7 @@ class contentLogin extends HTMLPage
                      */
                     Symphony::ExtensionManager()->notifyMembers('AuthorPostPasswordResetSuccess', '/login/', array('author_id' => $author['id']));
                 } else {
-
-                    /**
+                    /*
                      * When a password reset has been attempted, but Symphony doesn't
                      * recognise the credentials the user has given.
                      *
@@ -321,7 +323,7 @@ class contentLogin extends HTMLPage
 
         // If token is valid and is an 8 char shortcut
         if (!in_array(strlen($token), array(6, 16))) {
-            redirect(SYMPHONY_URL . '/'); // Regular token-based login
+            redirect(SYMPHONY_URL.'/'); // Regular token-based login
         }
 
         return false;

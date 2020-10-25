@@ -1,12 +1,9 @@
 <?php
-/**
- * @package content
- */
+
 /**
  * The AjaxTranslate page is used for translating strings on the fly
- * that are used in Symphony's javascript
+ * that are used in Symphony's javascript.
  */
-
 class contentAjaxTranslate extends JSONPage
 {
     public function view()

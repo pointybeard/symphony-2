@@ -10,3 +10,4 @@ symphony/lib/toolkit/fields/*
 .php_cs.cache
 .phpunit.result.cache
 composer.lock
+extensions/*

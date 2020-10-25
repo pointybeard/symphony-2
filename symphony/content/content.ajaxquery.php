@@ -1,24 +1,21 @@
 <?php
-/**
- * @package content
- */
+
 /**
  * The AjaxQuery returns an JSON array of entries, associations and other
  * static values, depending on the parameters received.
  */
-
 class contentAjaxQuery extends JSONPage
 {
     public function view()
     {
         $database = Symphony::Configuration()->get('db', 'database');
-        $field_ids = array_map(array('General','intval'), explode(',', General::sanitize($_GET['field_id'])));
+        $field_ids = array_map(array('General', 'intval'), explode(',', General::sanitize($_GET['field_id'])));
         $search = MySQL::cleanValue(General::sanitize($_GET['query']));
-        $types = array_map(array('MySQL','cleanValue'), explode(',', General::sanitize($_GET['types'])));
+        $types = array_map(array('MySQL', 'cleanValue'), explode(',', General::sanitize($_GET['types'])));
         $limit = General::intval(General::sanitize($_GET['limit']));
 
         // Set limit
-        if ($limit === 0) {
+        if (0 === $limit) {
             $max = '';
         } elseif ($limit < 0) {
             $max = ' LIMIT 100';
@@ -60,10 +57,12 @@ class contentAjaxQuery extends JSONPage
         $field = FieldManager::fetch($field_id);
         $parent_section = SectionManager::fetch($field->get('parent_section'));
 
-        $association_id = Symphony::Database()->fetchCol('parent_section_field_id',
+        $association_id = Symphony::Database()->fetchCol(
+            'parent_section_field_id',
             sprintf(
-                "SELECT `parent_section_field_id` FROM tbl_sections_association WHERE `child_section_field_id` = %d AND `child_section_id` = %d LIMIT 1;",
-                $field_id, $parent_section->get('id')
+                'SELECT `parent_section_field_id` FROM tbl_sections_association WHERE `child_section_field_id` = %d AND `child_section_id` = %d LIMIT 1;',
+                $field_id,
+                $parent_section->get('id')
             )
         );
 
@@ -77,7 +76,7 @@ class contentAjaxQuery extends JSONPage
         if (!empty($field_id)) {
             $field = FieldManager::fetch($field_id);
 
-            if (!empty($field) && $field->canPublishFilter() === true) {
+            if (!empty($field) && true === $field->canPublishFilter()) {
                 if (method_exists($field, 'getToggleStates')) {
                     $options = $field->getToggleStates();
                 } elseif (method_exists($field, 'findAllTags')) {
@@ -87,7 +86,7 @@ class contentAjaxQuery extends JSONPage
         }
 
         foreach ($options as $value => $data) {
-            if (!$search || strripos($data, $search) !== false || strripos($value, $search) !== false) {
+            if (!$search || false !== strripos($data, $search) || false !== strripos($value, $search)) {
                 $this->_Result['entries'][]['value'] = ($data ? $data : $value);
             }
         }
@@ -97,9 +96,9 @@ class contentAjaxQuery extends JSONPage
     {
         // Get entries
         if (!empty($search)) {
-
             // Get columns
-            $columns = Symphony::Database()->fetchCol('column_name',
+            $columns = Symphony::Database()->fetchCol(
+                'column_name',
                 sprintf(
                     "SELECT column_name
                     FROM information_schema.columns
@@ -120,14 +119,14 @@ class contentAjaxQuery extends JSONPage
 
             // Build query
             $query = sprintf(
-                "SELECT * from tbl_entries_data_%d WHERE %s%s;",
+                'SELECT * from tbl_entries_data_%d WHERE %s%s;',
                 $field_id,
-                implode($where, " OR "),
+                implode($where, ' OR '),
                 $max
             );
         } else {
             $query = sprintf(
-                "SELECT * from tbl_entries_data_%d%s;",
+                'SELECT * from tbl_entries_data_%d%s;',
                 $field_id,
                 $max
             );
@@ -145,22 +144,19 @@ class contentAjaxQuery extends JSONPage
                 $entry_id = $field_data['entry_id'];
 
                 if ($field instanceof ExportableField && in_array(ExportableField::UNFORMATTED, $field->getExportModes())) {
-
                     // Get unformatted value
                     $value = $field->prepareExportValue($field_data, ExportableField::UNFORMATTED, $entry_id);
                 } elseif ($field instanceof ExportableField && in_array(ExportableField::VALUE, $field->getExportModes())) {
-
                     // Get formatted value
                     $value = $field->prepareExportValue($field_data, ExportableField::VALUE, $entry_id);
                 } else {
-
                     // Get value from parameter pool
                     $value = $field->getParameterPoolValue($field_data, $entry_id);
                 }
 
                 $this->_Result['entries'][$entry_id]['value'] = $value;
                 $this->_Result['entries'][$entry_id]['section'] = $parent_section_handle;
-                $this->_Result['entries'][$entry_id]['link'] = APPLICATION_URL . '/publish/' . $parent_section_handle . '/edit/' . $entry_id . '/';
+                $this->_Result['entries'][$entry_id]['link'] = APPLICATION_URL.'/publish/'.$parent_section_handle.'/edit/'.$entry_id.'/';
             }
         }
     }

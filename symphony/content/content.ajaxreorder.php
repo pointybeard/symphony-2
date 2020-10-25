@@ -1,13 +1,10 @@
 <?php
-/**
- * @package content
- */
+
 /**
  * The AjaxReorder page is used for reordering objects in the Symphony
  * backend through Javascript. At the moment this is only supported for
  * Pages and Sections.
  */
-
 class contentAjaxReorder extends XMLPage
 {
     const kREORDER_PAGES = 0;
@@ -25,11 +22,11 @@ class contentAjaxReorder extends XMLPage
 
         $destination = self::kREORDER_UNKNOWN;
 
-        if ($this->_context[0] == 'blueprints' && $this->_context[1] == 'pages') {
+        if ('blueprints' == $this->_context[0] && 'pages' == $this->_context[1]) {
             $destination = self::kREORDER_PAGES;
-        } elseif ($this->_context[0] == 'blueprints' && $this->_context[1] == 'sections') {
+        } elseif ('blueprints' == $this->_context[0] && 'sections' == $this->_context[1]) {
             $destination = self::kREORDER_SECTIONS;
-        } elseif ($this->_context[0] == 'extensions') {
+        } elseif ('extensions' == $this->_context[0]) {
             $destination = self::kREORDER_EXTENSION;
         }
 

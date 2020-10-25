@@ -1,11 +1,8 @@
 <?php
-/**
- * @package content
- */
+
 /**
  * The AjaxParameters returns an JSON array of all available parameters.
  */
-
 class contentAjaxParameters extends JSONPage
 {
     private $template = '$%s';
@@ -20,18 +17,18 @@ class contentAjaxParameters extends JSONPage
         }
 
         // Environment parameters
-        if ($filter == 'env') {
+        if ('env' == $filter) {
             $params = array_merge($params, $this->__getEnvParams());
 
-            // Page parameters
-        } elseif ($filter == 'page') {
+        // Page parameters
+        } elseif ('page' == $filter) {
             $params = array_merge($params, $this->__getPageParams());
 
-            // Data source parameters
-        } elseif ($filter == 'ds') {
+        // Data source parameters
+        } elseif ('ds' == $filter) {
             $params = array_merge($params, $this->__getDSParams());
 
-            // All parameters
+        // All parameters
         } else {
             $params = array_merge($params, $this->__getEnvParams());
             $params = array_merge($params, $this->__getPageParams());
@@ -39,7 +36,7 @@ class contentAjaxParameters extends JSONPage
         }
 
         foreach ($params as $param) {
-            if (empty($filter) || strripos($param, $filter) !== false) {
+            if (empty($filter) || false !== strripos($param, $filter)) {
                 $this->_Result[] = $param;
             }
         }
@@ -48,7 +45,7 @@ class contentAjaxParameters extends JSONPage
     }
 
     /**
-     * Utilities
+     * Utilities.
      */
     private function __getEnvParams()
     {
@@ -97,7 +94,7 @@ class contentAjaxParameters extends JSONPage
             // Get parameters
             if (is_array($current->dsParamPARAMOUTPUT)) {
                 foreach ($current->dsParamPARAMOUTPUT as $id => $param) {
-                    $params[] = sprintf($this->template, 'ds-' . Lang::createHandle($datasource['name']) . '.' . Lang::createHandle($param));
+                    $params[] = sprintf($this->template, 'ds-'.Lang::createHandle($datasource['name']).'.'.Lang::createHandle($param));
                 }
             }
         }

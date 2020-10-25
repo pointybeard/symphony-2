@@ -1,15 +1,10 @@
 <?php
 
 /**
- * @package content
- */
-
-/**
  * Developers can create new Frontend pages from this class. It provides
  * an index view of all the pages in this Symphony install as well as the
- * forms for the creation/editing of a Page
+ * forms for the creation/editing of a Page.
  */
-
 class contentBlueprintsPages extends AdministrationPage
 {
     public $_errors = [];
@@ -17,9 +12,9 @@ class contentBlueprintsPages extends AdministrationPage
 
     public function insertBreadcrumbsUsingPageIdentifier($page_id, $preserve_last = true)
     {
-        if ($page_id == 0) {
+        if (0 == $page_id) {
             return $this->insertBreadcrumbs(
-                array(Widget::Anchor(__('Pages'), SYMPHONY_URL . '/blueprints/pages/'))
+                array(Widget::Anchor(__('Pages'), SYMPHONY_URL.'/blueprints/pages/'))
             );
         }
 
@@ -28,21 +23,21 @@ class contentBlueprintsPages extends AdministrationPage
         foreach ($pages as &$page) {
             // If we are viewing the Page Editor, the Breadcrumbs should link
             // to the parent's Page Editor.
-            if ($this->_context[0] == 'edit') {
+            if ('edit' == $this->_context[0]) {
                 $page = Widget::Anchor(
                     General::sanitize(PageManager::fetchTitleFromHandle($page)),
-                    SYMPHONY_URL . '/blueprints/pages/edit/' . PageManager::fetchIDFromHandle($page) . '/'
+                    SYMPHONY_URL.'/blueprints/pages/edit/'.PageManager::fetchIDFromHandle($page).'/'
                 );
 
-                // If the pages index is nested, the Breadcrumb should link to the
+            // If the pages index is nested, the Breadcrumb should link to the
                 // Pages Index filtered by parent
-            } elseif (Symphony::Configuration()->get('pages_table_nest_children', 'symphony') == 'yes') {
+            } elseif ('yes' == Symphony::Configuration()->get('pages_table_nest_children', 'symphony')) {
                 $page = Widget::Anchor(
                     General::sanitize(PageManager::fetchTitleFromHandle($page)),
-                    SYMPHONY_URL . '/blueprints/pages/?parent=' . PageManager::fetchIDFromHandle($page)
+                    SYMPHONY_URL.'/blueprints/pages/?parent='.PageManager::fetchIDFromHandle($page)
                 );
 
-                // If there is no nesting on the Pages Index, the breadcrumb is
+            // If there is no nesting on the Pages Index, the breadcrumb is
                 // not a link, just plain text
             } else {
                 $page = new XMLElement('span', General::sanitize(PageManager::fetchTitleFromHandle($page)));
@@ -54,7 +49,7 @@ class contentBlueprintsPages extends AdministrationPage
         }
 
         $this->insertBreadcrumbs(array_merge(
-            array(Widget::Anchor(__('Pages'), SYMPHONY_URL . '/blueprints/pages/')),
+            array(Widget::Anchor(__('Pages'), SYMPHONY_URL.'/blueprints/pages/')),
             $pages
         ));
     }
@@ -64,10 +59,10 @@ class contentBlueprintsPages extends AdministrationPage
         $this->setPageType('table');
         $this->setTitle(__('%1$s &ndash; %2$s', array(__('Pages'), __('Symphony'))));
 
-        $nesting = Symphony::Configuration()->get('pages_table_nest_children', 'symphony') == 'yes';
+        $nesting = 'yes' == Symphony::Configuration()->get('pages_table_nest_children', 'symphony');
 
         if ($nesting && isset($_GET['parent']) && is_numeric($_GET['parent'])) {
-            $parent = PageManager::fetchPageByID((int)$_GET['parent'], array('title', 'id'));
+            $parent = PageManager::fetchPageByID((int) $_GET['parent'], array('title', 'id'));
         }
 
         $this->appendSubheading(
@@ -76,7 +71,7 @@ class contentBlueprintsPages extends AdministrationPage
                 : __('Pages'),
             Widget::Anchor(
                 __('Create New'),
-                Administration::instance()->getCurrentPageURL() . 'new/' . ($nesting && isset($parent) ? "?parent={$parent['id']}" : null),
+                Administration::instance()->getCurrentPageURL().'new/'.($nesting && isset($parent) ? "?parent={$parent['id']}" : null),
                 __('Create a new page'),
                 'create button',
                 null,
@@ -91,16 +86,16 @@ class contentBlueprintsPages extends AdministrationPage
         $aTableHead = array(
             array(__('Name'), 'col'),
             array(__('Template'), 'col'),
-            array('<abbr title="' . __('Universal Resource Locator') . '">' . __('URL') . '</abbr>', 'col'),
+            array('<abbr title="'.__('Universal Resource Locator').'">'.__('URL').'</abbr>', 'col'),
             array(__('Parameters'), 'col'),
-            array(__('Type'), 'col')
+            array(__('Type'), 'col'),
         );
         $aTableBody = [];
 
         if ($nesting) {
             $aTableHead[] = array(__('Children'), 'col');
             $where = array(
-                'parent ' . (isset($parent) ? " = {$parent['id']} " : ' IS NULL ')
+                'parent '.(isset($parent) ? " = {$parent['id']} " : ' IS NULL '),
             );
         } else {
             $where = [];
@@ -110,15 +105,15 @@ class contentBlueprintsPages extends AdministrationPage
 
         if (!is_array($pages) || empty($pages)) {
             $aTableBody = array(Widget::TableRow(array(
-                Widget::TableData(__('None found.'), 'inactive', null, count($aTableHead))
+                Widget::TableData(__('None found.'), 'inactive', null, count($aTableHead)),
             ), 'odd'));
         } else {
             foreach ($pages as $page) {
                 $class = [];
 
                 $page_title = ($nesting ? $page['title'] : PageManager::resolvePageTitle($page['id']));
-                $page_url = URL . '/' . PageManager::resolvePagePath($page['id']) . '/';
-                $page_edit_url = Administration::instance()->getCurrentPageURL() . 'edit/' . $page['id'] . '/';
+                $page_url = URL.'/'.PageManager::resolvePagePath($page['id']).'/';
+                $page_edit_url = Administration::instance()->getCurrentPageURL().'edit/'.$page['id'].'/';
                 $page_template = PageManager::createFilePath($page['path'], $page['handle']);
 
                 $col_title = Widget::TableData(
@@ -130,14 +125,14 @@ class contentBlueprintsPages extends AdministrationPage
                         null,
                         'accessible',
                         null,
-                        ['for' => 'page-' . $page['id']]
+                        ['for' => 'page-'.$page['id']]
                     )
                 );
                 $col_title->appendChild(Widget::Input('items['.$page['id'].']', 'on', 'checkbox', array(
-                    'id' => 'page-' . $page['id']
+                    'id' => 'page-'.$page['id'],
                 )));
 
-                $col_template = Widget::TableData($page_template . '.xsl');
+                $col_template = Widget::TableData($page_template.'.xsl');
 
                 $col_url = Widget::TableData(Widget::Anchor($page_url, $page_url));
 
@@ -162,8 +157,10 @@ class contentBlueprintsPages extends AdministrationPage
                 if ($nesting) {
                     if (PageManager::hasChildPages($page['id'])) {
                         $col_children = Widget::TableData(
-                            Widget::Anchor(PageManager::getChildPagesCount($page['id']) . ' &rarr;',
-                            SYMPHONY_URL . '/blueprints/pages/?parent=' . $page['id'])
+                            Widget::Anchor(
+                                PageManager::getChildPagesCount($page['id']).' &rarr;',
+                                SYMPHONY_URL.'/blueprints/pages/?parent='.$page['id']
+                            )
                         );
                     } else {
                         $col_children = Widget::TableData(__('None'), 'inactive');
@@ -180,15 +177,18 @@ class contentBlueprintsPages extends AdministrationPage
         }
 
         $table = Widget::Table(
-            Widget::TableHead($aTableHead), null,
-            Widget::TableBody($aTableBody), 'orderable selectable',
-            null, array('role' => 'directory', 'aria-labelledby' => 'symphony-subheading', 'data-interactive' => 'data-interactive')
+            Widget::TableHead($aTableHead),
+            null,
+            Widget::TableBody($aTableBody),
+            'orderable selectable',
+            null,
+            array('role' => 'directory', 'aria-labelledby' => 'symphony-subheading', 'data-interactive' => 'data-interactive')
         );
 
         $this->Form->appendChild($table);
 
-        $version = new XMLElement('p', 'Symphony ' . Symphony::Configuration()->get('version', 'symphony'), array(
-            'id' => 'version'
+        $version = new XMLElement('p', 'Symphony '.Symphony::Configuration()->get('version', 'symphony'), array(
+            'id' => 'version',
         ));
         $this->Form->appendChild($version);
 
@@ -198,11 +198,11 @@ class contentBlueprintsPages extends AdministrationPage
         $options = array(
             array(null, false, __('With Selected...')),
             array('delete', false, __('Delete'), 'confirm', null, array(
-                'data-message' => __('Are you sure you want to delete the selected pages?')
-            ))
+                'data-message' => __('Are you sure you want to delete the selected pages?'),
+            )),
         );
 
-        /**
+        /*
          * Allows an extension to modify the existing options for this page's
          * With Selected menu. If the `$options` parameter is an empty array,
          * the 'With Selected' menu will not be rendered.
@@ -217,7 +217,7 @@ class contentBlueprintsPages extends AdministrationPage
          *  expected by `Widget::__SelectBuildOption`. Passed by reference.
          */
         Symphony::ExtensionManager()->notifyMembers('AddCustomActions', '/blueprints/pages/', array(
-            'options' => &$options
+            'options' => &$options,
         ));
 
         if (!empty($options)) {
@@ -234,19 +234,19 @@ class contentBlueprintsPages extends AdministrationPage
     public function __viewEdit()
     {
         $this->setPageType('form');
-        $fields = array("title"=>null, "handle"=>null, "parent"=>null, "params"=>null, "type"=>null, "data_sources"=>null);
+        $fields = array('title' => null, 'handle' => null, 'parent' => null, 'params' => null, 'type' => null, 'data_sources' => null);
         $existing = $fields;
         $canonical_link = '/blueprints/pages/';
-        $nesting = (Symphony::Configuration()->get('pages_table_nest_children', 'symphony') == 'yes');
+        $nesting = ('yes' == Symphony::Configuration()->get('pages_table_nest_children', 'symphony'));
 
         // Verify page exists:
-        if ($this->_context[0] === 'edit') {
-            if (!$page_id = (int)$this->_context[1]) {
-                redirect(SYMPHONY_URL . '/blueprints/pages/');
+        if ('edit' === $this->_context[0]) {
+            if (!$page_id = (int) $this->_context[1]) {
+                redirect(SYMPHONY_URL.'/blueprints/pages/');
             }
 
             $existing = PageManager::fetchPageByID($page_id);
-            $canonical_link .= 'edit/' . $page_id . '/';
+            $canonical_link .= 'edit/'.$page_id.'/';
 
             if (!$existing) {
                 Administration::instance()->errorPageNotFound();
@@ -264,9 +264,9 @@ class contentBlueprintsPages extends AdministrationPage
             $time = Widget::Time();
 
             if (isset($_REQUEST['parent']) && is_numeric($_REQUEST['parent'])) {
-                $parent_link_suffix = "?parent=" . $_REQUEST['parent'];
-            } elseif ($nesting && isset($existing) && !is_null($existing['parent'])) {
-                $parent_link_suffix = '?parent=' . $existing['parent'];
+                $parent_link_suffix = '?parent='.$_REQUEST['parent'];
+            } elseif ($nesting && isset($existing) && null !== $existing['parent']) {
+                $parent_link_suffix = '?parent='.$existing['parent'];
             }
 
             switch ($flag) {
@@ -279,11 +279,11 @@ class contentBlueprintsPages extends AdministrationPage
 
             $this->pageAlert(
                 $message
-                . ' <a href="' . SYMPHONY_URL . '/blueprints/pages/new/' . $parent_link_suffix . '" accesskey="c">'
-                . __('Create another?')
-                . '</a> <a href="' . SYMPHONY_URL . '/blueprints/pages/" accesskey="a">'
-                . __('View all Pages')
-                . '</a>',
+                .' <a href="'.SYMPHONY_URL.'/blueprints/pages/new/'.$parent_link_suffix.'" accesskey="c">'
+                .__('Create another?')
+                .'</a> <a href="'.SYMPHONY_URL.'/blueprints/pages/" accesskey="a">'
+                .__('View all Pages')
+                .'</a>',
                 Alert::SUCCESS
             );
         }
@@ -291,10 +291,10 @@ class contentBlueprintsPages extends AdministrationPage
         // Find values:
         if (isset($_POST['fields'])) {
             $fields = $_POST['fields'];
-        } elseif ($this->_context[0] == 'edit') {
+        } elseif ('edit' == $this->_context[0]) {
             $fields = $existing;
 
-            if (!is_null($fields['type'])) {
+            if (null !== $fields['type']) {
                 $fields['type'] = implode(', ', $fields['type']);
             }
 
@@ -302,12 +302,12 @@ class contentBlueprintsPages extends AdministrationPage
             $fields['events'] = preg_split('/,/i', $fields['events'], -1, PREG_SPLIT_NO_EMPTY);
         } elseif (isset($_REQUEST['parent']) && is_numeric($_REQUEST['parent'])) {
             $fields['parent'] = $_REQUEST['parent'];
-            $canonical_link .= '?parent=' . urlencode($_REQUEST['parent']);
+            $canonical_link .= '?parent='.urlencode($_REQUEST['parent']);
         }
 
         $title = $fields['title'];
 
-        if (trim($title) == '') {
+        if ('' == trim($title)) {
             $title = $existing['title'];
         }
 
@@ -321,13 +321,13 @@ class contentBlueprintsPages extends AdministrationPage
         );
         $this->addElementToHead(new XMLElement('link', null, array(
             'rel' => 'canonical',
-            'href' => SYMPHONY_URL . $canonical_link,
+            'href' => SYMPHONY_URL.$canonical_link,
         )));
 
         $page_id = isset($page_id) ? $page_id : null;
 
         if (!empty($title)) {
-            $page_url = URL . '/' . PageManager::resolvePagePath($page_id) . '/';
+            $page_url = URL.'/'.PageManager::resolvePagePath($page_id).'/';
 
             $this->appendSubheading(
                 General::sanitize($title),
@@ -348,7 +348,7 @@ class contentBlueprintsPages extends AdministrationPage
             $this->insertBreadcrumbsUsingPageIdentifier($page_id, false);
         } else {
             $_GET['parent'] = isset($_GET['parent']) ? $_GET['parent'] : null;
-            $this->insertBreadcrumbsUsingPageIdentifier((int)$_GET['parent'], true);
+            $this->insertBreadcrumbsUsingPageIdentifier((int) $_GET['parent'], true);
         }
 
         // Title --------------------------------------------------------------
@@ -359,7 +359,8 @@ class contentBlueprintsPages extends AdministrationPage
 
         $label = Widget::Label(__('Name'));
         $label->appendChild(Widget::Input(
-            'fields[title]', General::sanitize($fields['title'])
+            'fields[title]',
+            General::sanitize($fields['title'])
         ));
 
         if (isset($this->_errors['title'])) {
@@ -377,7 +378,8 @@ class contentBlueprintsPages extends AdministrationPage
 
         $label = Widget::Label(__('Handle'));
         $label->appendChild(Widget::Input(
-            'fields[handle]', $fields['handle']
+            'fields[handle]',
+            $fields['handle']
         ));
 
         if (isset($this->_errors['handle'])) {
@@ -391,19 +393,19 @@ class contentBlueprintsPages extends AdministrationPage
         $label = Widget::Label(__('Parent Page'));
 
         $where = array(
-            sprintf('id != %d', $page_id)
+            sprintf('id != %d', $page_id),
         );
         $pages = PageManager::fetch(false, array('id'), $where, 'title ASC');
 
         $options = array(
-            array('', false, '/')
+            array('', false, '/'),
         );
 
         if (!empty($pages)) {
             foreach ($pages as $page) {
                 $options[] = array(
                     $page['id'], $fields['parent'] == $page['id'],
-                    '/' . PageManager::resolvePagePath($page['id'])
+                    '/'.PageManager::resolvePagePath($page['id']),
                 );
             }
 
@@ -411,7 +413,8 @@ class contentBlueprintsPages extends AdministrationPage
         }
 
         $label->appendChild(Widget::Select(
-            'fields[parent]', $options
+            'fields[parent]',
+            $options
         ));
         $column->appendChild($label);
         $group->appendChild($column);
@@ -423,7 +426,10 @@ class contentBlueprintsPages extends AdministrationPage
 
         $label = Widget::Label(__('Parameters'));
         $label->appendChild(Widget::Input(
-            'fields[params]', $fields['params'], 'text', array('placeholder' => 'param1/param2')
+            'fields[params]',
+            $fields['params'],
+            'text',
+            array('placeholder' => 'param1/param2')
         ));
         $column->appendChild($label);
 
@@ -475,7 +481,7 @@ class contentBlueprintsPages extends AdministrationPage
 
             foreach ($events as $name => $about) {
                 $options[] = array(
-                    $name, in_array($name, $fields['events']), $about['name']
+                    $name, in_array($name, $fields['events']), $about['name'],
                 );
             }
         }
@@ -498,7 +504,7 @@ class contentBlueprintsPages extends AdministrationPage
 
             foreach ($datasources as $name => $about) {
                 $options[] = array(
-                    $name, in_array($name, $fields['data_sources']), $about['name']
+                    $name, in_array($name, $fields['data_sources']), $about['name'],
                 );
             }
         }
@@ -510,7 +516,7 @@ class contentBlueprintsPages extends AdministrationPage
 
         // Controls -----------------------------------------------------------
 
-        /**
+        /*
          * After all Page related Fields have been added to the DOM, just before the
          * actions.
          *
@@ -525,9 +531,9 @@ class contentBlueprintsPages extends AdministrationPage
             'AppendPageContent',
             '/blueprints/pages/',
             array(
-                'form'        => &$this->Form,
-                'fields'    => &$fields,
-                'errors'    => $this->_errors
+                'form' => &$this->Form,
+                'fields' => &$fields,
+                'errors' => $this->_errors,
             )
         );
 
@@ -535,12 +541,12 @@ class contentBlueprintsPages extends AdministrationPage
         $div->setAttribute('class', 'actions');
         $div->appendChild(Widget::Input(
             'action[save]',
-            ($this->_context[0] == 'edit' ? __('Save Changes') : __('Create Page')),
+            ('edit' == $this->_context[0] ? __('Save Changes') : __('Create Page')),
             'submit',
             array('accesskey' => 's')
         ));
 
-        if ($this->_context[0] == 'edit') {
+        if ('edit' == $this->_context[0]) {
             $button = new XMLElement('button', __('Delete'));
             $button->setAttributeArray(array('name' => 'action[delete]', 'class' => 'button confirm delete', 'title' => __('Delete this page'), 'accesskey' => 'd', 'data-message' => __('Are you sure you want to delete this page?')));
             $div->appendChild($button);
@@ -563,7 +569,7 @@ class contentBlueprintsPages extends AdministrationPage
         $checked = (is_array($_POST['items'])) ? array_keys($_POST['items']) : null;
 
         if (is_array($checked) && !empty($checked)) {
-            /**
+            /*
              * Extensions can listen for any custom actions that were added
              * through `AddCustomPreferenceFieldsets` or `AddCustomActions`
              * delegates.
@@ -577,12 +583,12 @@ class contentBlueprintsPages extends AdministrationPage
              *  the associated object.
              */
             Symphony::ExtensionManager()->notifyMembers('CustomActions', '/blueprints/pages/', array(
-                'checked' => $checked
+                'checked' => $checked,
             ));
 
             switch ($_POST['with-selected']) {
                 case 'delete':
-                    $this->__actionDelete($checked, SYMPHONY_URL . '/blueprints/pages/');
+                    $this->__actionDelete($checked, SYMPHONY_URL.'/blueprints/pages/');
                     break;
             }
         }
@@ -590,19 +596,19 @@ class contentBlueprintsPages extends AdministrationPage
 
     public function __actionTemplate()
     {
-        $filename = $this->_context[1] . '.xsl';
-        $file_abs = PAGES . '/' . $filename;
+        $filename = $this->_context[1].'.xsl';
+        $file_abs = PAGES.'/'.$filename;
         $fields = $_POST['fields'];
         $this->_errors = [];
 
-        if (!isset($fields['body']) || trim($fields['body']) == '') {
+        if (!isset($fields['body']) || '' == trim($fields['body'])) {
             $this->_errors['body'] = __('This is a required field.');
         } elseif (!General::validateXML($fields['body'], $errors, false)) {
-            $this->_errors['body'] = __('This document is not well formed.') . ' ' . __('The following error was returned:') . ' <code>' . $errors[0]['message'] . '</code>';
+            $this->_errors['body'] = __('This document is not well formed.').' '.__('The following error was returned:').' <code>'.$errors[0]['message'].'</code>';
         }
 
         if (empty($this->_errors)) {
-            /**
+            /*
              * Just before a Page Template is about to written to disk
              *
              * @delegate PageTemplatePreEdit
@@ -619,11 +625,11 @@ class contentBlueprintsPages extends AdministrationPage
             if (!PageManager::writePageFiles($file_abs, $fields['body'])) {
                 $this->pageAlert(
                     __('Page Template could not be written to disk.')
-                    . ' ' . __('Please check permissions on %s.', array('<code>/workspace/pages</code>')),
+                    .' '.__('Please check permissions on %s.', array('<code>/workspace/pages</code>')),
                     Alert::ERROR
                 );
             } else {
-                /**
+                /*
                  * Just after a Page Template has been edited and written to disk
                  *
                  * @delegate PageTemplatePostEdit
@@ -635,7 +641,7 @@ class contentBlueprintsPages extends AdministrationPage
                  */
                 Symphony::ExtensionManager()->notifyMembers('PageTemplatePostEdit', '/blueprints/pages/template/', array('file' => $file_abs));
 
-                redirect(SYMPHONY_URL . '/blueprints/pages/template/' . $this->_context[1] . '/saved/');
+                redirect(SYMPHONY_URL.'/blueprints/pages/template/'.$this->_context[1].'/saved/');
             }
         }
     }
@@ -647,29 +653,29 @@ class contentBlueprintsPages extends AdministrationPage
 
     public function __actionEdit()
     {
-        if ($this->_context[0] != 'new' && !$page_id = (integer)$this->_context[1]) {
-            redirect(SYMPHONY_URL . '/blueprints/pages/');
+        if ('new' != $this->_context[0] && !$page_id = (int) $this->_context[1]) {
+            redirect(SYMPHONY_URL.'/blueprints/pages/');
         }
 
         $parent_link_suffix = null;
 
         if (isset($_REQUEST['parent']) && is_numeric($_REQUEST['parent'])) {
-            $parent_link_suffix = '?parent=' . $_REQUEST['parent'];
+            $parent_link_suffix = '?parent='.$_REQUEST['parent'];
         }
 
         if (@array_key_exists('delete', $_POST['action'])) {
-            $this->__actionDelete($page_id, SYMPHONY_URL  . '/blueprints/pages/' . $parent_link_suffix);
+            $this->__actionDelete($page_id, SYMPHONY_URL.'/blueprints/pages/'.$parent_link_suffix);
         }
 
         if (@array_key_exists('save', $_POST['action'])) {
             $fields = $_POST['fields'];
             $this->_errors = [];
 
-            if (!isset($fields['title']) || trim($fields['title']) == '') {
+            if (!isset($fields['title']) || '' == trim($fields['title'])) {
                 $this->_errors['title'] = __('This is a required field');
             }
 
-            if (trim($fields['type']) != '' && preg_match('/(index|404|403)/i', $fields['type'])) {
+            if ('' != trim($fields['type']) && preg_match('/(index|404|403)/i', $fields['type'])) {
                 $types = preg_split('/\s*,\s*/', strtolower($fields['type']), -1, PREG_SPLIT_NO_EMPTY);
 
                 if (in_array('index', $types) && PageManager::hasPageTypeBeenUsed($page_id, 'index')) {
@@ -681,7 +687,7 @@ class contentBlueprintsPages extends AdministrationPage
                 }
             }
 
-            if (trim($fields['handle']) == '') {
+            if ('' == trim($fields['handle'])) {
                 $fields['handle'] = $fields['title'];
             }
 
@@ -691,7 +697,7 @@ class contentBlueprintsPages extends AdministrationPage
                 $this->_errors['handle'] = __('Please ensure handle contains at least one Latin-based character.');
             }
 
-            /**
+            /*
              * Just after the Symphony validation has run, allows Developers
              * to run custom validation logic on a Page
              *
@@ -710,7 +716,6 @@ class contentBlueprintsPages extends AdministrationPage
             Symphony::ExtensionManager()->notifyMembers('PagePostValidate', '/blueprints/pages/', array('fields' => $fields, 'errors' => &$errors));
 
             if (empty($this->_errors)) {
-
                 if ($fields['params']) {
                     $fields['params'] = trim(preg_replace('@\/{2,}@', '/', $fields['params']), '/');
                 }
@@ -726,7 +731,7 @@ class contentBlueprintsPages extends AdministrationPage
                 $fields['path'] = null;
 
                 if ($fields['parent']) {
-                    $fields['path'] = PageManager::resolvePagePath((integer)$fields['parent']);
+                    $fields['path'] = PageManager::resolvePagePath((int) $fields['parent']);
                 }
 
                 // Check for duplicates:
@@ -742,17 +747,17 @@ class contentBlueprintsPages extends AdministrationPage
                     $where[] = "p.id != {$page_id}";
                 }
 
-                $where[] = "p.handle = '" . $fields['handle'] . "'";
-                $where[] = (is_null($fields['path']))
-                    ? "p.path IS null"
-                    : "p.path = '" . $fields['path'] . "'";
+                $where[] = "p.handle = '".$fields['handle']."'";
+                $where[] = (null === $fields['path'])
+                    ? 'p.path IS null'
+                    : "p.path = '".$fields['path']."'";
                 $duplicate = PageManager::fetch(false, array('*'), $where);
 
                 // If duplicate
                 if (!empty($duplicate)) {
                     $this->_errors['handle'] = __('A page with that handle already exists');
 
-                    // Create or move files:
+                // Create or move files:
                 } else {
                     // New page?
                     if (empty($current)) {
@@ -761,7 +766,7 @@ class contentBlueprintsPages extends AdministrationPage
                             $fields['handle']
                         );
 
-                        // Existing page, potentially rename files
+                    // Existing page, potentially rename files
                     } else {
                         $file_created = PageManager::createPageFiles(
                             $fields['path'],
@@ -775,14 +780,14 @@ class contentBlueprintsPages extends AdministrationPage
                     if (!$file_created) {
                         return $this->pageAlert(
                             __('Page Template could not be written to disk.')
-                            . ' ' . __('Please check permissions on %s.', array('<code>/workspace/pages</code>')),
+                            .' '.__('Please check permissions on %s.', array('<code>/workspace/pages</code>')),
                             Alert::ERROR
                         );
                     }
 
                     // Insert the new data:
                     if (empty($current)) {
-                        /**
+                        /*
                          * Just prior to creating a new Page record in `tbl_pages`, provided
                          * with the `$fields` associative array. Use with caution, as no
                          * duplicate page checks are run after this delegate has fired
@@ -799,13 +804,13 @@ class contentBlueprintsPages extends AdministrationPage
                         if (!$page_id = PageManager::add($fields)) {
                             $this->pageAlert(
                                 __('Unknown errors occurred while attempting to save.')
-                                . '<a href="' . SYMPHONY_URL . '/system/log/">'
-                                . __('Check your activity log')
-                                . '</a>.',
+                                .'<a href="'.SYMPHONY_URL.'/system/log/">'
+                                .__('Check your activity log')
+                                .'</a>.',
                                 Alert::ERROR
                             );
                         } else {
-                            /**
+                            /*
                              * Just after the creation of a new page in `tbl_pages`
                              *
                              * @delegate PagePostCreate
@@ -824,7 +829,7 @@ class contentBlueprintsPages extends AdministrationPage
 
                         // Update existing:
                     } else {
-                        /**
+                        /*
                          * Just prior to updating a Page record in `tbl_pages`, provided
                          * with the `$fields` associative array. Use with caution, as no
                          * duplicate page checks are run after this delegate has fired
@@ -843,13 +848,13 @@ class contentBlueprintsPages extends AdministrationPage
                         if (!PageManager::edit($page_id, $fields, true)) {
                             return $this->pageAlert(
                                 __('Unknown errors occurred while attempting to save.')
-                                . '<a href="' . SYMPHONY_URL . '/system/log/">'
-                                . __('Check your activity log')
-                                . '</a>.',
+                                .'<a href="'.SYMPHONY_URL.'/system/log/">'
+                                .__('Check your activity log')
+                                .'</a>.',
                                 Alert::ERROR
                             );
                         } else {
-                            /**
+                            /*
                              * Just after updating a page in `tbl_pages`
                              *
                              * @delegate PagePostEdit
@@ -870,7 +875,7 @@ class contentBlueprintsPages extends AdministrationPage
 
                 // Only proceed if there was no errors saving/creating the page
                 if (empty($this->_errors)) {
-                    /**
+                    /*
                      * Just before the page's types are saved into `tbl_pages_types`.
                      * Use with caution as no further processing is done on the `$types`
                      * array to prevent duplicate `$types` from occurring (ie. two index
@@ -893,12 +898,12 @@ class contentBlueprintsPages extends AdministrationPage
                     PageManager::addPageTypesToPage($page_id, $types);
 
                     // Find and update children:
-                    if ($this->_context[0] == 'edit') {
-                        PageManager::editPageChildren($page_id, $fields['path'] . '/' . $fields['handle']);
+                    if ('edit' == $this->_context[0]) {
+                        PageManager::editPageChildren($page_id, $fields['path'].'/'.$fields['handle']);
                     }
 
                     if ($redirect) {
-                        redirect(SYMPHONY_URL . $redirect);
+                        redirect(SYMPHONY_URL.$redirect);
                     }
                 }
             }
@@ -923,7 +928,7 @@ class contentBlueprintsPages extends AdministrationPage
             $pages = array($pages);
         }
 
-        /**
+        /*
          * Prior to deleting Pages
          *
          * @delegate PagePreDelete
@@ -968,7 +973,7 @@ class contentBlueprintsPages extends AdministrationPage
                 $success = false;
                 $this->pageAlert(
                     __('One or more pages could not be deleted.')
-                    . ' ' . __('Please check permissions on %s.', array('<code>/workspace/pages</code>')),
+                    .' '.__('Please check permissions on %s.', array('<code>/workspace/pages</code>')),
                     Alert::ERROR
                 );
 
@@ -981,7 +986,7 @@ class contentBlueprintsPages extends AdministrationPage
         }
 
         if ($success) {
-            /**
+            /*
              * Fires after all Pages have been deleted
              *
              * @delegate PagePostDelete

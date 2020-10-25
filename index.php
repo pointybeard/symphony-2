@@ -1,20 +1,12 @@
 <?php
 
-    // Find out where we are:
-    define('DOCROOT', __DIR__);
+declare(strict_types=1);
 
-    // Propagate this change to all executables:
-    chdir(DOCROOT);
+// Set up the Symphony CMS environment
+define('DOCROOT', __DIR__);
+chdir(DOCROOT);
 
-    // Include autoloader:
-    require_once DOCROOT . '/vendor/autoload.php';
+require DOCROOT . '/src/Includes/Boot.php';
 
-    // Include the boot script:
-    require_once DOCROOT . '/symphony/lib/boot/bundle.php';
-
-    // Begin Symphony proper:
-    symphony(
-        isset($_GET['mode'])
-            ? $_GET['mode']
-            : null
-    );
+// Begin Symphony proper
+symphony($_GET['mode'] ?? null);

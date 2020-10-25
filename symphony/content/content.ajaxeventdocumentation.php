@@ -1,7 +1,5 @@
 <?php
-/**
- * @package content
- */
+
 /**
  * The AjaxEventDocumentation returns the documentation for a particular
  * event by invoking all fields to return their documentation.
@@ -34,7 +32,7 @@ class contentAjaxEventDocumentation extends TextPage
         $this->addFrontendMarkupDoc($doc_parts, $rootelement, $section, $filters);
         $this->addSendMailFilterDoc($doc_parts, $filters);
 
-        /**
+        /*
          * Allows adding documentation for new filters. A reference to the $documentation
          * array is provided, along with selected filters
          *
@@ -51,20 +49,20 @@ class contentAjaxEventDocumentation extends TextPage
         Symphony::ExtensionManager()->notifyMembers('AppendEventFilterDocumentation', '/blueprints/events/', array(
             'selected' => $filters,
             'documentation' => &$doc_parts,
-            'rootelement' => $rootelement
+            'rootelement' => $rootelement,
         ));
 
-        $documentation = join(PHP_EOL, array_map(function($part) {
+        $documentation = join(PHP_EOL, array_map(function ($part) {
             return rtrim($part->generate(true, 4));
         }, $doc_parts));
         $documentation = str_replace('\'', '\\\'', $documentation);
 
-        $documentation = '<fieldset id="event-documentation" class="settings"><legend>' . __('Documentation') . '</legend>' . $documentation . '</fieldset>';
+        $documentation = '<fieldset id="event-documentation" class="settings"><legend>'.__('Documentation').'</legend>'.$documentation.'</fieldset>';
         $this->_Result = $documentation;
     }
 
     /**
-     * Utilities
+     * Utilities.
      */
     public static function hasMultipleFilter($filters)
     {
@@ -99,7 +97,7 @@ class contentAjaxEventDocumentation extends TextPage
 
     public static function processDocumentationCode($code)
     {
-        return new XMLElement('pre', '<code>' . str_replace('<', '&lt;', str_replace('&', '&amp;', trim((is_object($code) ? $code->generate(true) : $code)))) . '</code>', array('class' => 'XML'));
+        return new XMLElement('pre', '<code>'.str_replace('<', '&lt;', str_replace('&', '&amp;', trim((is_object($code) ? $code->generate(true) : $code)))).'</code>', array('class' => 'XML'));
     }
 
     public function addEntrySuccessDoc(array &$doc_parts, $rootelement, $filters)
@@ -168,7 +166,7 @@ class contentAjaxEventDocumentation extends TextPage
         $doc_parts[] = new XMLElement('h3', __('Example Front-end Form Markup'));
         $doc_parts[] = new XMLElement('p', __('This is an example of the form markup you can use on your frontend:'));
         $container = new XMLElement('form', null, array('method' => 'post', 'action' => '{$current-url}/', 'enctype' => 'multipart/form-data'));
-        $container->appendChild(Widget::Input('MAX_FILE_SIZE', (string)min(ini_size_to_bytes(ini_get('upload_max_filesize')), Symphony::Configuration()->get('max_upload_size', 'admin')), 'hidden'));
+        $container->appendChild(Widget::Input('MAX_FILE_SIZE', (string) min(ini_size_to_bytes(ini_get('upload_max_filesize')), Symphony::Configuration()->get('max_upload_size', 'admin')), 'hidden'));
 
         if (is_numeric($section)) {
             $section = SectionManager::fetch($section);
@@ -190,7 +188,7 @@ class contentAjaxEventDocumentation extends TextPage
         $doc_parts[] = self::processDocumentationCode(($multiple ? str_replace('fields[', 'fields[0][', $code) : $code));
 
         $doc_parts[] = new XMLElement('p', __('To edit an existing entry, include the entry ID value of the entry in the form. This is best as a hidden field like so:'));
-        $doc_parts[] = self::processDocumentationCode(Widget::Input('id' . ($multiple ? '[0]' : null), '23', 'hidden'));
+        $doc_parts[] = self::processDocumentationCode(Widget::Input('id'.($multiple ? '[0]' : null), '23', 'hidden'));
 
         $doc_parts[] = new XMLElement('p', __('To redirect to a different location upon a successful save, include the redirect location in the form. This is best as a hidden field like so, where the value is the URL to redirect to:'));
         $doc_parts[] = self::processDocumentationCode(Widget::Input('redirect', URL.'/success/', 'hidden'));
@@ -200,12 +198,13 @@ class contentAjaxEventDocumentation extends TextPage
     {
         if ($this->hasSendEmailFilter($filters)) {
             $doc_parts[] = new XMLElement('h3', __('Send Notification Email'));
-            $doc_parts[] = new XMLElement('p',
+            $doc_parts[] = new XMLElement(
+                'p',
                 __('Upon the event successfully saving the entry, this option takes input from the form and send an email to the desired recipient.')
-                . ' <strong>'
-                . __('It currently does not work with ‘Allow Multiple’')
-                . '</strong>. '
-                . __('The following are the recognised fields:')
+                .' <strong>'
+                .__('It currently does not work with ‘Allow Multiple’')
+                .'</strong>. '
+                .__('The following are the recognised fields:')
             );
 
             $doc_parts[] = self::processDocumentationCode(
@@ -215,10 +214,12 @@ class contentAjaxEventDocumentation extends TextPage
                 'send-email[reply-to-name] // '.__('Optional').PHP_EOL.
                 'send-email[subject]'.PHP_EOL.
                 'send-email[body]'.PHP_EOL.
-                'send-email[recipient] // '.__('list of comma-separated author usernames.'));
+                'send-email[recipient] // '.__('list of comma-separated author usernames.')
+            );
 
             $doc_parts[] = new XMLElement('p', __('All of these fields can be set dynamically using the exact field name of another field in the form as shown below in the example form:'));
-            $doc_parts[] = self::processDocumentationCode('<form action="" method="post">
+            $doc_parts[] = self::processDocumentationCode(
+                '<form action="" method="post">
 <fieldset>
 <label>'.__('Name').' <input type="text" name="fields[author]" value="" /></label>
 <label>'.__('Email').' <input type="text" name="fields[email]" value="" /></label>
@@ -233,7 +234,7 @@ class contentAjaxEventDocumentation extends TextPage
 <input id="submit" type="submit" name="action[save-contact-form]" value="Send" />
 </fieldset>
 </form>'
-);
+            );
         }
     }
 }

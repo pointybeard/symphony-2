@@ -1,16 +1,11 @@
 <?php
 
 /**
- * @package content
- */
-
-/**
  * The Preferences page allows Developers to change settings for
  * this Symphony install. Extensions can extend the form on this
  * page so they can have their own settings. This page is typically
  * a UI for a subset of the `CONFIG` file.
  */
-
 class contentSystemPreferences extends AdministrationPage
 {
     public $_errors = [];
@@ -22,21 +17,22 @@ class contentSystemPreferences extends AdministrationPage
         $this->setTitle(__('%1$s &ndash; %2$s', array(__('Preferences'), __('Symphony'))));
         $this->addElementToHead(new XMLElement('link', null, array(
             'rel' => 'canonical',
-            'href' => SYMPHONY_URL . '/system/preferences/',
+            'href' => SYMPHONY_URL.'/system/preferences/',
         )));
         $this->appendSubheading(__('Preferences'));
 
         $bIsWritable = true;
         $formHasErrors = (is_array($this->_errors) && !empty($this->_errors));
 
-        if (General::checkFileWritable(CONFIG) === false) {
+        if (false === General::checkFileWritable(CONFIG)) {
             $this->pageAlert(__('The Symphony configuration file, %s, or folder is not writable. You will not be able to save changes to preferences.', array('<code>/manifest/config.json</code>')), Alert::ERROR);
             $bIsWritable = false;
         } elseif ($formHasErrors) {
             $this->pageAlert(
-                __('An error occurred while processing this form. See below for details.'), Alert::ERROR
+                __('An error occurred while processing this form. See below for details.'),
+                Alert::ERROR
             );
-        } elseif (isset($this->_context[0]) && $this->_context[0] == 'success') {
+        } elseif (isset($this->_context[0]) && 'success' == $this->_context[0]) {
             $this->pageAlert(__('Preferences saved.'), Alert::SUCCESS);
         }
 
@@ -67,37 +63,46 @@ class contentSystemPreferences extends AdministrationPage
         }
 
         // Get available EmailGateways
-        $email_gateways = EmailGatewayManager::listAll();
+        $emailGateways = EmailGatewayManager::listAll();
 
-        if (count($email_gateways) >= 1) {
-            $group = new XMLElement('fieldset', null, array('class' => 'settings condensed'));
+        if (count($emailGateways) >= 1) {
+            $group = new XMLElement('fieldset', null, ['class' => 'settings condensed']);
             $group->appendChild(new XMLElement('legend', __('Default Email Settings')));
             $label = Widget::Label(__('Gateway'));
 
             // Get gateway names
-            ksort($email_gateways);
+            ksort($emailGateways);
 
-            $default_gateway = EmailGatewayManager::getDefaultGateway();
-            $selected_is_installed = EmailGatewayManager::__getClassPath($default_gateway);
+            $defaultGateway = EmailGatewayManager::getDefaultGateway();
+            $selectedIsInstalled = EmailGatewayManager::__getClassPath($defaultGateway);
 
             $options = [];
 
-            foreach ($email_gateways as $handle => $details) {
-                $options[] = array($handle, (($handle == $default_gateway) || (($selected_is_installed == false) && $handle == 'sendmail')), $details['name']);
+            foreach ($emailGateways as $handle => $details) {
+                $options[] = [
+                    $handle, 
+                    (($handle == $defaultGateway) || ((false == $selectedIsInstalled) && 'Sendmail' == $handle)),
+                    $details['name']
+                ];
             }
 
-            $select = Widget::Select('settings[Email][default_gateway]', $options, array('class' => 'picker', 'data-interactive' => 'data-interactive'));
+            $select = Widget::Select(
+                'settings[Email][default_gateway]',
+                $options,
+                ['class' => 'picker', 'data-interactive' => 'data-interactive']
+            );
+
             $label->appendChild($select);
             $group->appendChild($label);
             // Append email gateway selection
             $this->Form->appendChild($group);
         }
 
-        foreach ($email_gateways as $gateway) {
-            $gateway_settings = EmailGatewayManager::create($gateway['handle'])->getPreferencesPane();
+        foreach ($emailGateways as $gateway) {
+            $gatewaySettings = EmailGatewayManager::create($gateway['handle'])->getPreferencesPane();
 
-            if (is_a($gateway_settings, 'XMLElement')) {
-                $this->Form->appendChild($gateway_settings);
+            if (is_a($gatewaySettings, 'XMLElement')) {
+                $this->Form->appendChild($gatewaySettings);
             }
         }
 
@@ -110,7 +115,7 @@ class contentSystemPreferences extends AdministrationPage
             $group = new XMLElement('fieldset', null, array('class' => 'settings condensed'));
             $group->appendChild(new XMLElement('legend', __('Default Cache Settings')));
 
-            /**
+            /*
              * Add custom Caching groups. For example a Datasource extension might want to add in the ability
              * for set a cache driver for it's functionality. This should usually be a dropdown, which allows
              * a developer to select what driver they want to use for caching. This choice is stored in the
@@ -138,7 +143,7 @@ class contentSystemPreferences extends AdministrationPage
                 'wrapper' => &$group,
                 'config_path' => 'caching',
                 'available_caches' => $caches,
-                'errors' => $this->_errors
+                'errors' => $this->_errors,
             ));
 
             $this->Form->appendChild($group);
@@ -147,7 +152,7 @@ class contentSystemPreferences extends AdministrationPage
         // Get available xslt processors
         $processors = Symphony::ExtensionManager()->getProvidersOf('xslt_processing');
         $processors[] = [
-            "class" => "\\XsltProcess", "name" => "Default (XSLT 1.0)"
+            'class' => '\\XsltProcess', 'name' => 'Default (XSLT 1.0)',
         ];
 
         if (count($processors) > 1) {
@@ -159,9 +164,9 @@ class contentSystemPreferences extends AdministrationPage
             $options = [];
             foreach ($processors as $p) {
                 $options[] = [
-                    $p["class"],
-                    Symphony::Configuration()->get('processor', 'xslt') == $p["class"],
-                    $p["name"]
+                    $p['class'],
+                    Symphony::Configuration()->get('processor', 'xslt') == $p['class'],
+                    $p['name'],
                 ];
             }
 
@@ -171,7 +176,7 @@ class contentSystemPreferences extends AdministrationPage
             $this->Form->appendChild($group);
         }
 
-        /**
+        /*
          * Add Extension custom preferences. Use the $wrapper reference to append objects.
          *
          * @delegate AddCustomPreferenceFieldsets
@@ -184,14 +189,14 @@ class contentSystemPreferences extends AdministrationPage
          */
         Symphony::ExtensionManager()->notifyMembers('AddCustomPreferenceFieldsets', '/system/preferences/', array(
             'wrapper' => &$this->Form,
-            'errors' => $this->_errors
+            'errors' => $this->_errors,
         ));
 
         $div = new XMLElement('div');
         $div->setAttribute('class', 'actions');
 
-        $version = new XMLElement('p', 'Symphony ' . Symphony::Configuration()->get('version', 'symphony'), array(
-            'id' => 'version'
+        $version = new XMLElement('p', 'Symphony '.Symphony::Configuration()->get('version', 'symphony'), array(
+            'id' => 'version',
         ));
         $div->appendChild($version);
 
@@ -209,11 +214,11 @@ class contentSystemPreferences extends AdministrationPage
     public function action()
     {
         // Do not proceed if the config file cannot be changed
-        if (General::checkFileWritable(CONFIG) === false) {
-            redirect(SYMPHONY_URL . '/system/preferences/');
+        if (false === General::checkFileWritable(CONFIG)) {
+            redirect(SYMPHONY_URL.'/system/preferences/');
         }
 
-        /**
+        /*
          * Extensions can listen for any custom actions that were added
          * through `AddCustomPreferenceFieldsets` or `AddCustomActions`
          * delegates.
@@ -226,7 +231,7 @@ class contentSystemPreferences extends AdministrationPage
 
         if (isset($_POST['action']['save'])) {
             $settings = filter_var_array($_POST['settings'], FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
-            /**
+            /*
              * Just prior to saving the preferences and writing them to the `CONFIG`
              * Allows extensions to preform custom validation logic on the settings.
              *
@@ -240,7 +245,7 @@ class contentSystemPreferences extends AdministrationPage
              */
             Symphony::ExtensionManager()->notifyMembers('Save', '/system/preferences/', array(
                 'settings' => &$settings,
-                'errors' => &$this->_errors
+                'errors' => &$this->_errors,
             ));
 
             if (!is_array($this->_errors) || empty($this->_errors)) {
@@ -253,7 +258,7 @@ class contentSystemPreferences extends AdministrationPage
                         @opcache_invalidate(CONFIG, true);
                     }
 
-                    redirect(SYMPHONY_URL . '/system/preferences/success/');
+                    redirect(SYMPHONY_URL.'/system/preferences/success/');
                 }
             }
         }

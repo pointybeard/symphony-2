@@ -26,17 +26,13 @@
         "classmap": [
             "symphony/content",
             "symphony/lib",
-            "symphony/template",
             "install"
         ],
         "psr-4": {
-            "Symphony\\": "src"
+            "Symphony\\Symphony\\": "src/Symphony/"
         },
         "files": [
-            "symphony/lib/boot/preboot.php",
-            "symphony/lib/boot/func.utilities.php",
-            "symphony/lib/boot/defines.php",
-            "symphony/lib/toolkit/util.validators.php"
+            "src/Includes/Preboot.php"
         ]
     },
     "scripts": {

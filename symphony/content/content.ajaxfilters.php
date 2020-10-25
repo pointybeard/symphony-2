@@ -1,12 +1,9 @@
 <?php
-/**
- * @package content
- */
+
 /**
  * The AjaxSections page return an object of all sections and their fields
- * that are available for pre-population
+ * that are available for pre-population.
  */
-
 class contentAjaxFilters extends JSONPage
 {
     public function view()
@@ -21,7 +18,7 @@ class contentAjaxFilters extends JSONPage
             $field_id = FieldManager::fetchFieldIDFromElementName($handle, $section_id);
             $field = FieldManager::fetch($field_id);
 
-            if (!empty($field) && $field->canPublishFilter() === true) {
+            if (!empty($field) && true === $field->canPublishFilter()) {
                 if (method_exists($field, 'getToggleStates')) {
                     $options = $field->getToggleStates();
                 } elseif (method_exists($field, 'findAllTags')) {
@@ -33,7 +30,7 @@ class contentAjaxFilters extends JSONPage
         foreach ($options as $value => $data) {
             $filters[] = array(
                 'value' => ($value ? $value : $data),
-                'text' => ($data ? $data : $value)
+                'text' => ($data ? $data : $value),
             );
         }
 

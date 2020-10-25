@@ -1,13 +1,9 @@
 <?php
-/**
- * @package content
- */
 
 /**
  * This page controls the creation and maintenance of Symphony
  * Sections through the Section Index and Section Editor.
  */
-
 class contentBlueprintsSections extends AdministrationPage
 {
     public $_errors = [];
@@ -18,7 +14,7 @@ class contentBlueprintsSections extends AdministrationPage
             $section_id = $context[1];
             $context['associations'] = array(
                 'parent' => SectionManager::fetchParentAssociations($section_id),
-                'child' => SectionManager::fetchChildAssociations($section_id)
+                'child' => SectionManager::fetchChildAssociations($section_id),
             );
         }
 
@@ -36,35 +32,35 @@ class contentBlueprintsSections extends AdministrationPage
         $aTableHead = array(
             array(__('Name'), 'col'),
             array(__('Entries'), 'col'),
-            array(__('Navigation Group'), 'col')
+            array(__('Navigation Group'), 'col'),
         );
 
         $aTableBody = [];
 
         if (!is_array($sections) || empty($sections)) {
             $aTableBody = array(
-                Widget::TableRow(array(Widget::TableData(__('None found.'), 'inactive', null, count($aTableHead))), 'odd')
+                Widget::TableRow(array(Widget::TableData(__('None found.'), 'inactive', null, count($aTableHead))), 'odd'),
             );
         } else {
             foreach ($sections as $s) {
                 $entry_count = EntryManager::fetchCount($s->get('id'));
 
                 // Setup each cell
-                $td1 = Widget::TableData(Widget::Anchor(General::sanitize($s->get('name')), Administration::instance()->getCurrentPageURL() . 'edit/' . $s->get('id') .'/', null, 'content'));
+                $td1 = Widget::TableData(Widget::Anchor(General::sanitize($s->get('name')), Administration::instance()->getCurrentPageURL().'edit/'.$s->get('id').'/', null, 'content'));
                 $td1->appendChild(Widget::Label(__('Select Section %s', array(General::sanitize($s->get('name')))), null, 'accessible', null, array(
-                    'for' => 'section-' . $s->get('id')
+                    'for' => 'section-'.$s->get('id'),
                 )));
                 $td1->appendChild(Widget::Input('items['.$s->get('id').']', $s->get('modification_date'), 'checkbox', array(
-                    'id' => 'section-' . $s->get('id')
+                    'id' => 'section-'.$s->get('id'),
                 )));
 
-                $td2 = Widget::TableData(Widget::Anchor((string)$entry_count, SYMPHONY_URL . '/publish/' . $s->get('handle') . '/'));
+                $td2 = Widget::TableData(Widget::Anchor((string) $entry_count, SYMPHONY_URL.'/publish/'.$s->get('handle').'/'));
                 $td3 = Widget::TableData(General::sanitize($s->get('navigation_group')));
 
                 // Create row
                 $tr = Widget::TableRow(array($td1, $td2, $td3));
 
-                if ($s->get('hidden') === 'yes') {
+                if ('yes' === $s->get('hidden')) {
                     $tr->setAttribute('class', 'inactive');
                 }
 
@@ -83,8 +79,8 @@ class contentBlueprintsSections extends AdministrationPage
 
         $this->Form->appendChild($table);
 
-        $version = new XMLElement('p', 'Symphony ' . Symphony::Configuration()->get('version', 'symphony'), array(
-            'id' => 'version'
+        $version = new XMLElement('p', 'Symphony '.Symphony::Configuration()->get('version', 'symphony'), array(
+            'id' => 'version',
         ));
 
         $this->Form->appendChild($version);
@@ -95,11 +91,11 @@ class contentBlueprintsSections extends AdministrationPage
         $options = array(
             array(null, false, __('With Selected...')),
             array('delete', false, __('Delete'), 'confirm', null, array(
-                'data-message' => __('Are you sure you want to delete the selected sections?')
+                'data-message' => __('Are you sure you want to delete the selected sections?'),
             )),
             array('delete-entries', false, __('Delete Entries'), 'confirm', null, array(
-                'data-message' => __('Are you sure you want to delete all entries in the selected sections?')
-            ))
+                'data-message' => __('Are you sure you want to delete all entries in the selected sections?'),
+            )),
         );
 
         if (is_array($sections) && !empty($sections)) {
@@ -115,12 +111,12 @@ class contentBlueprintsSections extends AdministrationPage
 
                 $groups[] = $s->get('navigation_group');
 
-                $value = 'set-navigation-group-' . urlencode($s->get('navigation_group'));
+                $value = 'set-navigation-group-'.urlencode($s->get('navigation_group'));
                 $options[$index]['options'][] = array($value, false, General::sanitize($s->get('navigation_group')));
             }
         }
 
-        /**
+        /*
          * Allows an extension to modify the existing options for this page's
          * With Selected menu. If the `$options` parameter is an empty array,
          * the 'With Selected' menu will not be rendered.
@@ -135,7 +131,7 @@ class contentBlueprintsSections extends AdministrationPage
          *  expected by `Widget::__SelectBuildOption`. Passed by reference.
          */
         Symphony::ExtensionManager()->notifyMembers('AddCustomActions', '/blueprints/sections/', array(
-            'options' => &$options
+            'options' => &$options,
         ));
 
         if (!empty($options)) {
@@ -150,13 +146,13 @@ class contentBlueprintsSections extends AdministrationPage
         $this->setTitle(__('%1$s &ndash; %2$s', array(__('Sections'), __('Symphony'))));
         $this->appendSubheading(__('Untitled'));
         $this->insertBreadcrumbs(array(
-            Widget::Anchor(__('Sections'), SYMPHONY_URL . '/blueprints/sections/'),
+            Widget::Anchor(__('Sections'), SYMPHONY_URL.'/blueprints/sections/'),
         ));
 
         $types = [];
 
         $fields = (isset($_POST['fields']) && is_array($_POST['fields'])) ? $_POST['fields'] : array();
-        $meta = (isset($_POST['meta']) && is_array($_POST['meta'])) ? $_POST['meta'] : array('name'=>null);
+        $meta = (isset($_POST['meta']) && is_array($_POST['meta'])) ? $_POST['meta'] : array('name' => null);
 
         $formHasErrors = (is_array($this->_errors) && !empty($this->_errors));
 
@@ -277,7 +273,7 @@ class contentBlueprintsSections extends AdministrationPage
             }
         }
 
-        uasort($types, function($a, $b) {
+        uasort($types, function ($a, $b) {
             return strnatcasecmp($a->_name, $b->_name);
         });
 
@@ -288,7 +284,7 @@ class contentBlueprintsSections extends AdministrationPage
             $type->setArray($defaults);
 
             $wrapper = new XMLElement('li');
-            $wrapper->setAttribute('class', 'template field-' . $type->handle() . ($type->mustBeUnique() ? ' unique' : null));
+            $wrapper->setAttribute('class', 'template field-'.$type->handle().($type->mustBeUnique() ? ' unique' : null));
             $wrapper->setAttribute('data-type', $type->handle());
 
             $type->set('sortorder', '-1');
@@ -324,7 +320,7 @@ class contentBlueprintsSections extends AdministrationPage
         $meta = $section->get();
         $section_id = $meta['id'];
         $types = [];
-        $canonical_link = '/blueprints/sections/edit/' . $section_id . '/';
+        $canonical_link = '/blueprints/sections/edit/'.$section_id.'/';
 
         $formHasErrors = (is_array($this->_errors) && !empty($this->_errors));
 
@@ -334,7 +330,7 @@ class contentBlueprintsSections extends AdministrationPage
                 Alert::ERROR
             );
 
-            // These alerts are only valid if the form doesn't have errors
+        // These alerts are only valid if the form doesn't have errors
         } elseif (isset($this->_context[2])) {
             $time = Widget::Time();
 
@@ -348,11 +344,11 @@ class contentBlueprintsSections extends AdministrationPage
 
             $this->pageAlert(
                 $message
-                . ' <a href="' . SYMPHONY_URL . '/blueprints/sections/new/" accesskey="c">'
-                . __('Create another?')
-                . '</a> <a href="' . SYMPHONY_URL . '/blueprints/sections/" accesskey="a">'
-                . __('View all Sections')
-                . '</a>',
+                .' <a href="'.SYMPHONY_URL.'/blueprints/sections/new/" accesskey="c">'
+                .__('Create another?')
+                .'</a> <a href="'.SYMPHONY_URL.'/blueprints/sections/" accesskey="a">'
+                .__('View all Sections')
+                .'</a>',
                 Alert::SUCCESS
             );
         }
@@ -378,7 +374,7 @@ class contentBlueprintsSections extends AdministrationPage
 
         if (isset($_POST['meta'])) {
             $meta = $_POST['meta'];
-            if ($meta['name'] == '') {
+            if ('' == $meta['name']) {
                 $meta['name'] = $section->get('name');
             }
         }
@@ -387,13 +383,14 @@ class contentBlueprintsSections extends AdministrationPage
         $this->setTitle(__('%1$s &ndash; %2$s &ndash; %3$s', array(General::sanitize($meta['name']), __('Sections'), __('Symphony'))));
         $this->addElementToHead(new XMLElement('link', null, array(
             'rel' => 'canonical',
-            'href' => SYMPHONY_URL . $canonical_link,
+            'href' => SYMPHONY_URL.$canonical_link,
         )));
-        $this->appendSubheading(General::sanitize($meta['name']),
-            Widget::Anchor(__('View Entries'), SYMPHONY_URL . '/publish/' . $section->get('handle') . '/', __('View Section Entries'), 'button')
+        $this->appendSubheading(
+            General::sanitize($meta['name']),
+            Widget::Anchor(__('View Entries'), SYMPHONY_URL.'/publish/'.$section->get('handle').'/', __('View Section Entries'), 'button')
         );
         $this->insertBreadcrumbs(array(
-            Widget::Anchor(__('Sections'), SYMPHONY_URL . '/blueprints/sections/'),
+            Widget::Anchor(__('Sections'), SYMPHONY_URL.'/blueprints/sections/'),
         ));
 
         $fieldset = new XMLElement('fieldset');
@@ -477,7 +474,7 @@ class contentBlueprintsSections extends AdministrationPage
 
         if (is_array($fields) && !empty($fields)) {
             foreach ($fields as $position => $field) {
-                $wrapper = new XMLElement('li', null, array('class' => 'field-' . $field->handle() . ($field->mustBeUnique() ? ' unique' : null)));
+                $wrapper = new XMLElement('li', null, array('class' => 'field-'.$field->handle().($field->mustBeUnique() ? ' unique' : null)));
                 $wrapper->setAttribute('data-type', $field->handle());
 
                 $field->set('sortorder', $position);
@@ -492,7 +489,7 @@ class contentBlueprintsSections extends AdministrationPage
             }
         }
 
-        uasort($types, function($a, $b) {
+        uasort($types, function ($a, $b) {
             return strnatcasecmp($a->_name, $b->_name);
         });
 
@@ -504,7 +501,7 @@ class contentBlueprintsSections extends AdministrationPage
 
             $wrapper = new XMLElement('li');
 
-            $wrapper->setAttribute('class', 'template field-' . $type->handle() . ($type->mustBeUnique() ? ' unique' : null));
+            $wrapper->setAttribute('class', 'template field-'.$type->handle().($type->mustBeUnique() ? ' unique' : null));
             $wrapper->setAttribute('data-type', $type->handle());
 
             $type->set('sortorder', '-1');
@@ -537,7 +534,7 @@ class contentBlueprintsSections extends AdministrationPage
         $checked = (is_array($_POST['items'])) ? array_keys($_POST['items']) : null;
 
         if (is_array($checked) && !empty($checked)) {
-            /**
+            /*
              * Extensions can listen for any custom actions that were added
              * through `AddCustomPreferenceFieldsets` or `AddCustomActions`
              * delegates.
@@ -551,11 +548,11 @@ class contentBlueprintsSections extends AdministrationPage
              *  the associated object.
              */
             Symphony::ExtensionManager()->notifyMembers('CustomActions', '/blueprints/sections/', array(
-                'checked' => $checked
+                'checked' => $checked,
             ));
 
-            if ($_POST['with-selected'] == 'delete') {
-                /**
+            if ('delete' == $_POST['with-selected']) {
+                /*
                  * Just prior to calling the Section Manager's delete function
                  *
                  * @delegate SectionPreDelete
@@ -571,8 +568,8 @@ class contentBlueprintsSections extends AdministrationPage
                     SectionManager::delete($section_id);
                 }
 
-                redirect(SYMPHONY_URL . '/blueprints/sections/');
-            } elseif ($_POST['with-selected'] == 'delete-entries') {
+                redirect(SYMPHONY_URL.'/blueprints/sections/');
+            } elseif ('delete-entries' == $_POST['with-selected']) {
                 foreach ($checked as $section_id) {
                     $entries = EntryManager::fetch(null, $section_id, null, null, null, null, false, false, null, false);
                     $entry_ids = [];
@@ -581,7 +578,7 @@ class contentBlueprintsSections extends AdministrationPage
                         $entry_ids[] = $entry['id'];
                     }
 
-                    /**
+                    /*
                      * Prior to deletion of entries.
                      *
                      * @delegate Delete
@@ -595,7 +592,7 @@ class contentBlueprintsSections extends AdministrationPage
                     EntryManager::delete($entry_ids, $section_id);
                 }
 
-                redirect(SYMPHONY_URL . '/blueprints/sections/');
+                redirect(SYMPHONY_URL.'/blueprints/sections/');
             } elseif (preg_match('/^set-navigation-group-/', $_POST['with-selected'])) {
                 $navigation_group = preg_replace('/^set-navigation-group-/', null, $_POST['with-selected']);
 
@@ -606,7 +603,7 @@ class contentBlueprintsSections extends AdministrationPage
                     ));
                 }
 
-                redirect(SYMPHONY_URL . '/blueprints/sections/');
+                redirect(SYMPHONY_URL.'/blueprints/sections/');
             }
         }
     }
@@ -615,7 +612,7 @@ class contentBlueprintsSections extends AdministrationPage
     {
         if (@array_key_exists('save', $_POST['action']) || @array_key_exists('done', $_POST['action'])) {
             $canProceed = true;
-            $edit = ($this->_context[0] == "edit");
+            $edit = ('edit' == $this->_context[0]);
             $this->_errors = [];
 
             $fields = isset($_POST['fields']) ? $_POST['fields'] : array();
@@ -636,30 +633,30 @@ class contentBlueprintsSections extends AdministrationPage
                 : $meta['name']);
 
             // Check to ensure all the required section fields are filled
-            if (!isset($meta['name']) || strlen(trim($meta['name'])) == 0) {
+            if (!isset($meta['name']) || 0 == strlen(trim($meta['name']))) {
                 $this->_errors['name'] = __('This is a required field.');
                 $canProceed = false;
 
-                // Check for duplicate section handle during edit
+            // Check for duplicate section handle during edit
             } elseif ($edit) {
                 $s = SectionManager::fetchIDFromHandle(Lang::createHandle($meta['handle']));
 
                 if (
                     $meta['handle'] !== $existing_section->get('handle')
-                    && !is_null($s) && $s !== $section_id
+                    && null !== $s && $s !== $section_id
                 ) {
-                    $this->_errors['handle'] = __('A Section with the handle %s already exists', array('<code>' . $meta['handle'] . '</code>'));
+                    $this->_errors['handle'] = __('A Section with the handle %s already exists', array('<code>'.$meta['handle'].'</code>'));
                     $canProceed = false;
                 }
 
                 // Existing section during creation
-            } elseif (!is_null(SectionManager::fetchIDFromHandle(Lang::createHandle($meta['handle'])))) {
-                $this->_errors['handle'] = __('A Section with the handle %s already exists', array('<code>' . $meta['handle'] . '</code>'));
+            } elseif (null !== SectionManager::fetchIDFromHandle(Lang::createHandle($meta['handle']))) {
+                $this->_errors['handle'] = __('A Section with the handle %s already exists', array('<code>'.$meta['handle'].'</code>'));
                 $canProceed = false;
             }
 
             // Check to ensure all the required section fields are filled
-            if (!isset($meta['navigation_group']) || strlen(trim($meta['navigation_group'])) == 0) {
+            if (!isset($meta['navigation_group']) || 0 == strlen(trim($meta['navigation_group']))) {
                 $this->_errors['navigation_group'] = __('This is a required field.');
                 $canProceed = false;
             }
@@ -671,11 +668,11 @@ class contentBlueprintsSections extends AdministrationPage
                     $name_list = [];
 
                     foreach ($fields as $position => $data) {
-                        if (trim($data['element_name']) == '') {
+                        if ('' == trim($data['element_name'])) {
                             $data['element_name'] = $fields[$position]['element_name'] = $_POST['fields'][$position]['element_name'] = Lang::createHandle($data['label'], 255, '-', false, true, array('@^[\d-]+@i' => ''));
                         }
 
-                        if (trim($data['element_name']) != '' && in_array($data['element_name'], $name_list)) {
+                        if ('' != trim($data['element_name']) && in_array($data['element_name'], $name_list)) {
                             $this->_errors[$position] = array('element_name' => __('A field with this handle already exists. All handle must be unique.'));
                             $canProceed = false;
                             break;
@@ -701,7 +698,7 @@ class contentBlueprintsSections extends AdministrationPage
                         } elseif ($field->mustBeUnique() && in_array($field->get('type'), $unique)) {
                             // Warning. cannot have 2 of this field!
                             $canProceed = false;
-                            $this->_errors[$position] = array('label' => __('There is already a field of type %s. There can only be one per section.', array('<code>' . $field->handle() . '</code>')));
+                            $this->_errors[$position] = array('label' => __('There is already a field of type %s. There can only be one per section.', array('<code>'.$field->handle().'</code>')));
                         }
 
                         $errors = [];
@@ -719,7 +716,7 @@ class contentBlueprintsSections extends AdministrationPage
                 if (!$edit) {
                     $meta['sortorder'] = SectionManager::fetchNextSortOrder();
 
-                    /**
+                    /*
                      * Just prior to saving the Section settings. Use with caution as
                      * there is no additional processing to ensure that Field's or Section's
                      * are unique.
@@ -746,8 +743,7 @@ class contentBlueprintsSections extends AdministrationPage
 
                     // We are editing a Section
                 } else {
-
-                    /**
+                    /*
                      * Just prior to updating the Section settings. Use with caution as
                      * there is no additional processing to ensure that Field's or Section's
                      * are unique.
@@ -802,14 +798,14 @@ class contentBlueprintsSections extends AdministrationPage
                         foreach ($fields as $position => $data) {
                             $field = FieldManager::create($data['type']);
                             $field->setFromPOST($data);
-                            $field->set('sortorder', (string)$position);
+                            $field->set('sortorder', (string) $position);
                             $field->set('parent_section', $section_id);
 
                             // It is possible that the "existing" field has been deleted
                             // so we are dealing with an invalid id.
                             // First make sure the field table still exists and that
                             // there is a field with the corresponding id in it
-                            $newField = !((boolean)$field->get('id') && $field->tableExists() && $field->exists());
+                            $newField = !((bool) $field->get('id') && $field->tableExists() && $field->exists());
                             // If the field has not been found, erase the id from $_POST
                             if ($newField) {
                                 $field->set('id', false);
@@ -822,7 +818,7 @@ class contentBlueprintsSections extends AdministrationPage
 
                             if ($field_id) {
                                 if ($newField) {
-                                    /**
+                                    /*
                                      * After creation of a Field.
                                      *
                                      * @delegate FieldPostCreate
@@ -835,7 +831,7 @@ class contentBlueprintsSections extends AdministrationPage
                                      */
                                     Symphony::ExtensionManager()->notifyMembers('FieldPostCreate', '/blueprints/sections/', array('field' => &$field, 'data' => &$data));
                                 } else {
-                                    /**
+                                    /*
                                      * After editing of a Field.
                                      *
                                      * @delegate FieldPostEdit
@@ -853,7 +849,7 @@ class contentBlueprintsSections extends AdministrationPage
                     }
 
                     if (!$edit) {
-                        /**
+                        /*
                          * After the Section has been created, and all the Field's have been
                          * created for this section, but just before the redirect
                          *
@@ -866,9 +862,9 @@ class contentBlueprintsSections extends AdministrationPage
                          */
                         Symphony::ExtensionManager()->notifyMembers('SectionPostCreate', '/blueprints/sections/', array('section_id' => $section_id));
 
-                        redirect(SYMPHONY_URL . "/blueprints/sections/edit/$section_id/created/");
+                        redirect(SYMPHONY_URL."/blueprints/sections/edit/$section_id/created/");
                     } else {
-                        /**
+                        /*
                          * After the Section has been updated, and all the Field's have been
                          * updated for this section, but just before the redirect
                          *
@@ -881,7 +877,7 @@ class contentBlueprintsSections extends AdministrationPage
                          */
                         Symphony::ExtensionManager()->notifyMembers('SectionPostEdit', '/blueprints/sections/', array('section_id' => $section_id));
 
-                        redirect(SYMPHONY_URL . "/blueprints/sections/edit/$section_id/saved/");
+                        redirect(SYMPHONY_URL."/blueprints/sections/edit/$section_id/saved/");
                     }
                 }
             }
@@ -897,12 +893,13 @@ class contentBlueprintsSections extends AdministrationPage
                     SectionManager::fetch($section_id),
                     'delete'
                 );
+
                 return;
             }
 
             $section_ids = array($section_id);
 
-            /**
+            /*
              * Just prior to calling the Section Manager's delete function
              *
              * @delegate SectionPreDelete
@@ -918,7 +915,7 @@ class contentBlueprintsSections extends AdministrationPage
                 SectionManager::delete($section);
             }
 
-            redirect(SYMPHONY_URL . '/blueprints/sections/');
+            redirect(SYMPHONY_URL.'/blueprints/sections/');
         }
     }
 
@@ -948,7 +945,7 @@ class contentBlueprintsSections extends AdministrationPage
         $fieldset->appendChild($div);
         $this->Form->appendChild($fieldset);
 
-        /**
+        /*
          * Allows extensions to add elements to the header of the Section Editor
          * form. Usually for section settings, this delegate is passed the current
          * `$meta` array and the `$this->_errors` array.
@@ -968,7 +965,7 @@ class contentBlueprintsSections extends AdministrationPage
         Symphony::ExtensionManager()->notifyMembers('AddSectionElements', '/blueprints/sections/', array(
             'form' => &$this->Form,
             'meta' => &$meta,
-            'errors' => &$this->_errors
+            'errors' => &$this->_errors,
         ));
     }
 
@@ -977,10 +974,12 @@ class contentBlueprintsSections extends AdministrationPage
      * and set the proper error messages.
      *
      * @since Symphony 2.7.0
-     * @param  int $section_id
-     *   The entry id to validate
-     * @return boolean
-     *   true if the timestamp is valid
+     *
+     * @param int $section_id
+     *                        The entry id to validate
+     *
+     * @return bool
+     *              true if the timestamp is valid
      */
     protected function validateTimestamp($section_id, $checkMissing = false)
     {
@@ -989,6 +988,7 @@ class contentBlueprintsSections extends AdministrationPage
                 if (isset($this->_errors) && is_array($this->_errors)) {
                     $this->_errors['timestamp'] = __('The section could not be saved due to conflicting changes');
                 }
+
                 return false;
             } elseif (isset($_POST['action']['timestamp'])) {
                 $tv = new TimestampValidator('sections');
@@ -996,10 +996,12 @@ class contentBlueprintsSections extends AdministrationPage
                     if (isset($this->_errors) && is_array($this->_errors)) {
                         $this->_errors['timestamp'] = __('The section could not be saved due to conflicting changes');
                     }
+
                     return false;
                 }
             }
         }
+
         return true;
     }
 }

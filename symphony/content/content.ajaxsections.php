@@ -1,12 +1,9 @@
 <?php
-/**
- * @package content
- */
+
 /**
  * The AjaxSections page return an object of all sections and their fields
- * that are available for pre-population
+ * that are available for pre-population.
  */
-
 class contentAjaxSections extends JSONPage
 {
     public function view()
@@ -34,7 +31,7 @@ class contentAjaxSections extends JSONPage
                             'id' => $f->get('id'),
                             'name' => $f->get('label'),
                             'handle' => $f->get('element_name'),
-                            'type' => $f->get('type')
+                            'type' => $f->get('type'),
                         );
                     }
                 }
@@ -44,7 +41,7 @@ class contentAjaxSections extends JSONPage
                         'id' => $section->get('id'),
                         'name' => $section->get('name'),
                         'handle' => $section->get('handle'),
-                        'fields' => $fields
+                        'fields' => $fields,
                     );
                 }
             }

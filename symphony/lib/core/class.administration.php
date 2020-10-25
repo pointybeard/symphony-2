@@ -1,23 +1,19 @@
 <?php
 
 /**
- * @package core
- */
-
-/**
  * The Administration class is an instance of Symphony that controls
  * all backend pages. These pages are HTMLPages are usually generated
  * using XMLElement before being rendered as HTML. These pages do not
- * use XSLT. The Administration is only accessible by logged in Authors
+ * use XSLT. The Administration is only accessible by logged in Authors.
  */
-
 class Administration extends Symphony
 {
     /**
-     * The path of the current page, ie. '/blueprints/sections/'
+     * The path of the current page, ie. '/blueprints/sections/'.
+     *
      * @var string
      */
-    private $_currentPage  = null;
+    private $_currentPage = null;
 
     /**
      * An associative array of the page's callback, including the keys
@@ -28,20 +24,22 @@ class Administration extends Symphony
      * handled using the _switchboard function.
      *
      * @see toolkit.AdministrationPage#__switchboard()
-     * @var array|boolean
+     *
+     * @var array|bool
      */
     private $_callback = null;
 
     /**
      * The class representation of the current Symphony backend page,
      * which is a subclass of the `HTMLPage` class. Symphony uses a convention
-     * of prefixing backend page classes with 'content'. ie. 'contentBlueprintsSections'
+     * of prefixing backend page classes with 'content'. ie. 'contentBlueprintsSections'.
+     *
      * @var HTMLPage
      */
     public $Page;
 
     /**
-     * Overrides the default Symphony constructor to add XSRF checking
+     * Overrides the default Symphony constructor to add XSRF checking.
      */
     protected function __construct()
     {
@@ -56,14 +54,14 @@ class Administration extends Symphony
     /**
      * This function returns an instance of the Administration
      * class. It is the only way to create a new Administration, as
-     * it implements the Singleton interface
+     * it implements the Singleton interface.
      *
      * @return Administration
      */
     public static function instance()
     {
         if (!(self::$_instance instanceof Administration)) {
-            self::$_instance = new Administration;
+            self::$_instance = new Administration();
         }
 
         return self::$_instance;
@@ -73,7 +71,7 @@ class Administration extends Symphony
      * Returns the current Page path, excluding the domain and Symphony path.
      *
      * @return string
-     *  The path of the current page, ie. '/blueprints/sections/'
+     *                The path of the current page, ie. '/blueprints/sections/'
      */
     public function getCurrentPageURL()
     {
@@ -86,10 +84,11 @@ class Administration extends Symphony
      * is present. This logs an Author in using the loginFromToken function.
      * A token may be 6 or 8 characters in length in the backend. A 6 or 16 character token
      * is used for forget password requests, whereas the 8 character token is used to login
-     * an Author into the page
+     * an Author into the page.
      *
      * @see core.Symphony#loginFromToken()
-     * @return boolean
+     *
+     * @return bool
      */
     public static function isLoggedIn()
     {
@@ -104,22 +103,24 @@ class Administration extends Symphony
      * Given the URL path of a Symphony backend page, this function will
      * attempt to resolve the URL to a Symphony content page in the backend
      * or a page provided by an extension. This function checks to ensure a user
-     * is logged in, otherwise it will direct them to the login page
+     * is logged in, otherwise it will direct them to the login page.
      *
      * @param string $page
-     *  The URL path after the root of the Symphony installation, including a starting
-     *  slash, such as '/login/'
+     *                     The URL path after the root of the Symphony installation, including a starting
+     *                     slash, such as '/login/'
+     *
      * @throws SymphonyErrorPage
      * @throws Exception
+     *
      * @return HTMLPage
      */
     private function __buildPage($page)
     {
         $is_logged_in = self::isLoggedIn();
 
-        if (empty($page) || is_null($page)) {
+        if (empty($page) || null === $page) {
             if (!$is_logged_in) {
-                $page  = "/login";
+                $page = '/login';
             } else {
                 // Will redirect an Author to their default area of the Backend
                 // Integers are indicative of section's, text is treated as the path
@@ -143,50 +144,50 @@ class Administration extends Symphony
                         }
                     }
 
-                    if (!is_null($section_handle)) {
+                    if (null !== $section_handle) {
                         $default_area = "/publish/{$section_handle}/";
                     }
-                } elseif (!is_null(Symphony::Author()->get('default_area'))) {
-                    $default_area = preg_replace('/^' . preg_quote(SYMPHONY_URL, '/') . '/i', '', Symphony::Author()->get('default_area'));
+                } elseif (null !== Symphony::Author()->get('default_area')) {
+                    $default_area = preg_replace('/^'.preg_quote(SYMPHONY_URL, '/').'/i', '', Symphony::Author()->get('default_area'));
                 }
 
                 // Fallback: No default area found
-                if (is_null($default_area)) {
+                if (null === $default_area) {
                     if (Symphony::Author()->isDeveloper()) {
                         // Redirect to the section index if author is a developer
-                        redirect(SYMPHONY_URL . '/blueprints/sections/');
+                        redirect(SYMPHONY_URL.'/blueprints/sections/');
                     } else {
                         // Redirect to the author page if author is not a developer
-                        redirect(SYMPHONY_URL . "/system/authors/edit/".Symphony::Author()->get('id')."/");
+                        redirect(SYMPHONY_URL.'/system/authors/edit/'.Symphony::Author()->get('id').'/');
                     }
                 } else {
-                    redirect(SYMPHONY_URL . $default_area);
+                    redirect(SYMPHONY_URL.$default_area);
                 }
             }
         }
 
         if (!$this->_callback = $this->getPageCallback($page)) {
-            if ($page === '/publish/') {
+            if ('/publish/' === $page) {
                 $sections = SectionManager::fetch(null, 'ASC', 'sortorder');
                 $section = current($sections);
-                redirect(SYMPHONY_URL . '/publish/' . $section->get('handle'));
+                redirect(SYMPHONY_URL.'/publish/'.$section->get('handle'));
             } else {
                 $this->errorPageNotFound();
             }
         }
 
-        include_once($this->_callback['driver_location']);
-        $this->Page = new $this->_callback['classname'];
+        include_once $this->_callback['driver_location'];
+        $this->Page = new $this->_callback['classname']();
 
-        if (!$is_logged_in && $this->_callback['driver'] !== 'login') {
+        if (!$is_logged_in && 'login' !== $this->_callback['driver']) {
             if (is_callable(array($this->Page, 'handleFailedAuthorisation'))) {
                 $this->Page->handleFailedAuthorisation();
             } else {
-                $this->Page = new contentLogin;
+                $this->Page = new contentLogin();
 
                 // Include the query string for the login, RE: #2324
                 if ($queryString = $this->Page->__buildQueryString(array('symphony-page', 'mode'), FILTER_SANITIZE_STRING)) {
-                    $page .= '?' . $queryString;
+                    $page .= '?'.$queryString;
                 }
                 $this->Page->build(array('redirect' => $page));
             }
@@ -214,30 +215,31 @@ class Administration extends Symphony
      * to the page.
      *
      * @since Symphony 2.5.2
-     * @return boolean
-     *  Returns true if there is an update available, false otherwise.
+     *
+     * @return bool
+     *              Returns true if there is an update available, false otherwise
      */
     public function checkCoreForUpdates()
     {
         // Is there even an install directory to check?
-        if ($this->isInstallerAvailable() === false) {
+        if (false === $this->isInstallerAvailable()) {
             return false;
         }
 
         try {
             // The updater contains a version higher than the current Symphony version.
             if ($this->isUpgradeAvailable()) {
-                $message = __('An update has been found in your installation to upgrade Symphony to %s.', array($this->getMigrationVersion())) . ' <a href="' . URL . '/install/">' . __('View update.') . '</a>';
+                $message = __('An update has been found in your installation to upgrade Symphony to %s.', array($this->getMigrationVersion())).' <a href="'.URL.'/install/">'.__('View update.').'</a>';
 
-                // The updater contains a version lower than the current Symphony version.
+            // The updater contains a version lower than the current Symphony version.
                 // The updater is the same version as the current Symphony install.
             } else {
-                $message = __('Your Symphony installation is up to date, but the installer was still detected. For security reasons, it should be removed.') . ' <a href="' . URL . '/install/?action=remove">' . __('Remove installer?') . '</a>';
+                $message = __('Your Symphony installation is up to date, but the installer was still detected. For security reasons, it should be removed.');
             }
 
             // Can't detect update Symphony version
         } catch (Exception $e) {
-            $message = __('An update script has been found in your installation.') . ' <a href="' . URL . '/install/">' . __('View update.') . '</a>';
+            $message = __('An update script has been found in your installation.').' <a href="'.URL.'/install/">'.__('View update.').'</a>';
         }
 
         $this->Page->pageAlert($message, Alert::NOTICE);
@@ -247,7 +249,7 @@ class Administration extends Symphony
 
     /**
      * Checks all installed extensions to see any have an outstanding update. If any do
-     * an Alert will be added to the current page directing the Author to the Extension page
+     * an Alert will be added to the current page directing the Author to the Extension page.
      *
      * @since Symphony 2.5.2
      */
@@ -261,7 +263,7 @@ class Administration extends Symphony
 
                 if (array_key_exists('status', $about) && in_array(EXTENSION_REQUIRES_UPDATE, $about['status'])) {
                     $this->Page->pageAlert(
-                        __('An extension requires updating.') . ' <a href="' . SYMPHONY_URL . '/system/extensions/">' . __('View extensions') . '</a>'
+                        __('An extension requires updating.').' <a href="'.SYMPHONY_URL.'/system/extensions/">'.__('View extensions').'</a>'
                     );
                     break;
                 }
@@ -272,10 +274,11 @@ class Administration extends Symphony
     /**
      * This function determines whether an administrative alert can be
      * displayed on the current page. It ensures that the page exists,
-     * and the user is logged in and a developer
+     * and the user is logged in and a developer.
      *
      * @since Symphony 2.2
-     * @return boolean
+     *
+     * @return bool
      */
     private function __canAccessAlerts()
     {
@@ -295,12 +298,14 @@ class Administration extends Symphony
      * be found, this function will return false.
      *
      * @uses AdminPagePostCallback
+     *
      * @param string $page
-     *  The full path (including the domain) of the Symphony backend page
-     * @return array|boolean
-     *  If successful, this function will return an associative array that at the
-     *  very least will return the page's classname, pageroot, driver, driver_location
-     *  and context, otherwise this will return false.
+     *                     The full path (including the domain) of the Symphony backend page
+     *
+     * @return array|bool
+     *                    If successful, this function will return an associative array that at the
+     *                    very least will return the page's classname, pageroot, driver, driver_location
+     *                    and context, otherwise this will return false
      */
     public function getPageCallback($page = null)
     {
@@ -310,20 +315,20 @@ class Administration extends Symphony
             trigger_error(__('Cannot request a page callback without first specifying the page.'));
         }
 
-        $this->_currentPage = SYMPHONY_URL . preg_replace('/\/{2,}/', '/', $page);
+        $this->_currentPage = SYMPHONY_URL.preg_replace('/\/{2,}/', '/', $page);
         $bits = preg_split('/\//', trim($page, '/'), 3, PREG_SPLIT_NO_EMPTY);
         $callback = array(
             'driver' => null,
             'driver_location' => null,
             'context' => null,
             'classname' => null,
-            'pageroot' => null
+            'pageroot' => null,
         );
 
         // Login page, /symphony/login/
-        if ($bits[0] == 'login') {
+        if ('login' == $bits[0]) {
             if (isset($bits[1], $bits[2])) {
-                $context = preg_split('/\//', $bits[1] . '/' . $bits[2], -1, PREG_SPLIT_NO_EMPTY);
+                $context = preg_split('/\//', $bits[1].'/'.$bits[2], -1, PREG_SPLIT_NO_EMPTY);
             } elseif (isset($bits[1])) {
                 $context = preg_split('/\//', $bits[1], -1, PREG_SPLIT_NO_EMPTY);
             } else {
@@ -332,50 +337,50 @@ class Administration extends Symphony
 
             $callback = array(
                 'driver' => 'login',
-                'driver_location' => CONTENT . '/content.login.php',
+                'driver_location' => CONTENT.'/content.login.php',
                 'context' => $context,
                 'classname' => 'contentLogin',
-                'pageroot' => '/login/'
+                'pageroot' => '/login/',
             );
 
-            // Extension page, /symphony/extension/{extension_name}/
-        } elseif ($bits[0] == 'extension' && isset($bits[1])) {
+        // Extension page, /symphony/extension/{extension_name}/
+        } elseif ('extension' == $bits[0] && isset($bits[1])) {
             $extension_name = $bits[1];
             $bits = preg_split('/\//', trim($bits[2], '/'), 2, PREG_SPLIT_NO_EMPTY);
 
             $callback['driver'] = 'index';
-            $callback['classname'] = 'contentExtension' . ucfirst($extension_name) . 'Index';
-            $callback['pageroot'] = '/extension/' . $extension_name. '/';
+            $callback['classname'] = 'contentExtension'.ucfirst($extension_name).'Index';
+            $callback['pageroot'] = '/extension/'.$extension_name.'/';
 
             if (isset($bits[0])) {
                 $callback['driver'] = $bits[0];
-                $callback['classname'] = 'contentExtension' . ucfirst($extension_name) . ucfirst($bits[0]);
-                $callback['pageroot'] .= $bits[0] . '/';
+                $callback['classname'] = 'contentExtension'.ucfirst($extension_name).ucfirst($bits[0]);
+                $callback['pageroot'] .= $bits[0].'/';
             }
 
             if (isset($bits[1])) {
                 $callback['context'] = preg_split('/\//', $bits[1], -1, PREG_SPLIT_NO_EMPTY);
             }
 
-            $callback['driver_location'] = EXTENSIONS . '/' . $extension_name . '/content/content.' . $callback['driver'] . '.php';
+            $callback['driver_location'] = EXTENSIONS.'/'.$extension_name.'/content/content.'.$callback['driver'].'.php';
 
-            // Publish page, /symphony/publish/{section_handle}/
-        } elseif ($bits[0] == 'publish') {
+        // Publish page, /symphony/publish/{section_handle}/
+        } elseif ('publish' == $bits[0]) {
             if (!isset($bits[1])) {
                 return false;
             }
 
             $callback = array(
                 'driver' => 'publish',
-                'driver_location' => $callback['driver_location'] = CONTENT . '/content.publish.php',
+                'driver_location' => $callback['driver_location'] = CONTENT.'/content.publish.php',
                 'context' => array(
                     'section_handle' => $bits[1],
                     'page' => null,
                     'entry_id' => null,
-                    'flag' => null
+                    'flag' => null,
                 ),
-                'pageroot' => '/' . $bits[0] . '/' . $bits[1] . '/',
-                'classname' => 'contentPublish'
+                'pageroot' => '/'.$bits[0].'/'.$bits[1].'/',
+                'classname' => 'contentPublish',
             );
 
             if (isset($bits[2])) {
@@ -396,23 +401,23 @@ class Administration extends Symphony
             // Everything else
         } else {
             $callback['driver'] = ucfirst($bits[0]);
-            $callback['pageroot'] = '/' . $bits[0] . '/';
+            $callback['pageroot'] = '/'.$bits[0].'/';
 
             if (isset($bits[1])) {
-                $callback['driver'] = $callback['driver'] . ucfirst($bits[1]);
-                $callback['pageroot'] .= $bits[1] . '/';
+                $callback['driver'] = $callback['driver'].ucfirst($bits[1]);
+                $callback['pageroot'] .= $bits[1].'/';
             }
 
             if (isset($bits[2])) {
                 $callback['context'] = preg_split('/\//', $bits[2], -1, PREG_SPLIT_NO_EMPTY);
             }
 
-            $callback['classname'] = 'content' . $callback['driver'];
+            $callback['classname'] = 'content'.$callback['driver'];
             $callback['driver'] = strtolower($callback['driver']);
-            $callback['driver_location'] = CONTENT . '/content.' . $callback['driver'] . '.php';
+            $callback['driver_location'] = CONTENT.'/content.'.$callback['driver'].'.php';
         }
 
-        /**
+        /*
          * Immediately after determining which class will resolve the current page, this
          * delegate allows extension to modify the routing or provide additional information.
          *
@@ -435,7 +440,7 @@ class Administration extends Symphony
         Symphony::ExtensionManager()->notifyMembers('AdminPagePostCallback', '/backend/', array(
             'page' => $this->_currentPage,
             'parts' => $bits,
-            'callback' => &$callback
+            'callback' => &$callback,
         ));
 
         if (isset($callback['driver_location']) && !is_file($callback['driver_location'])) {
@@ -454,21 +459,25 @@ class Administration extends Symphony
      * @uses AdminPagePreBuild
      * @uses AdminPagePreGenerate
      * @uses AdminPagePostGenerate
+     *
      * @see core.Symphony#__buildPage()
      * @see boot.getCurrentPage()
+     *
      * @param string $page
-     *  The result of getCurrentPage, which returns the $_GET['symphony-page']
-     *  variable.
+     *                     The result of getCurrentPage, which returns the $_GET['symphony-page']
+     *                     variable
+     *
      * @throws Exception
      * @throws SymphonyErrorPage
+     *
      * @return string
-     *  The HTML of the page to return
+     *                The HTML of the page to return
      */
     public function display($page)
     {
         Symphony::Profiler()->sample('Page build process started');
 
-        /**
+        /*
          * Immediately before building the admin page. Provided with the page parameter
          * @delegate AdminPagePreBuild
          * @since Symphony 2.6.0
@@ -487,7 +496,7 @@ class Administration extends Symphony
             $this->Page->Form->prependChild(XSRF::formToken());
         }
 
-        /**
+        /*
          * Immediately before generating the admin page. Provided with the page object
          * @delegate AdminPagePreGenerate
          * @param string $context
@@ -501,7 +510,7 @@ class Administration extends Symphony
 
         $output = $this->Page->generate();
 
-        /**
+        /*
          * Immediately after generating the admin page. Provided with string containing page source
          * @delegate AdminPagePostGenerate
          * @param string $context
@@ -519,7 +528,7 @@ class Administration extends Symphony
     /**
      * If a page is not found in the Symphony backend, this function should
      * be called which will raise a customError to display the default Symphony
-     * page not found template
+     * page not found template.
      */
     public function errorPageNotFound()
     {

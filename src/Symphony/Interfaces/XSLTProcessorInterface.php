@@ -1,10 +1,11 @@
 <?php
 
-declare(strict_types=1);
+//declare(strict_types=1);
 
 namespace Symphony\Symphony\Interfaces;
 
-interface XSLTProcessorInterface {
+interface XSLTProcessorInterface
+{
     public static function isXSLTProcessorAvailable(): bool;
 
     public function process(
@@ -15,6 +16,8 @@ interface XSLTProcessorInterface {
     );
 
     public function validate(string $xsd, ?string $xml = null): bool;
+
     public function isErrors(): bool;
+
     public function getError(bool $all = false, bool $rewind = false): ?array;
 }

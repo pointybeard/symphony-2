@@ -1,10 +1,8 @@
 <?php
-/**
- * @package content
- */
+
 /**
  * The AjaxHandle page is used for generating handles on the fly
- * that are used in Symphony's javascript
+ * that are used in Symphony's javascript.
  */
 class contentAjaxHandle extends JSONPage
 {

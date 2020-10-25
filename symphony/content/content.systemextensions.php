@@ -1,20 +1,16 @@
 <?php
 
 /**
- * @package content
- */
-/**
  * This page generates the Extensions index which shows all Extensions
  * that are available in this Symphony installation.
  */
-
 class contentSystemExtensions extends AdministrationPage
 {
     public function sort(&$sort, &$order, $params)
     {
-        $sort = is_null($sort) ? 'name' : General::sanitize($sort);
+        $sort = null === $sort ? 'name' : General::sanitize($sort);
 
-        return ExtensionManager::fetch(array(), array(), $sort . ' ' . $order);
+        return ExtensionManager::fetch(array(), array(), $sort.' '.$order);
     }
 
     public function __viewIndex()
@@ -24,11 +20,11 @@ class contentSystemExtensions extends AdministrationPage
         $this->setTitle(__('%1$s &ndash; %2$s', array(__('Extensions'), __('Symphony'))));
         $this->addElementToHead(new XMLElement('link', null, array(
             'rel' => 'canonical',
-            'href' => SYMPHONY_URL . $canonical_link,
+            'href' => SYMPHONY_URL.$canonical_link,
         )));
         $this->appendSubheading(__('Extensions'));
 
-        $this->Form->setAttribute('action', SYMPHONY_URL . $canonical_link);
+        $this->Form->setAttribute('action', SYMPHONY_URL.$canonical_link);
 
         Sortable::initialize($this, $extensions, $sort, $order);
 
@@ -36,7 +32,7 @@ class contentSystemExtensions extends AdministrationPage
             array(
                 'label' => __('Name'),
                 'sortable' => true,
-                'handle' => 'name'
+                'handle' => 'name',
             ),
             array(
                 'label' => __('Version'),
@@ -49,20 +45,20 @@ class contentSystemExtensions extends AdministrationPage
             array(
                 'label' => __('Links'),
                 'sortable' => false,
-                'handle' => 'links'
+                'handle' => 'links',
             ),
             array(
                 'label' => __('Authors'),
                 'sortable' => true,
-                'handle' => 'author'
-            )
+                'handle' => 'author',
+            ),
         );
 
         $aTableHead = Sortable::buildTableHeaders(
             $columns,
             $sort,
             $order,
-            (isset($_REQUEST['filter']) ? '&amp;filter=' . $_REQUEST['filter'] : '')
+            (isset($_REQUEST['filter']) ? '&amp;filter='.$_REQUEST['filter'] : '')
         );
 
         $aTableBody = [];
@@ -70,18 +66,18 @@ class contentSystemExtensions extends AdministrationPage
         if (!is_array($extensions) || empty($extensions)) {
             $aTableBody = array(
                 Widget::TableRow(array(
-                    Widget::TableData(__('None found.'), 'inactive', null, count($aTableHead))
-                ), 'odd')
+                    Widget::TableData(__('None found.'), 'inactive', null, count($aTableHead)),
+                ), 'odd'),
             );
         } else {
             foreach ($extensions as $name => $about) {
                 // Name
                 $td1 = Widget::TableData($about['name']);
                 $td1->appendChild(Widget::Label(__('Select %s Extension', array($about['name'])), null, 'accessible', null, array(
-                    'for' => 'extension-' . $name
+                    'for' => 'extension-'.$name,
                 )));
                 $td1->appendChild(Widget::Input('items['.$name.']', 'on', 'checkbox', array(
-                    'id' => 'extension-' . $name
+                    'id' => 'extension-'.$name,
                 )));
 
                 // Version
@@ -90,7 +86,7 @@ class contentSystemExtensions extends AdministrationPage
                 if (in_array(Extension::EXTENSION_NOT_INSTALLED, $about['status'])) {
                     $td2 = Widget::TableData($about['version']);
                 } elseif (in_array(Extension::EXTENSION_REQUIRES_UPDATE, $about['status'])) {
-                    $td2 = Widget::TableData($installed_version . '<i> → ' . $about['version'] . '</i>');
+                    $td2 = Widget::TableData($installed_version.'<i> → '.$about['version'].'</i>');
                 } else {
                     $td2 = Widget::TableData($installed_version);
                 }
@@ -122,7 +118,7 @@ class contentSystemExtensions extends AdministrationPage
                 }
 
                 if (in_array(Extension::EXTENSION_NOT_COMPATIBLE, $about['status'])) {
-                    $tdMessage .= ', ' . __('requires Symphony %s', array($about['required_version']));
+                    $tdMessage .= ', '.__('requires Symphony %s', array($about['required_version']));
                     $trStatus = 'status-error';
                 }
 
@@ -132,25 +128,25 @@ class contentSystemExtensions extends AdministrationPage
                 // Links
                 $tdLinks = [];
 
-                if ($about['github'] != '') {
+                if ('' != $about['github']) {
                     $tdLinks['github'] = Widget::Anchor(__('GitHub'), General::validateURL($about['github']))->generate();
                 }
 
-                if ($about['discuss'] != '') {
+                if ('' != $about['discuss']) {
                     $tdLinks['discuss'] = Widget::Anchor(__('Discuss'), General::validateURL($about['discuss']))->generate();
                     // Update links to point to our 'new' domain, RE: #1995
                     $tdLinks['discuss'] = str_replace('symphony-cms.com', 'getsymphony.com', $tdLinks['discuss']);
                 }
 
-                if ($about['homepage'] != '') {
+                if ('' != $about['homepage']) {
                     $tdLinks['homepage'] = Widget::Anchor(__('Homepage'), General::validateURL($about['homepage']))->generate();
                 }
 
-                if ($about['wiki'] != '') {
+                if ('' != $about['wiki']) {
                     $tdLinks['wiki'] = Widget::Anchor(__('Wiki'), General::validateURL($about['wiki']))->generate();
                 }
 
-                if ($about['issues'] != '') {
+                if ('' != $about['issues']) {
                     $tdLinks['issues'] = Widget::Anchor(__('Issues'), General::validateURL($about['issues']))->generate();
                 }
 
@@ -167,9 +163,9 @@ class contentSystemExtensions extends AdministrationPage
                     if (isset($author['website'])) {
                         $tdAuthors[] = Widget::Anchor($author['name'], General::validateURL($author['website']))->generate();
                     } elseif (isset($author['github'])) {
-                        $tdAuthors[] = Widget::Anchor($author['name'], General::validateURL('https://github.com/' . $author['github']))->generate();
+                        $tdAuthors[] = Widget::Anchor($author['name'], General::validateURL('https://github.com/'.$author['github']))->generate();
                     } elseif (isset($author['email'])) {
-                        $tdAuthors[] = Widget::Anchor($author['name'], 'mailto:' . $author['email'])->generate();
+                        $tdAuthors[] = Widget::Anchor($author['name'], 'mailto:'.$author['email'])->generate();
                     } else {
                         $tdAuthors[] = $author['name'];
                     }
@@ -201,8 +197,8 @@ class contentSystemExtensions extends AdministrationPage
 
         $this->Form->appendChild($table);
 
-        $version = new XMLElement('p', 'Symphony ' . Symphony::Configuration()->get('version', 'symphony'), array(
-            'id' => 'version'
+        $version = new XMLElement('p', 'Symphony '.Symphony::Configuration()->get('version', 'symphony'), array(
+            'id' => 'version',
         ));
 
         $this->Form->appendChild($version);
@@ -215,11 +211,11 @@ class contentSystemExtensions extends AdministrationPage
             array('enable', false, __('Enable')),
             array('disable', false, __('Disable')),
             array('uninstall', false, __('Uninstall'), 'confirm', null, array(
-                'data-message' => __('Are you sure you want to uninstall the selected extensions?')
-            ))
+                'data-message' => __('Are you sure you want to uninstall the selected extensions?'),
+            )),
         );
 
-        /**
+        /*
          * Allows an extension to modify the existing options for this page's
          * With Selected menu. If the `$options` parameter is an empty array,
          * the 'With Selected' menu will not be rendered.
@@ -234,7 +230,7 @@ class contentSystemExtensions extends AdministrationPage
          *  expected by `Widget::__SelectBuildOption`. Passed by reference.
          */
         Symphony::ExtensionManager()->notifyMembers('AddCustomActions', '/system/extensions/', array(
-            'options' => &$options
+            'options' => &$options,
         ));
 
         if (!empty($options)) {
@@ -247,7 +243,7 @@ class contentSystemExtensions extends AdministrationPage
     {
         $checked = (is_array($_POST['items'])) ? array_keys($_POST['items']) : null;
 
-        /**
+        /*
          * Extensions can listen for any custom actions that were added
          * through `AddCustomPreferenceFieldsets` or `AddCustomActions`
          * delegates.
@@ -261,14 +257,14 @@ class contentSystemExtensions extends AdministrationPage
          *  the associated object.
          */
         Symphony::ExtensionManager()->notifyMembers('CustomActions', '/system/extensions/', array(
-            'checked' => $checked
+            'checked' => $checked,
         ));
 
         if (isset($_POST['with-selected']) && is_array($checked) && !empty($checked)) {
             try {
                 switch ($_POST['with-selected']) {
                     case 'enable':
-                        /**
+                        /*
                          * Notifies just before an Extension is to be enabled.
                          *
                          * @delegate ExtensionPreEnable
@@ -281,13 +277,13 @@ class contentSystemExtensions extends AdministrationPage
                         Symphony::ExtensionManager()->notifyMembers('ExtensionPreEnable', '/system/extensions/', array('extensions' => &$checked));
 
                         foreach ($checked as $name) {
-                            if (Symphony::ExtensionManager()->enable($name) === false) {
+                            if (false === Symphony::ExtensionManager()->enable($name)) {
                                 return;
                             }
                         }
                         break;
                     case 'disable':
-                        /**
+                        /*
                          * Notifies just before an Extension is to be disabled.
                          *
                          * @delegate ExtensionPreDisable
@@ -304,7 +300,7 @@ class contentSystemExtensions extends AdministrationPage
                         }
                         break;
                     case 'uninstall':
-                        /**
+                        /*
                          * Notifies just before an Extension is to be uninstalled
                          *
                          * @delegate ExtensionPreUninstall
