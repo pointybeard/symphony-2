@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Exceptions;
 
 use Symphony\Symphony;
@@ -146,8 +144,7 @@ class SymphonyErrorPageException extends SymphonyException
         // preserves backwards compatibility
         if (file_exists($template = sprintf('%s/usererror.%s.php', WORKSPACE.'/template', $this->template))) {
             return $template;
-
-        } elseif (file_exists($template = sprintf("%s/%s.php", ERROR_PAGES, ucfirst(strtolower($this->template))))) {
+        } elseif (file_exists($template = sprintf('%s/%s.php', ERROR_PAGES, ucfirst(strtolower($this->template))))) {
             return $template;
         }
 

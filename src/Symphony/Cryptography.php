@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 use Symphony\Symphony\Cryptography\Pbkdf2;
@@ -61,10 +59,8 @@ class Cryptography
 
         if (true === $isHash) {
             return $input == $hash;
-
         } elseif ('PBKDF2v1' == $version) { // salted PBKDF2
             return Pbkdf2::compare($input, $hash);
-
         } else { // the hash provided doesn't make any sense
             return false;
         }

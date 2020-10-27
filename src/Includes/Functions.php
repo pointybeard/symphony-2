@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 /**
  * Redirects the browser to a specified location. Safer than using a
  * direct header() call.

@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -87,7 +85,7 @@ abstract class AbstractDevKitPage extends HtmlPage
      * `<h1>` with an anchor to this query string.
      *
      * @param \XMLElement $wrapper
-     *                            The parent `\XMLElement` to add the header to
+     *                             The parent `\XMLElement` to add the header to
      *
      * @throws InvalidArgumentException
      */
@@ -118,13 +116,13 @@ abstract class AbstractDevKitPage extends HtmlPage
      * @uses ManipulateDevKitNavigation
      *
      * @param \XMLElement $wrapper
-     *                            The parent \XMLElement to add the navigation to
+     *                             The parent \XMLElement to add the navigation to
      *
      * @throws InvalidArgumentException
      */
     protected function buildNavigation(\XMLElement $wrapper)
     {
-        $xml = new \DOMDocument;
+        $xml = new \DOMDocument();
         $xml->preserveWhiteSpace = false;
         $xml->formatOutput = true;
         $xml->load(ASSETS.'/xml/devkit_navigation.xml');
@@ -192,8 +190,8 @@ abstract class AbstractDevKitPage extends HtmlPage
      * @see buildJumpItem
      *
      * @param \XMLElement $wrapper
-     *                            The parent \XMLElement that the jump menu will be appended
-     *                            to. By default this is `<div id='jump'>`
+     *                             The parent \XMLElement that the jump menu will be appended
+     *                             to. By default this is `<div id='jump'>`
      */
     protected function buildJump(\XMLElement $wrapper)
     {
@@ -231,8 +229,8 @@ abstract class AbstractDevKitPage extends HtmlPage
      * The content of the Devkit, defaults to empty.
      *
      * @param \XMLElement $wrapper
-     *                            The parent \XMLElement that the content will be appended
-     *                            to. By default this is `<div id='content'>`
+     *                             The parent \XMLElement that the content will be appended
+     *                             to. By default this is `<div id='content'>`
      */
     protected function buildContent(\XMLElement $wrapper)
     {

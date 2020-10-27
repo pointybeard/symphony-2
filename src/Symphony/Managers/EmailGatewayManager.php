@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Managers;
 
 use Symphony\Symphony;
@@ -11,7 +9,7 @@ use Symphony\Symphony\Interfaces;
 /**
  * A manager to standardize the finding and listing of installed gateways.
  */
-class EmailGatewayManager  extends Symphony\AbstractManager implements Interfaces\FileResourceInterface
+class EmailGatewayManager extends Symphony\AbstractManager implements Interfaces\FileResourceInterface
 {
     /**
      * The default gateway to use when one is not provided. This value can
@@ -84,16 +82,15 @@ class EmailGatewayManager  extends Symphony\AbstractManager implements Interface
      */
     public static function __getClassPath($name)
     {
-        if (is_file(EMAILGATEWAYS."/".ucfirst(strtolower($name)).".php")) {
+        if (is_file(EMAILGATEWAYS.'/'.ucfirst(strtolower($name)).'.php')) {
             return EMAILGATEWAYS;
-
         } else {
             $extensions = \Symphony::ExtensionManager()->listInstalledHandles();
 
             if (is_array($extensions) && !empty($extensions)) {
                 foreach ($extensions as $e) {
                     // Check for both naming conventions: email.YYY.php and Yyy.php
-                    if (is_file(EXTENSIONS."/$e/email-gateways/email.$name.php") || is_file(EXTENSIONS."/$e/email-gateways/".ucfirst(strtolower($name)).".php")) {
+                    if (is_file(EXTENSIONS."/$e/email-gateways/email.$name.php") || is_file(EXTENSIONS."/$e/email-gateways/".ucfirst(strtolower($name)).'.php')) {
                         return EXTENSIONS."/$e/email-gateways";
                     }
                 }
@@ -115,11 +112,10 @@ class EmailGatewayManager  extends Symphony\AbstractManager implements Interface
      */
     public static function __getDriverPath($name)
     {
-        if(true == file_exists(self::__getClassPath($name)."/email.{$name}.php")) {
+        if (true == file_exists(self::__getClassPath($name)."/email.{$name}.php")) {
             return self::__getClassPath($name)."/email.{$name}.php";
-        
-        } elseif(true == file_exists(self::__getClassPath($name)."/".ucfirst(strtolower($name)).".php")) {
-            return self::__getClassPath($name)."/".ucfirst(strtolower($name)).".php";
+        } elseif (true == file_exists(self::__getClassPath($name).'/'.ucfirst(strtolower($name)).'.php')) {
+            return self::__getClassPath($name).'/'.ucfirst(strtolower($name)).'.php';
         }
 
         return false;
@@ -231,6 +227,6 @@ class EmailGatewayManager  extends Symphony\AbstractManager implements Interface
             include_once $path;
         }
 
-        return new $classname;
+        return new $classname();
     }
 }

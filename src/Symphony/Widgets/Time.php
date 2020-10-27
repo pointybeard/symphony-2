@@ -36,7 +36,7 @@ class Time extends Symphony\AbstractWidget {
         );
 
         if (true == $this->isPublishedDate()) {
-            $output->setAttribute('pubdate', 'pubdate')
+            $output->setAttribute('pubdate', 'pubdate');
         }
 
         return $output;

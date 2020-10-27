@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -17,9 +15,10 @@ namespace Symphony\Symphony;
  */
 class Sortable
 {
-
     // Ensure this class can never be instanciated
-    private function __construct(){}
+    private function __construct()
+    {
+    }
 
     /**
      * This method initializes the `$result`, `$sort` and `$order` variables by using the

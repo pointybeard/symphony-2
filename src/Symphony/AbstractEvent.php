@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -116,17 +114,14 @@ abstract class AbstractEvent implements Interfaces\EventInterface
     {
         if (true == file_exists($template = sprintf('%s/email.entrycreated.%s.tpl', WORKSPACE.'/template', $language))) {
             return $template;
-
         } elseif (true == file_exists($template = sprintf('%s/email.entrycreated.tpl', WORKSPACE.'/template'))) {
             return $template;
-
         } elseif (true == file_exists($template = sprintf('%s/Emails/EntryCreated.%s.tpl', TEMPLATE, $language))) {
             return $template;
-
         } elseif (true == file_exists($template = sprintf('%s/Emails/EntryCreated.tpl', TEMPLATE))) {
             return $template;
         }
-        
+
         return false;
     }
 

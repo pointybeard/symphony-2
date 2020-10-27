@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -10,9 +8,10 @@ namespace Symphony\Symphony;
  */
 class General
 {
-
     // Make sure this can never be instanciated
-    private function __construct(){}
+    private function __construct()
+    {
+    }
 
     /**
      * Convert any special characters into their entity equivalents. Since
@@ -169,7 +168,7 @@ class General
         libxml_use_internal_errors(true);
 
         // Load the document and check for errors
-        if (!(new \DOMDocument)->loadXML($xml)) {
+        if (!(new \DOMDocument())->loadXML($xml)) {
             $errors = [];
             foreach (libxml_get_errors() as $error) {
                 $errors[] = [
@@ -945,12 +944,12 @@ class General
      * The input XML element will be modified as a result of calling this.
      *
      * @param \XMLElement $parent
-     *                             the XML element to append the formatted array data to
-     * @param array      $data
-     *                             the array to format and append to the XML fragment
-     * @param bool       $validate
-     *                             true if the formatted array data should be validated as it is
-     *                             constructed, false otherwise
+     *                              the XML element to append the formatted array data to
+     * @param array       $data
+     *                              the array to format and append to the XML fragment
+     * @param bool        $validate
+     *                              true if the formatted array data should be validated as it is
+     *                              constructed, false otherwise
      */
     public static function array_to_xml(\XMLElement $parent, array $data, $validate = false)
     {

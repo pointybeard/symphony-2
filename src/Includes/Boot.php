@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 require DOCROOT . '/vendor/autoload.php';
 
 use Symphony\Symphony;

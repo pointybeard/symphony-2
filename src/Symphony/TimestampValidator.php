@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -64,7 +62,7 @@ class TimestampValidator
             WHERE `id` = $id
             AND `modification_date` = '$timestamp'
         ";
-        
+
         $results = \Symphony::Database()->fetchVar('id', 0, $sql);
 
         return !empty($results) && \General::intval($results) === $id;

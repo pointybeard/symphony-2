@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Interfaces;
 
 /**
@@ -82,5 +80,3 @@ interface CacheInterface
      */
     public function delete($hash);
 }
-
-

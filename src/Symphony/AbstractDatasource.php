@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -90,11 +88,11 @@ abstract class AbstractDatasource implements Interfaces\DatasourceInterface
      * @see toolkit.Datasource#processParameters()
      *
      * @param array $env
-     *                              The environment variables from the Frontend class which includes
-     *                              any params set by Symphony or Events or by other Datasources
+     *                             The environment variables from the Frontend class which includes
+     *                             any params set by Symphony or Events or by other Datasources
      * @param bool  $processParams
-     *                              If set to true, `self::processParameters` will be called. By default
-     *                              this is true
+     *                             If set to true, `self::processParameters` will be called. By default
+     *                             this is true
      *
      * @throws \FrontendPageNotFoundException
      */
@@ -210,8 +208,8 @@ abstract class AbstractDatasource implements Interfaces\DatasourceInterface
      * which appends an \XMLElement to the current root element.
      *
      * @param \XMLElement $xml
-     *                        The root element \XMLElement for this datasource. By default, this will
-     *                        the handle of the datasource, as defined by `$this->dsParamROOTELEMENT`
+     *                         The root element \XMLElement for this datasource. By default, this will
+     *                         the handle of the datasource, as defined by `$this->dsParamROOTELEMENT`
      *
      * @return \XMLElement
      */
@@ -231,8 +229,8 @@ abstract class AbstractDatasource implements Interfaces\DatasourceInterface
      * which appends an \XMLElement to the current root element.
      *
      * @param \XMLElement $xml
-     *                        The root element \XMLElement for this datasource. By default, this will
-     *                        the handle of the datasource, as defined by `$this->dsParamROOTELEMENT`
+     *                         The root element \XMLElement for this datasource. By default, this will
+     *                         the handle of the datasource, as defined by `$this->dsParamROOTELEMENT`
      *
      * @return \XMLElement
      */

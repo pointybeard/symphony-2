@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Managers;
 
 use Symphony\Symphony;
@@ -947,7 +945,7 @@ class ExtensionManager extends Symphony\AbstractManager implements Interfaces\Fi
         // See if the extension has the new meta format
         if (file_exists(self::__getClassPath($name).'/extension.meta.xml')) {
             try {
-                $meta = new \DOMDocument;
+                $meta = new \DOMDocument();
                 $meta->load(self::__getClassPath($name).'/extension.meta.xml');
                 $xpath = new \DOMXPath($meta);
                 $rootNamespace = $meta->lookupNamespaceUri($meta->namespaceURI);

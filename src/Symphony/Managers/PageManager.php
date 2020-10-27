@@ -1,11 +1,8 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Managers;
 
 use Symphony\Symphony;
-use Symphony\Symphony\Exceptions;
 
 /**
  * The `PageManager` class is responsible for providing basic CRUD operations
@@ -120,9 +117,10 @@ class PageManager extends Symphony\AbstractManager
 
     private static function getTemplatePathFromName(string $name): ?string
     {
-        $bits = explode(".", strtolower($name));
-        $bits = array_map("ucfirst", $bits);
-        return implode("/", $bits);
+        $bits = explode('.', strtolower($name));
+        $bits = array_map('ucfirst', $bits);
+
+        return implode('/', $bits);
     }
 
     /**
@@ -749,7 +747,7 @@ class PageManager extends Symphony\AbstractManager
      */
     public static function createHandle($name)
     {
-        return Lang::createHandle($name, 255, '-', false, true, array(
+        return Symphony\Lang::createHandle($name, 255, '-', false, true, array(
             '@^[^a-z\d]+@i' => '',
             '@[^-\.\w]@i' => '',
         ));

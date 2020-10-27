@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Handlers;
 
 use Symphony\Symphony;
@@ -107,14 +105,13 @@ class GenericExceptionHandler
         $output = '';
 
         try {
-
             // If this is anything other than a SymphonyException, e.g. TypeError,
             // then let it fall through and be handled by the GenericExceptionHandler
             // rather than rendered as a Symphony 404 page
-            if(false == ($exception instanceof Exceptions\SymphonyException)) {
-                 $e = $exception;
+            if (false == ($exception instanceof Exceptions\SymphonyException)) {
+                $e = $exception;
 
-            // This is a SymphonyException so we don't need to see much in the 
+            // This is a SymphonyException so we don't need to see much in the
             // way of errors. Instead, show a 404 page
             } else {
                 // Instead of just throwing an empty page, return a 404 page.
@@ -128,7 +125,7 @@ class GenericExceptionHandler
                 }
             }
 
-            $exceptionType = array_pop(explode("\\", get_class($e)));
+            $exceptionType = array_pop(explode('\\', get_class($e)));
 
             if (class_exists("\\Symphony\\Symphony\\Handlers\\{$exceptionType}Handler") && method_exists("\\Symphony\\Symphony\\Handlers\\{$exceptionType}Handler", 'render')) {
                 $class = "{$exceptionType}Handler";
@@ -143,7 +140,7 @@ class GenericExceptionHandler
 
             $output = call_user_func([$class, 'render'], $e);
 
-        // If an exception was raised trying to render the exception, fall back
+            // If an exception was raised trying to render the exception, fall back
         // to the generic exception handler
         } catch (\Exception $exception) {
             try {
@@ -185,9 +182,10 @@ class GenericExceptionHandler
 
     private static function getTemplatePathFromName(string $name): ?string
     {
-        $bits = explode(".", strtolower($name));
-        $bits = array_map("ucfirst", $bits);
-        return implode("/", $bits);
+        $bits = explode('.', strtolower($name));
+        $bits = array_map('ucfirst', $bits);
+
+        return implode('/', $bits);
     }
 
     /**

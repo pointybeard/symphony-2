@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -155,12 +153,12 @@ class HtmlPage extends AbstractPage
      * @see toolkit.General#array_find_available_index()
      *
      * @param \XMLElement $object
-     * @param int        $position
-     *                                   Defaults to null which will put the `$object` at the end of the
-     *                                   `$this->_head`
-     * @param bool       $allowDuplicate
-     *                                   If set to false, make this function check if there is already an \XMLElement that as the same name in the head.
-     *                                   Defaults to true. @since Symphony 2.3.2
+     * @param int         $position
+     *                                    Defaults to null which will put the `$object` at the end of the
+     *                                    `$this->_head`
+     * @param bool        $allowDuplicate
+     *                                    If set to false, make this function check if there is already an \XMLElement that as the same name in the head.
+     *                                    Defaults to true. @since Symphony 2.3.2
      *
      * @return int
      *             Returns the position that the `$object` has been set in the `$this->_head`
@@ -233,7 +231,7 @@ class HtmlPage extends AbstractPage
     public function checkElementsInHead($path, $attribute)
     {
         foreach ($this->_head as $element) {
-            if (basename((string)$element->getAttribute($attribute)) == basename((string)$path)) {
+            if (basename((string) $element->getAttribute($attribute)) == basename((string) $path)) {
                 return true;
             }
         }
@@ -323,14 +321,14 @@ class HtmlPage extends AbstractPage
         }
 
         // Generate the full query string and then parse it back to an array
-        $preExclusion = http_build_query($_GET ?? [], "", '&');
+        $preExclusion = http_build_query($_GET ?? [], '', '&');
         parse_str($preExclusion, $query);
 
         // Remove the excluded keys from query string and then build
         // the query string again
         $postExclusion = array_diff_key($query, array_fill_keys($exclude, true));
 
-        $query = http_build_query($postExclusion ?? [], "", '&');
+        $query = http_build_query($postExclusion ?? [], '', '&');
 
         return filter_var(urldecode($query), $filters);
     }

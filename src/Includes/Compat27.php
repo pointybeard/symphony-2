@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 /**
  * Attempts to add backwards compatiblity by aliasing namespaces classes to 
  * their original global counterparts. This should allow many Extensions,

@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -172,7 +170,7 @@ abstract class AbstractResourcesPage extends Administration\AbstractPage
                         $r['handle'],
                         'resource-'.$action,
                         null,
-                        $locked
+                        $locked ?? []
                     )
                 );
 
@@ -417,9 +415,10 @@ abstract class AbstractResourcesPage extends Administration\AbstractPage
 
     private static function getTemplatePathFromName(string $name): ?string
     {
-        $bits = explode(".", strtolower($name));
-        $bits = array_map("ucfirst", $bits);
-        return implode("/", $bits);
+        $bits = explode('.', strtolower($name));
+        $bits = array_map('ucfirst', $bits);
+
+        return implode('/', $bits);
     }
 
     /**

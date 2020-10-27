@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -285,7 +283,7 @@ class DateTimeObj
     {
         // Current date and time
         if ('now' == $string || empty($string)) {
-            $date = new \DateTime;
+            $date = new \DateTime();
 
         // Timestamp
         } elseif (is_numeric($string)) {

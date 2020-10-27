@@ -1,11 +1,8 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Managers;
 
 use Symphony\Symphony;
-use Symphony\Symphony\Exceptions;
 
 /**
  * The `SectionManager` is responsible for managing all Sections in a Symphony
@@ -268,7 +265,7 @@ class SectionManager extends Symphony\AbstractManager
      */
     public static function create()
     {
-        return new Symphony\Section;
+        return new Symphony\Section();
     }
 
     /**

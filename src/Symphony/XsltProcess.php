@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -52,7 +50,7 @@ class XsltProcess extends AbstractXSLTProcessor
             return false;
         }
 
-        $XSLProc = new \XSLTProcessor;
+        $XSLProc = new \XSLTProcessor();
 
         if (false == empty($registerFunctions)) {
             $XSLProc->registerPHPFunctions($registerFunctions);
@@ -89,8 +87,8 @@ class XsltProcess extends AbstractXSLTProcessor
     private function __process(\XsltProcessor $XSLProc, $xml, $xsl, array $parameters = [])
     {
         // Create instances of the DomDocument class
-        $xmlDoc = new \DomDocument;
-        $xslDoc = new \DomDocument;
+        $xmlDoc = new \DomDocument();
+        $xslDoc = new \DomDocument();
 
         // Set up error handling
         if (function_exists('ini_set')) {
@@ -171,7 +169,7 @@ class XsltProcess extends AbstractXSLTProcessor
         }
 
         // Create instances of the DomDocument class
-        $xmlDoc = new \DomDocument;
+        $xmlDoc = new \DomDocument();
 
         // Set up error handling
         if (true == function_exists('ini_set')) {

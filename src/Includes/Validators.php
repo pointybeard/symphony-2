@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 // DO NOT ALTER THIS FILE!
 // Instead, create /manifest/validators.php and add/edit pairs there.
 

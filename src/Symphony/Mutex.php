@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -59,7 +57,6 @@ class Mutex
 
             self::$lockFiles[$lockFile] = ['time' => time(), 'ttl' => $ttl];
             fclose($lock);
-
         } catch (\Exception $ex) {
             // If, for some reason, lock file was not unlinked before,
             // remove it if it is old enough.
@@ -97,7 +94,7 @@ class Mutex
         if (false == empty(self::$lockFiles[$lockFile])) {
             unset(self::$lockFiles[$lockFile]);
 
-            return (bool)\General::deleteFile($lockFile, false);
+            return (bool) \General::deleteFile($lockFile, false);
         }
 
         return false;

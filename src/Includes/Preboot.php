@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 use pointybeard\Helpers\Functions\Json;
 use Symphony\Symphony;
 use Symphony\Symphony\Exceptions;

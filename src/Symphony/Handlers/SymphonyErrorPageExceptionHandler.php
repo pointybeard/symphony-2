@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Handlers;
 
 use Symphony\Symphony;
@@ -30,7 +28,7 @@ class SymphonyErrorPageExceptionHandler extends GenericExceptionHandler
     {
         // Validate the type, resolve to a 404 if not valid
         if (!static::isValidThrowable($e)) {
-            $e = new Exceptions\FrontendPageNotFoundException;
+            $e = new Exceptions\FrontendPageNotFoundException();
         }
 
         if (false === $e->getTemplate()) {

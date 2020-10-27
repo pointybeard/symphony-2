@@ -100,7 +100,7 @@ class contentBlueprintsDatasources extends ResourcesPage
         } elseif ('edit' == $this->_context[0]) {
             $isEditing = true;
             $handle = $this->_context[1];
-            $existing = DatasourceManager::create($handle, array(), false);
+            $existing = DatasourceManager::create($handle, [], false);
             $order = isset($existing->dsParamORDER) ? stripslashes($existing->dsParamORDER) : 'asc';
             $canonical_link = '/blueprints/datasources/edit/'.$handle.'/';
 
@@ -242,7 +242,7 @@ class contentBlueprintsDatasources extends ResourcesPage
 
         // Loop over the datasource providers
         if (!empty($providers)) {
-            $p = array('label' => __('From extensions'), 'data-label' => 'from_extensions', 'options' => array());
+            $p = array('label' => __('From extensions'), 'data-label' => 'from_extensions', 'options' => []);
 
             foreach ($providers as $providerClass => $provider) {
                 $p['options'][] = array(
@@ -255,7 +255,7 @@ class contentBlueprintsDatasources extends ResourcesPage
 
         // Add Sections
         if (is_array($sections) && !empty($sections)) {
-            array_unshift($options, array('label' => __('Sections'), 'data-label' => 'sections', 'options' => array()));
+            array_unshift($options, array('label' => __('Sections'), 'data-label' => 'sections', 'options' => []));
 
             foreach ($sections as $s) {
                 $options[0]['options'][] = array($s->get('id'), ($fields['source'] == $s->get('id')), General::sanitize($s->get('name')));
@@ -478,7 +478,7 @@ class contentBlueprintsDatasources extends ResourcesPage
                         $wrapper->setAttribute('data-type', $field->get('element_name'));
                         $errors = isset($this->_errors[$field->get('id')])
                             ? $this->_errors[$field->get('id')]
-                            : array();
+                            : [];
 
                         $field->displayDatasourceFilterPanel($wrapper, $fields['filter'][$section_id][$field->get('id')], $errors, $section_id);
                         $ol->appendChild($wrapper);
@@ -534,7 +534,7 @@ class contentBlueprintsDatasources extends ResourcesPage
         $ul->setAttribute('class', 'tags');
         $ul->setAttribute('data-interactive', 'data-interactive');
 
-        $pages = PageManager::fetch(false, array('*'), array(), 'title ASC');
+        $pages = PageManager::fetch(false, array('*'), [], 'title ASC');
 
         foreach ($pages as $page) {
             $ul->appendChild(new XMLElement('li', preg_replace('/\/{2,}/i', '/', '/'.$page['path'].'/'.$page['handle'])));
@@ -692,11 +692,11 @@ class contentBlueprintsDatasources extends ResourcesPage
 
         $label = Widget::Label(__('Group By'));
         $options = array(
-            array('', null, __('None')),
+            array('', false, __('None')),
         );
 
         foreach ($field_groups as $section_id => $section_data) {
-            $optgroup = array('label' => $section_data['section']->get('name'), 'data-label' => 'section-'.$section_data['section']->get('id'), 'options' => array());
+            $optgroup = array('label' => $section_data['section']->get('name'), 'data-label' => 'section-'.$section_data['section']->get('id'), 'options' => []);
 
             if (is_array($section_data['fields']) && !empty($section_data['fields'])) {
                 foreach ($section_data['fields'] as $input) {
@@ -842,7 +842,7 @@ class contentBlueprintsDatasources extends ResourcesPage
         $prefix = '$ds-'.(isset($this->_context[1]) ? Lang::createHandle($fields['name']) : __('untitled')).'.';
 
         $options = array(
-            array('label' => __('Authors'), 'data-label' => 'authors', 'options' => array()),
+            array('label' => __('Authors'), 'data-label' => 'authors', 'options' => []),
         );
 
         foreach (array('id', 'username', 'name', 'email', 'user_type') as $p) {
@@ -859,7 +859,7 @@ class contentBlueprintsDatasources extends ResourcesPage
         }
 
         foreach ($field_groups as $section_id => $section_data) {
-            $optgroup = array('label' => $section_data['section']->get('name'), 'data-label' => 'section-'.$section_data['section']->get('id'), 'options' => array());
+            $optgroup = array('label' => $section_data['section']->get('name'), 'data-label' => 'section-'.$section_data['section']->get('id'), 'options' => []);
 
             foreach (array('id', 'creation-date', 'modification-date', 'author') as $p) {
                 $option = array(
@@ -1013,7 +1013,7 @@ class contentBlueprintsDatasources extends ResourcesPage
     {
         $this->setPageType('form');
 
-        $datasource = DatasourceManager::create($this->_context[1], array(), false);
+        $datasource = DatasourceManager::create($this->_context[1], [], false);
         $about = General::array_map_recursive('stripslashes', $datasource->about());
 
         $this->setTitle(__('%1$s &ndash; %2$s &ndash; %3$s', array($about['name'], __('Data Source'), __('Symphony'))));

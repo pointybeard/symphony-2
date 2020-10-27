@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Events;
 
 use Symphony\Symphony;
@@ -35,17 +33,17 @@ abstract class Section extends Symphony\AbstractEvent
      * This method will construct XML that represents the result of
      * an Event filter.
      *
-     * @param string            $name
-     *                                      The name of the filter
-     * @param string            $status
-     *                                      The status of the filter, either passed or failed
+     * @param string             $name
+     *                                       The name of the filter
+     * @param string             $status
+     *                                       The status of the filter, either passed or failed
      * @param \XMLElement|string $message
-     *                                      Optionally, an \XMLElement or string to be appended to this
-     *                                      `<filter>` element. \XMLElement allows for more complex return
-     *                                      types.
-     * @param array             $attributes
-     *                                      An associative array of additional attributes to add to this
-     *                                      `<filter>` element
+     *                                       Optionally, an \XMLElement or string to be appended to this
+     *                                       `<filter>` element. \XMLElement allows for more complex return
+     *                                       types.
+     * @param array              $attributes
+     *                                       An associative array of additional attributes to add to this
+     *                                       `<filter>` element
      *
      * @return \XMLElement
      */
@@ -68,9 +66,9 @@ abstract class Section extends Symphony\AbstractEvent
      * Appends errors generated from fields during the execution of an Event.
      *
      * @param \XMLElement $result
-     * @param array      $fields
-     * @param array      $errors
-     * @param object     $post_values
+     * @param array       $fields
+     * @param array       $errors
+     * @param object      $post_values
      *
      * @throws Exception
      *
@@ -227,10 +225,10 @@ abstract class Section extends Symphony\AbstractEvent
      * @throws Exception
      *
      * @return \XMLElement|void
-     *                         If `$_REQUEST{'redirect']` is set, and the Event executed successfully,
-     *                         the user will be redirected to the given location. If `$_REQUEST['redirect']`
-     *                         is not set, or the Event encountered errors, an \XMLElement of the Event
-     *                         result will be returned.
+     *                          If `$_REQUEST{'redirect']` is set, and the Event executed successfully,
+     *                          the user will be redirected to the given location. If `$_REQUEST['redirect']`
+     *                          is not set, or the Event encountered errors, an \XMLElement of the Event
+     *                          result will be returned.
      */
     public function execute()
     {
@@ -304,22 +302,22 @@ abstract class Section extends Symphony\AbstractEvent
      * to validating the data and eventually saving the data into Symphony. The result
      * of the Event is returned via the `$result` parameter.
      *
-     * @param array      $fields
-     *                             An array of $_POST data, to process and add/edit an entry
+     * @param array       $fields
+     *                              An array of $_POST data, to process and add/edit an entry
      * @param \XMLElement $result
-     *                             The \XMLElement contains the result of the Event, it is passed by
-     *                             reference
-     * @param int        $position
-     *                             When the Expect Multiple filter is added, this event should expect
-     *                             to deal with adding (or editing) multiple entries at once
-     * @param int        $entry_id
-     *                             If this Event is editing an existing entry, that Entry ID will
-     *                             be passed to this function
+     *                              The \XMLElement contains the result of the Event, it is passed by
+     *                              reference
+     * @param int         $position
+     *                              When the Expect Multiple filter is added, this event should expect
+     *                              to deal with adding (or editing) multiple entries at once
+     * @param int         $entry_id
+     *                              If this Event is editing an existing entry, that Entry ID will
+     *                              be passed to this function
      *
      * @throws Exception
      *
      * @return \XMLElement
-     *                    The result of the Event
+     *                     The result of the Event
      */
     public function __doit(array $fields = array(), \XMLElement &$result, $position = null, $entry_id = null)
     {
@@ -442,9 +440,9 @@ abstract class Section extends Symphony\AbstractEvent
      * @uses EventPreSaveFilter
      *
      * @param \XMLElement $result
-     * @param array      $fields
+     * @param array       $fields
      * @param \XMLElement $post_values
-     * @param int        $entry_id
+     * @param int         $entry_id
      *
      * @return bool
      */
@@ -522,8 +520,8 @@ abstract class Section extends Symphony\AbstractEvent
      * @uses EventPostSaveFilter
      *
      * @param \XMLElement $result
-     * @param array      $fields
-     * @param Entry      $entry
+     * @param array       $fields
+     * @param Entry       $entry
      *
      * @return \XMLElement
      */
@@ -578,8 +576,8 @@ abstract class Section extends Symphony\AbstractEvent
      * @uses EventFinalSaveFilter
      *
      * @param \XMLElement $result
-     * @param array      $fields
-     * @param Entry      $entry
+     * @param array       $fields
+     * @param Entry       $entry
      *
      * @return \XMLElement
      */
@@ -641,20 +639,20 @@ abstract class Section extends Symphony\AbstractEvent
      * created.
      *
      * @param \XMLElement $result
-     *                               The \XMLElement of the XML that is going to be returned as part
-     *                               of this event to the page
-     * @param array      $send_email
-     *                               Associative array of `send-mail` parameters.*  Associative array of `send-mail` parameters.
-     * @param array      $fields
-     *                               Array of post data to extract the values from
-     * @param Section    $section
-     *                               This current Entry that has just been updated or created
-     * @param Entry      $entry
+     *                                The \XMLElement of the XML that is going to be returned as part
+     *                                of this event to the page
+     * @param array       $send_email
+     *                                Associative array of `send-mail` parameters.*  Associative array of `send-mail` parameters.
+     * @param array       $fields
+     *                                Array of post data to extract the values from
+     * @param Section     $section
+     *                                This current Entry that has just been updated or created
+     * @param Entry       $entry
      *
      * @throws Exception
      *
      * @return \XMLElement
-     *                    The modified `$result` with the results of the filter
+     *                     The modified `$result` with the results of the filter
      */
     public function processSendMailFilter(\XMLElement $result, array $send_email, array &$fields, Section $section, \Entry $entry)
     {
@@ -769,5 +767,3 @@ abstract class Section extends Symphony\AbstractEvent
         return $result;
     }
 }
-
-

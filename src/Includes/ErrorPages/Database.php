@@ -1,10 +1,8 @@
 <?php
 
-//declare(strict_types=1);
-
 use Symphony\Symphony;
 
-$output = new Symphony\HtmlPage;
+$output = new Symphony\HtmlPage();
 
 $output->Html->setElementStyle('html');
 

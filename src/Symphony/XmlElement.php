@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -479,7 +477,7 @@ class XmlElement implements \IteratorAggregate
      * @since Symphony 2.5.0
      *
      * @param self $child
-     *                          The child to validate
+     *                    The child to validate
      */
     protected function validateChild($child)
     {
@@ -644,11 +642,11 @@ class XmlElement implements \IteratorAggregate
      *
      * @since Symphony 2.2.2
      *
-     * @param int        $index
-     *                          The index where the `$child` should be inserted. If this is negative
-     *                          the index will be calculated from the end of `$this->_children`.
+     * @param int  $index
+     *                    The index where the `$child` should be inserted. If this is negative
+     *                    the index will be calculated from the end of `$this->_children`.
      * @param self $child
-     *                          The XMLElement to insert at the desired `$index`
+     *                    The XMLElement to insert at the desired `$index`
      *
      * @return bool
      */
@@ -681,11 +679,11 @@ class XmlElement implements \IteratorAggregate
      *
      * @since Symphony 2.2.2
      *
-     * @param int        $index
-     *                          The index of the child to be replaced. If the index given is negative
-     *                          it will be calculated from the end of `$this->_children`.
+     * @param int  $index
+     *                    The index of the child to be replaced. If the index given is negative
+     *                    it will be calculated from the end of `$this->_children`.
      * @param self $child
-     *                          An XMLElement of the new child
+     *                    An XMLElement of the new child
      *
      * @return bool
      */
@@ -893,7 +891,7 @@ class XmlElement implements \IteratorAggregate
      *
      * @since Symphony 2.4
      *
-     * @param string      $root_element
+     * @param string       $root_element
      * @param \DOMDOcument $doc
      *
      * @return XMLElement
@@ -916,8 +914,8 @@ class XmlElement implements \IteratorAggregate
      *
      * @since Symphony 2.4
      *
-     * @param self $root
-     * @param \DOMNOde    $node
+     * @param self     $root
+     * @param \DOMNOde $node
      *
      * @return XMLElement
      */
@@ -940,8 +938,8 @@ class XmlElement implements \IteratorAggregate
      *
      * @since Symphony 2.5.2
      *
-     * @param self $element
-     * @param \DOMNode    $node
+     * @param self     $element
+     * @param \DOMNode $node
      */
     protected static function convertNode(self $element, \DOMNode $node)
     {

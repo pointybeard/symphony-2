@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -10,8 +8,10 @@ namespace Symphony\Symphony;
 class EmailHelper
 {
     // Ensure this class can never be instanciated
-    private function __construct() {}
-    
+    private function __construct()
+    {
+    }
+
     /**
      * Folding an email header field body as required by RFC2822.
      *

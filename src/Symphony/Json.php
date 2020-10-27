@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -70,12 +68,12 @@ class Json
      * to `$element` and then returned. Any arrays that are encountered are added
      * to 'item' elements.
      *
-     * @param mixed      $data
-     *                            The initial call to this function will be of `stdClass` and directly
-     *                            from `json_decode`. Recursive calls after that may be of `stdClass`,
-     *                            `array` or `string` types.
+     * @param mixed       $data
+     *                             The initial call to this function will be of `stdClass` and directly
+     *                             from `json_decode`. Recursive calls after that may be of `stdClass`,
+     *                             `array` or `string` types.
      * @param \DOMElement $element
-     *                            The `\DOMElement` to append the data to. The root node is `<data>`.
+     *                             The `\DOMElement` to append the data to. The root node is `<data>`.
      *
      * @return \DOMElement
      */
@@ -115,7 +113,7 @@ class Json
      *                     to create a handle for the element.
      *
      * @return \DOMElement
-     *                    An empty \DOMElement with `@handle` and `@value` attributes
+     *                     An empty \DOMElement with `@handle` and `@value` attributes
      */
     private static function _valid_element_name($name)
     {

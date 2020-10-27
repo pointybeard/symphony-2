@@ -1,11 +1,6 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
-
-use Symphony\Symphony\Exceptions;
-use Symphony\Symphony\Interfaces;
 
 /**
  * The Field class represents a Symphony Field object. Fields are the building

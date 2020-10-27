@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Frontend;
 
 use Symphony\Symphony;
@@ -348,7 +346,7 @@ class Page extends Symphony\AbstractXSLTPage
         $start = precision_timer();
 
         if (!$page = $this->resolvePage()) {
-            throw new Exceptions\FrontendPageNotFoundException;
+            throw new Exceptions\FrontendPageNotFoundException();
         }
 
         /*
@@ -728,12 +726,12 @@ class Page extends Symphony\AbstractXSLTPage
      * @uses FrontendProcessEvents
      * @uses FrontendEventPostProcess
      *
-     * @param string     $events
-     *                            A string of all the Events attached to this page, comma separated
+     * @param string      $events
+     *                             A string of all the Events attached to this page, comma separated
      * @param \XMLElement $wrapper
-     *                            The \XMLElement to append the Events results to. Event results are
-     *                            contained in a root \XMLElement that is the handlised version of
-     *                            their name.
+     *                             The \XMLElement to append the Events results to. Event results are
+     *                             contained in a root \XMLElement that is the handlised version of
+     *                             their name.
      *
      * @throws Exception
      */
@@ -846,16 +844,16 @@ class Page extends Symphony\AbstractXSLTPage
      * added to the `$env` pool for use by other Datasources and eventual
      * inclusion into the page parameters.
      *
-     * @param string     $datasources
-     *                                A string of Datasource's attached to this page, comma separated
+     * @param string      $datasources
+     *                                 A string of Datasource's attached to this page, comma separated
      * @param \XMLElement $wrapper
-     *                                The \XMLElement to append the Datasource results to. Datasource
-     *                                results are contained in a root \XMLElement that is the handlised
-     *                                version of their name.
-     * @param array      $params
-     *                                Any params to automatically add to the `$env` pool, by default this
-     *                                is an empty array. It looks like Symphony does not utilise this parameter
-     *                                at all
+     *                                 The \XMLElement to append the Datasource results to. Datasource
+     *                                 results are contained in a root \XMLElement that is the handlised
+     *                                 version of their name.
+     * @param array       $params
+     *                                 Any params to automatically add to the `$env` pool, by default this
+     *                                 is an empty array. It looks like Symphony does not utilise this parameter
+     *                                 at all
      *
      * @throws Exception
      */

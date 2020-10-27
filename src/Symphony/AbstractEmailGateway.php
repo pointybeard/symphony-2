@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
 
 /**
@@ -588,7 +586,7 @@ abstract class AbstractEmailGateway
             // If the attachment is a URL, download the file to a temporary location.
             // This prevents downloading the file twice - once for info, once for data.
             if (filter_var($file['file'], FILTER_VALIDATE_URL)) {
-                $gateway = new Gateway;
+                $gateway = new Gateway();
                 $gateway->init($file['file']);
                 $gateway->setopt('TIMEOUT', 30);
                 $file_content = @$gateway->exec();

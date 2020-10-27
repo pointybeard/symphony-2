@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Managers;
 
 use Symphony\Symphony;
@@ -793,6 +791,6 @@ class EntryManager extends Symphony\AbstractManager
      */
     public static function create()
     {
-        return new Symphony\Entry;
+        return new Symphony\Entry();
     }
 }

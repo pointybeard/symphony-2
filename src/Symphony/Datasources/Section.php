@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Datasources;
 
 use Symphony\Symphony;
@@ -31,7 +29,7 @@ abstract class Section extends Symphony\AbstractDatasource
         'system:id',
         'system:author',
         'system:creation-date',
-        'system:modification-date'
+        'system:modification-date',
     ];
 
     /**
@@ -136,7 +134,7 @@ abstract class Section extends Symphony\AbstractDatasource
      * @throws Exception
      *
      * @return \XMLElement|bool
-     *                         Returns boolean when only parameters are to be returned
+     *                          Returns boolean when only parameters are to be returned
      */
     public function processEntry(Entry $entry)
     {
@@ -208,10 +206,10 @@ abstract class Section extends Symphony\AbstractDatasource
      * related entry's section.
      *
      * @param \XMLElement $xEntry
-     *                           The <entry> \XMLElement that the associated section counts will
-     *                           be set on
-     * @param Entry      $entry
-     *                           The current entry object
+     *                            The <entry> \XMLElement that the associated section counts will
+     *                            be set on
+     * @param Entry       $entry
+     *                            The current entry object
      *
      * @throws Exception
      */

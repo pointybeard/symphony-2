@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Handlers;
 
 use Symphony\Symphony;
@@ -22,7 +20,7 @@ class FrontendPageNotFoundExceptionHandler extends SymphonyErrorPageExceptionHan
      * Symphony error page template to output the exception.
      *
      * @param \Throwable $e
-     *                     The \Throwable object
+     *                      The \Throwable object
      *
      * @throws FrontendPageNotFoundException
      * @throws SymphonyErrorPage

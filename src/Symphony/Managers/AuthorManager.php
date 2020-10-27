@@ -1,11 +1,8 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Managers;
 
 use Symphony\Symphony;
-use Symphony\Symphony\Exceptions;
 
 /**
  * The `AuthorManager` class is responsible for managing all Author objects
@@ -139,7 +136,7 @@ class AuthorManager extends Symphony\AbstractManager
         $authors = [];
 
         foreach ($records as $row) {
-            $author = new Symphony\Author;
+            $author = new Symphony\Author();
 
             foreach ($row as $field => $val) {
                 $author->set($field, $val);
@@ -212,7 +209,7 @@ class AuthorManager extends Symphony\AbstractManager
         }
 
         foreach ($records as $row) {
-            $author = new Symphony\Author;
+            $author = new Symphony\Author();
 
             foreach ($row as $field => $val) {
                 $author->set($field, $val);
@@ -250,7 +247,7 @@ class AuthorManager extends Symphony\AbstractManager
                 return null;
             }
 
-            $author = new Symphony\Author;
+            $author = new Symphony\Author();
 
             foreach ($records as $field => $val) {
                 $author->set($field, $val);

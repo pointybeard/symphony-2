@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Exceptions;
 
 /**
@@ -18,7 +16,6 @@ class FrontendPageNotFoundException extends SymphonyException
      */
     public function __construct(\Throwable $previous = null)
     {
-        
         $pagename = getCurrentPage();
 
         if (empty($pagename)) {

@@ -1,10 +1,6 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony;
-
-use  Symphony\Symphony\Handlers;
 
 /**
  * The Log class acts a simple wrapper to write errors to a file so that it can

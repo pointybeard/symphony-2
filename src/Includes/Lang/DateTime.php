@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 return [
     // Days
     'yesterday', 'today', 'tomorrow', 'now',

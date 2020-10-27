@@ -1,7 +1,5 @@
 <?php
 
-//declare(strict_types=1);
-
 namespace Symphony\Symphony\Administration;
 
 use Symphony\Symphony;
@@ -210,12 +208,12 @@ abstract class AbstractPage extends Symphony\HtmlPage
      *
      * @since Symphony 2.3
      *
-     * @param string                  $value
-     *                                         The heading text
+     * @param string                           $value
+     *                                                  The heading text
      * @param array|Symphony\XmlElement|string $actions
-     *                                         Some contextual actions to append to the heading, they can be provided as
-     *                                         an array of Symphony\XmlElements or strings. Traditionally Symphony uses this to append
-     *                                         a "Create new" link to the Context div.
+     *                                                  Some contextual actions to append to the heading, they can be provided as
+     *                                                  an array of Symphony\XmlElements or strings. Traditionally Symphony uses this to append
+     *                                                  a "Create new" link to the Context div.
      */
     public function appendSubheading($value, $actions = null)
     {
@@ -242,11 +240,11 @@ abstract class AbstractPage extends Symphony\HtmlPage
      * @see core.Widget#Anchor
      *
      * @param Symphony\XmlElement $action
-     *                           An Anchor element to add to the top of the page
-     * @param bool       $append
-     *                           If true, this will add the `$action` after existing actions, otherwise
-     *                           it will be added before existing actions. By default this is `true`,
-     *                           which will add the `$action` after current actions.
+     *                                    An Anchor element to add to the top of the page
+     * @param bool                $append
+     *                                    If true, this will add the `$action` after existing actions, otherwise
+     *                                    it will be added before existing actions. By default this is `true`,
+     *                                    which will add the `$action` after current actions.
      */
     public function insertAction(Symphony\XmlElement $action, $append = true)
     {
@@ -316,15 +314,15 @@ abstract class AbstractPage extends Symphony\HtmlPage
      * @see core.Widget#Drawer
      *
      * @param Symphony\XmlElement $drawer
-     *                             An Symphony\XmlElement representing the drawer, use `Symphony\Widget::Drawer` to construct
-     * @param string     $position
-     *                             Where `$position` can be `horizontal`, `vertical-left` or
-     *                             `vertical-right`. Defaults to `horizontal`.
-     * @param string     $button
-     *                             If not passed, a button to open/close the drawer will not be added
-     *                             to the interface. Accepts 'prepend' or 'append' values, which will
-     *                             add the button before or after existing buttons. Defaults to `prepend`.
-     *                             If any other value is passed, no button will be added.
+     *                                      An Symphony\XmlElement representing the drawer, use `Symphony\Widget::Drawer` to construct
+     * @param string              $position
+     *                                      Where `$position` can be `horizontal`, `vertical-left` or
+     *                                      `vertical-right`. Defaults to `horizontal`.
+     * @param string              $button
+     *                                      If not passed, a button to open/close the drawer will not be added
+     *                                      to the interface. Accepts 'prepend' or 'append' values, which will
+     *                                      add the button before or after existing buttons. Defaults to `prepend`.
+     *                                      If any other value is passed, no button will be added.
      *
      * @throws InvalidArgumentException
      */
