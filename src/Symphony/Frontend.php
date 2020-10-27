@@ -1,5 +1,7 @@
 <?php
 
+namespace Symphony\Symphony;
+
 /**
  * The Frontend class is the renderer that is used to display FrontendPage's.
  * A `FrontendPage` is one that is setup in Symphony and it's output is generated
@@ -7,28 +9,15 @@
  */
 class Frontend extends Symphony
 {
+
+    use Traits\SingletonTrait;
+
     /**
      * An instance of the FrontendPage class.
      *
      * @var FrontendPage
      */
-    private static $_page;
-
-    /**
-     * This function returns an instance of the Frontend
-     * class. It is the only way to create a new Frontend, as
-     * it implements the Singleton interface.
-     *
-     * @return Frontend
-     */
-    public static function instance()
-    {
-        if (!(self::$_instance instanceof Frontend)) {
-            self::$_instance = new Frontend();
-        }
-
-        return self::$_instance;
-    }
+    private static $page;
 
     /**
      * The constructor for Frontend calls the parent Symphony constructor.
@@ -43,13 +32,13 @@ class Frontend extends Symphony
     }
 
     /**
-     * Accessor for `$_page`.
+     * Accessor for `$page`.
      *
      * @return FrontendPage
      */
     public static function Page()
     {
-        return self::$_page;
+        return self::$page;
     }
 
     /**
@@ -70,7 +59,7 @@ class Frontend extends Symphony
             return self::loginFromToken($_REQUEST['auth-token']);
         }
 
-        return Symphony::isLoggedIn();
+        return parent::isLoggedIn();
     }
 
     /**
@@ -92,10 +81,10 @@ class Frontend extends Symphony
      */
     public function display($page)
     {
-        self::$_page = new FrontendPage();
+        self::$page = new Frontend\Page;
 
         /*
-         * `FrontendInitialised` is fired just after the `$_page` variable has been
+         * `FrontendInitialised` is fired just after the `$page` variable has been
          * created with an instance of the `FrontendPage` class. This delegate is
          * fired just before the `FrontendPage->generate()`.
          *
@@ -103,9 +92,9 @@ class Frontend extends Symphony
          * @param string $context
          *  '/frontend/'
          */
-        Symphony::ExtensionManager()->notifyMembers('FrontendInitialised', '/frontend/');
+        self::ExtensionManager()->notifyMembers('FrontendInitialised', '/frontend/');
 
-        $output = self::$_page->generate($page);
+        $output = self::$page->generate($page);
 
         return $output;
     }

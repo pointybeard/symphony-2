@@ -1,20 +1,15 @@
 <?php
 
+namespace Symphony\Symphony;
+
 /**
  * The Symphony class is an abstract class that implements the
  * Singleton interface. It provides the glue that forms the Symphony
  * CMS and initialises the toolkit classes. Symphony is extended by
  * the Frontend and Administration classes.
  */
-abstract class Symphony implements Singleton
+abstract class Symphony implements Interfaces\SingletonInterface
 {
-    /**
-     * An instance of the Symphony class, either `Administration` or `Frontend`.
-     *
-     * @var Symphony
-     */
-    protected static $_instance = null;
-
     /**
      * An instance of the Profiler class.
      *
@@ -112,7 +107,7 @@ abstract class Symphony implements Singleton
 
         // If the user is not a logged in Author, turn off the verbose error messages.
         if (!self::isLoggedIn() && null === self::$Author) {
-            GenericExceptionHandler::$enabled = false;
+            Handlers\GenericExceptionHandler::$enabled = false;
         }
 
         // Engine is ready.
@@ -128,8 +123,8 @@ abstract class Symphony implements Singleton
     {
         // Initialise logging
         self::initialiseLog();
-        GenericExceptionHandler::initialise(self::Log());
-        GenericErrorHandler::initialise(self::Log());
+        Handlers\GenericExceptionHandler::initialise(self::Log());
+        Handlers\GenericErrorHandler::initialise(self::Log());
     }
 
     /**
@@ -149,7 +144,7 @@ abstract class Symphony implements Singleton
         } elseif (class_exists('Frontend', false)) {
             return Frontend::instance();
         } else {
-            throw new Exception(__('No suitable engine object found'));
+            throw new Exceptions\SymphonyException(__('No suitable engine object found'));
         }
     }
 
@@ -304,13 +299,13 @@ abstract class Symphony implements Singleton
      */
     public static function initialiseExtensionManager($force = false)
     {
-        if (!$force && self::$ExtensionManager instanceof ExtensionManager) {
+        if (!$force && self::$ExtensionManager instanceof Managers\ExtensionManager) {
             return true;
         }
 
-        self::$ExtensionManager = new ExtensionManager();
+        self::$ExtensionManager = new Managers\ExtensionManager();
 
-        if (!(self::$ExtensionManager instanceof ExtensionManager)) {
+        if (!(self::$ExtensionManager instanceof Managers\ExtensionManager)) {
             self::throwCustomError(__('Error creating Symphony extension manager.'));
         }
     }
@@ -341,13 +336,13 @@ abstract class Symphony implements Singleton
      * @return bool
      *              This function will always return true
      */
-    public static function setDatabase(StdClass $database = null)
+    public static function setDatabase(\stdClass $database = null)
     {
         if (self::Database()) {
             return true;
         }
 
-        self::$Database = null !== $database ? $database : new MySQL();
+        self::$Database = null !== $database ? $database : new DatabaseWrappers\MySQL();
 
         return true;
     }
@@ -407,11 +402,11 @@ abstract class Symphony implements Singleton
                     self::Database()->enableLogging();
                 }
             }
-        } catch (DatabaseException $e) {
+        } catch (Exceptions\DatabaseException $e) {
             self::throwCustomError(
                 $e->getDatabaseErrorCode().': '.$e->getDatabaseErrorMessage(),
                 __('Symphony Database Error'),
-                Page::HTTP_STATUS_ERROR,
+                AbstractPage::HTTP_STATUS_ERROR,
                 'database',
                 array(
                     'error' => $e,
@@ -464,7 +459,7 @@ abstract class Symphony implements Singleton
         $password = trim(self::Database()->cleanValue($password));
 
         if (strlen($username) > 0 && strlen($password) > 0) {
-            $author = AuthorManager::fetch('id', 'ASC', 1, null, sprintf(
+            $author = Managers\AuthorManager::fetch('id', 'ASC', 1, null, sprintf(
                 "`username` = '%s'",
                 $username
             ));
@@ -555,7 +550,7 @@ abstract class Symphony implements Singleton
         }
 
         if ($row) {
-            self::$Author = AuthorManager::fetchByID($row['id']);
+            self::$Author = Managers\AuthorManager::fetchByID($row['id']);
             self::$Cookie->set('username', $row['username']);
             self::$Cookie->set('pass', $row['password']);
             self::Database()->update(array('last_seen' => DateTimeObj::getGMT('Y-m-d H:i:s')), 'tbl_authors', sprintf(
@@ -594,12 +589,12 @@ abstract class Symphony implements Singleton
     public static function isLoggedIn()
     {
         // Check to see if Symphony exists, or if we already have an Author instance.
-        if (self::Author() instanceof \Author) {
+        if (self::Author() instanceof Author) {
             return true;
         }
 
         // No author instance found, attempt to log in with the cookied credentials
-        return self::$Cookie instanceof \Cookie && self::login(self::$Cookie->get('username'), self::$Cookie->get('pass'), true);
+        return self::$Cookie instanceof Cookie && self::login(self::$Cookie->get('username'), self::$Cookie->get('pass'), true);
     }
 
     /**
@@ -635,7 +630,7 @@ abstract class Symphony implements Singleton
     {
         if (self::isInstallerAvailable()) {
             $migration_version = self::getMigrationVersion();
-            $current_version = Symphony::Configuration()->get('version', 'symphony');
+            $current_version = self::Configuration()->get('version', 'symphony');
 
             return version_compare($current_version, $migration_version, '<');
         }
@@ -680,10 +675,10 @@ abstract class Symphony implements Singleton
      *
      * @throws SymphonyErrorPage
      */
-    public static function throwCustomError($message, $heading = 'Symphony Fatal Error', $status = Page::HTTP_STATUS_ERROR, $template = 'generic', array $additional = array())
+    public static function throwCustomError($message, $heading = 'Symphony Fatal Error', $status = AbstractPage::HTTP_STATUS_ERROR, $template = 'generic', array $additional = array())
     {
-        GenericExceptionHandler::$enabled = true;
-        throw new SymphonyErrorPage($message, $heading, $template, $additional, $status);
+        Handlers\GenericExceptionHandler::$enabled = true;
+        throw new Exceptions\SymphonyErrorPageException($message, $heading, $template, $additional, $status);
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+namespace Symphony\Symphony;
+
 /**
  * The Administration class is an instance of Symphony that controls
  * all backend pages. These pages are HTMLPages are usually generated
@@ -8,6 +10,8 @@
  */
 class Administration extends Symphony
 {
+    use Traits\SingletonTrait;
+
     /**
      * The path of the current page, ie. '/blueprints/sections/'.
      *
@@ -47,24 +51,8 @@ class Administration extends Symphony
 
         // Ensure the request is legitimate. RE: #1874
         if (self::isXSRFEnabled()) {
-            XSRF::validateRequest();
+            Xsrf::validateRequest();
         }
-    }
-
-    /**
-     * This function returns an instance of the Administration
-     * class. It is the only way to create a new Administration, as
-     * it implements the Singleton interface.
-     *
-     * @return Administration
-     */
-    public static function instance()
-    {
-        if (!(self::$_instance instanceof Administration)) {
-            self::$_instance = new Administration();
-        }
-
-        return self::$_instance;
     }
 
     /**
@@ -127,15 +115,15 @@ class Administration extends Symphony
                 // to the page after `SYMPHONY_URL`
                 $default_area = null;
 
-                if (is_numeric(Symphony::Author()->get('default_area'))) {
-                    $default_section = SectionManager::fetch(Symphony::Author()->get('default_area'));
+                if (is_numeric(self::Author()->get('default_area'))) {
+                    $default_section = Managers\SectionManager::fetch(self::Author()->get('default_area'));
 
                     if ($default_section instanceof Section) {
                         $section_handle = $default_section->get('handle');
                     }
 
                     if (!$section_handle) {
-                        $all_sections = SectionManager::fetch();
+                        $all_sections = Managers\SectionManager::fetch();
 
                         if (!empty($all_sections)) {
                             $section_handle = $all_sections[0]->get('handle');
@@ -147,18 +135,18 @@ class Administration extends Symphony
                     if (null !== $section_handle) {
                         $default_area = "/publish/{$section_handle}/";
                     }
-                } elseif (null !== Symphony::Author()->get('default_area')) {
-                    $default_area = preg_replace('/^'.preg_quote(SYMPHONY_URL, '/').'/i', '', Symphony::Author()->get('default_area'));
+                } elseif (null !== self::Author()->get('default_area')) {
+                    $default_area = preg_replace('/^'.preg_quote(SYMPHONY_URL, '/').'/i', '', self::Author()->get('default_area'));
                 }
 
                 // Fallback: No default area found
                 if (null === $default_area) {
-                    if (Symphony::Author()->isDeveloper()) {
+                    if (self::Author()->isDeveloper()) {
                         // Redirect to the section index if author is a developer
                         redirect(SYMPHONY_URL.'/blueprints/sections/');
                     } else {
                         // Redirect to the author page if author is not a developer
-                        redirect(SYMPHONY_URL.'/system/authors/edit/'.Symphony::Author()->get('id').'/');
+                        redirect(SYMPHONY_URL.'/system/authors/edit/'.self::Author()->get('id').'/');
                     }
                 } else {
                     redirect(SYMPHONY_URL.$default_area);
@@ -168,7 +156,7 @@ class Administration extends Symphony
 
         if (!$this->_callback = $this->getPageCallback($page)) {
             if ('/publish/' === $page) {
-                $sections = SectionManager::fetch(null, 'ASC', 'sortorder');
+                $sections = Managers\SectionManager::fetch(null, 'ASC', 'sortorder');
                 $section = current($sections);
                 redirect(SYMPHONY_URL.'/publish/'.$section->get('handle'));
             } else {
@@ -183,7 +171,7 @@ class Administration extends Symphony
             if (is_callable(array($this->Page, 'handleFailedAuthorisation'))) {
                 $this->Page->handleFailedAuthorisation();
             } else {
-                $this->Page = new contentLogin();
+                $this->Page = new \contentLogin();
 
                 // Include the query string for the login, RE: #2324
                 if ($queryString = $this->Page->__buildQueryString(array('symphony-page', 'mode'), FILTER_SANITIZE_STRING)) {
@@ -238,11 +226,11 @@ class Administration extends Symphony
             }
 
             // Can't detect update Symphony version
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $message = __('An update script has been found in your installation.').' <a href="'.URL.'/install/">'.__('View update.').'</a>';
         }
 
-        $this->Page->pageAlert($message, Alert::NOTICE);
+        $this->Page->pageAlert($message, Administration\Alert::NOTICE);
 
         return true;
     }
@@ -255,11 +243,11 @@ class Administration extends Symphony
      */
     public function checkExtensionsForUpdates()
     {
-        $extensions = Symphony::ExtensionManager()->listInstalledHandles();
+        $extensions = self::ExtensionManager()->listInstalledHandles();
 
         if (is_array($extensions) && !empty($extensions)) {
             foreach ($extensions as $name) {
-                $about = Symphony::ExtensionManager()->about($name);
+                $about = self::ExtensionManager()->about($name);
 
                 if (array_key_exists('status', $about) && in_array(EXTENSION_REQUIRES_UPDATE, $about['status'])) {
                     $this->Page->pageAlert(
@@ -282,7 +270,7 @@ class Administration extends Symphony
      */
     private function __canAccessAlerts()
     {
-        if ($this->Page instanceof AdministrationPage && self::isLoggedIn() && Symphony::Author()->isDeveloper()) {
+        if ($this->Page instanceof Administration\AbstractPage && self::isLoggedIn() && self::Author()->isDeveloper()) {
             return true;
         }
 
@@ -437,7 +425,7 @@ class Administration extends Symphony
          *  class, `pageroot` the rootpage, before any extra URL params and `context` can
          *  provide additional information about the page
          */
-        Symphony::ExtensionManager()->notifyMembers('AdminPagePostCallback', '/backend/', array(
+        self::ExtensionManager()->notifyMembers('AdminPagePostCallback', '/backend/', array(
             'page' => $this->_currentPage,
             'parts' => $bits,
             'callback' => &$callback,
@@ -475,7 +463,7 @@ class Administration extends Symphony
      */
     public function display($page)
     {
-        Symphony::Profiler()->sample('Page build process started');
+        self::Profiler()->sample('Page build process started');
 
         /*
          * Immediately before building the admin page. Provided with the page parameter
@@ -487,13 +475,13 @@ class Administration extends Symphony
          *  The result of getCurrentPage, which returns the $_GET['symphony-page']
          *  variable.
          */
-        Symphony::ExtensionManager()->notifyMembers('AdminPagePreBuild', '/backend/', array('page' => $page));
+        self::ExtensionManager()->notifyMembers('AdminPagePreBuild', '/backend/', array('page' => $page));
 
         $this->__buildPage($page);
 
         // Add XSRF token to form's in the backend
         if (self::isXSRFEnabled() && isset($this->Page->Form)) {
-            $this->Page->Form->prependChild(XSRF::formToken());
+            $this->Page->Form->prependChild(Xsrf::formToken());
         }
 
         /*
@@ -506,7 +494,7 @@ class Administration extends Symphony
          *  extends HTMLPage. The Symphony backend uses a convention of contentPageName
          *  as the class that extends the HTMLPage
          */
-        Symphony::ExtensionManager()->notifyMembers('AdminPagePreGenerate', '/backend/', array('oPage' => &$this->Page));
+        self::ExtensionManager()->notifyMembers('AdminPagePreGenerate', '/backend/', array('oPage' => &$this->Page));
 
         $output = $this->Page->generate();
 
@@ -518,9 +506,9 @@ class Administration extends Symphony
          * @param string $output
          *  The resulting backend page HTML as a string, passed by reference
          */
-        Symphony::ExtensionManager()->notifyMembers('AdminPagePostGenerate', '/backend/', array('output' => &$output));
+        self::ExtensionManager()->notifyMembers('AdminPagePostGenerate', '/backend/', array('output' => &$output));
 
-        Symphony::Profiler()->sample('Page built');
+        self::Profiler()->sample('Page built');
 
         return $output;
     }
@@ -535,7 +523,7 @@ class Administration extends Symphony
         $this->throwCustomError(
             __('The page you requested does not exist.'),
             __('Page Not Found'),
-            Page::HTTP_STATUS_NOT_FOUND
+            AbstractPage::HTTP_STATUS_NOT_FOUND
         );
     }
 }
