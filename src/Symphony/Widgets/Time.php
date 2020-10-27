@@ -6,10 +6,10 @@ namespace Symphony\Symphony\Widgets;
 
 use Symphony\Symphony;
 
-class Time extends Symphony\AbstractWidget {
-
-    public function __construct(string $dateTimeString = 'now', string $format = __SYM_TIME_FORMAT__, bool $isPublishedDate = false, array $attributes = []) {
-
+class Time extends Symphony\AbstractWidget
+{
+    public function __construct(string $dateTimeString = 'now', string $format = __SYM_TIME_FORMAT__, bool $isPublishedDate = false, array $attributes = [])
+    {
         $this
             ->dateTimeString($dateTimeString)
             ->format($format)
@@ -20,7 +20,6 @@ class Time extends Symphony\AbstractWidget {
 
     public function toXmlElement(): Symphony\XmlElement
     {
-
         $dateTimeObj = Symphony\DateTimeObj::parse($this->dateTimeString());
 
         $output = new Symphony\XmlElement(
@@ -30,7 +29,7 @@ class Time extends Symphony\AbstractWidget {
                 $this->attributes(),
                 [
                     'datetime' => $dateTimeObj->format(\DateTime::ISO8601),
-                    'utc' => $dateTimeObj->format('U')
+                    'utc' => $dateTimeObj->format('U'),
                 ]
             )
         );
@@ -40,6 +39,5 @@ class Time extends Symphony\AbstractWidget {
         }
 
         return $output;
-
     }
 }
