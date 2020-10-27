@@ -70,7 +70,7 @@ abstract class AbstractResourcesPage extends Administration\AbstractPage
             redirect(\Administration::instance()->getCurrentPageURL());
         }
 
-        return \ResourceManager::fetch($params['type'], array(), array(), $sort.' '.$order);
+        return \ResourceManager::fetch($params['type'], [], [], $sort.' '.$order);
     }
 
     /**
@@ -264,8 +264,8 @@ abstract class AbstractResourcesPage extends Administration\AbstractPage
 
         $pages = $this->pagesFlatView();
 
-        $group_attach = array('label' => __('Attach to Page'), 'options' => array());
-        $group_detach = array('label' => __('Detach from Page'), 'options' => array());
+        $group_attach = array('label' => __('Attach to Page'), 'options' => []);
+        $group_detach = array('label' => __('Detach from Page'), 'options' => []);
 
         $group_attach['options'][] = array('attach-all-pages', false, __('All'));
         $group_detach['options'][] = array('detach-all-pages', false, __('All'));

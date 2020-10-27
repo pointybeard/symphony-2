@@ -15,7 +15,7 @@ use Symphony\Symphony\Exceptions;
  * or the user is not allowed to view it, the appropriate 404/403 page will be shown
  * instead.
  */
-class Page extends Symphony\AbstractXSLTPage
+class Page extends Symphony\AbstractXsltPage
 {
     /**
      * An associative array of all the parameters for this page including
@@ -105,7 +105,7 @@ class Page extends Symphony\AbstractXSLTPage
      * @param array $env
      *                   An associative array of new environment values
      */
-    public function setEnv(array $env = array())
+    public function setEnv(array $env = [])
     {
         $this->_env = $env;
     }
@@ -192,13 +192,13 @@ class Page extends Symphony\AbstractXSLTPage
              * @param mixed $devkit
              *  Allows a devkit to register to this page
              */
-            \Symphony::ExtensionManager()->notifyMembers('FrontendDevKitResolve', '/frontend/', array(
+            Symphony\Frontend::ExtensionManager()->notifyMembers('FrontendDevKitResolve', '/frontend/', array(
                 'full_generate' => &$full_generate,
                 'devkit' => &$devkit,
             ));
         }
 
-        \Symphony::Profiler()->sample('Page creation started');
+        Symphony\Frontend::Profiler()->sample('Page creation started');
         $this->_page = $page;
         $this->__buildPage();
 
@@ -216,7 +216,7 @@ class Page extends Symphony\AbstractXSLTPage
              * @param string $xsl
              *  This pages XSLT, by reference
              */
-            \Symphony::ExtensionManager()->notifyMembers('FrontendOutputPreGenerate', '/frontend/', array(
+            Symphony\Frontend::ExtensionManager()->notifyMembers('FrontendOutputPreGenerate', '/frontend/', array(
                 'page' => &$this,
                 'xml' => &$this->_xml,
                 'xsl' => &$this->_xsl,
@@ -251,23 +251,23 @@ class Page extends Symphony\AbstractXSLTPage
              * @param string $context
              * '/frontend/'
              */
-            \Symphony::ExtensionManager()->notifyMembers('FrontendPreRenderHeaders', '/frontend/');
+            Symphony\Frontend::ExtensionManager()->notifyMembers('FrontendPreRenderHeaders', '/frontend/');
 
             $backup_param = $this->_param;
             $this->_param['current-query-string'] = \General::wrapInCDATA($this->_param['current-query-string']);
 
             // In Symphony 2.4, the XML structure stays as an object until
             // the very last moment.
-            \Symphony::Profiler()->seed(precision_timer());
+            Symphony\Frontend::Profiler()->seed(precision_timer());
             if ($this->_xml instanceof \XMLElement) {
                 $this->setXML($this->_xml->generate(true, 0));
             }
-            \Symphony::Profiler()->sample('XML Generation', PROFILE_LAP);
+            Symphony\Frontend::Profiler()->sample('XML Generation', PROFILE_LAP);
 
             $output = parent::generate();
             $this->_param = $backup_param;
 
-            \Symphony::Profiler()->sample('XSLT Transformation', PROFILE_LAP);
+            Symphony\Frontend::Profiler()->sample('XSLT Transformation', PROFILE_LAP);
 
             /*
              * Immediately after generating the page. Provided with string containing page source
@@ -277,7 +277,7 @@ class Page extends Symphony\AbstractXSLTPage
              * @param string $output
              *  The generated output of this page, ie. a string of HTML, passed by reference
              */
-            \Symphony::ExtensionManager()->notifyMembers('FrontendOutputPostGenerate', '/frontend/', array('output' => &$output));
+            Symphony\Frontend::ExtensionManager()->notifyMembers('FrontendOutputPostGenerate', '/frontend/', array('output' => &$output));
 
             if (null === $devkit && !$output) {
                 $errstrs = [];
@@ -303,7 +303,7 @@ class Page extends Symphony\AbstractXSLTPage
                 );
             }
 
-            \Symphony::Profiler()->sample('Page creation complete');
+            Symphony\Frontend::Profiler()->sample('Page creation complete');
         }
 
         if (null !== $devkit) {
@@ -315,7 +315,7 @@ class Page extends Symphony\AbstractXSLTPage
         // Display the Event Results in the page source if the user is logged
         // into Symphony, the page is not JSON and if it is enabled in the
         // configuration.
-        if ($this->isLoggedIn && !\General::in_iarray('JSON', $this->pageData['type']) && 'yes' === \Symphony::Configuration()->get('display_event_xml_in_source', 'public')) {
+        if ($this->isLoggedIn && !\General::in_iarray('JSON', $this->pageData['type']) && 'yes' === Symphony\Frontend::Configuration()->get('display_event_xml_in_source', 'public')) {
             $output .= PHP_EOL.'<!-- '.PHP_EOL.$this->_events_xml->generate(true).' -->';
         }
 
@@ -360,7 +360,7 @@ class Page extends Symphony\AbstractXSLTPage
          *  An associative array of page data, which is a combination from `tbl_pages` and
          *  the path of the page on the filesystem. Passed by reference
          */
-        \Symphony::ExtensionManager()->notifyMembers('FrontendPageResolved', '/frontend/', array('page' => &$this, 'page_data' => &$page));
+        Symphony\Frontend::ExtensionManager()->notifyMembers('FrontendPageResolved', '/frontend/', array('page' => &$this, 'page_data' => &$page));
 
         $this->pageData = $page;
         $path = explode('/', $page['path']);
@@ -373,8 +373,8 @@ class Page extends Symphony\AbstractXSLTPage
 
         // Get max upload size from php and symphony config then choose the smallest
         $upload_size_php = ini_size_to_bytes(ini_get('upload_max_filesize'));
-        $upload_size_sym = \Symphony::Configuration()->get('max_upload_size', 'admin');
-        $date = new DateTime();
+        $upload_size_sym = Symphony\Frontend::Configuration()->get('max_upload_size', 'admin');
+        $date = new \DateTime;
 
         $this->_param = array(
             'today' => $date->format('Y-m-d'),
@@ -383,7 +383,7 @@ class Page extends Symphony\AbstractXSLTPage
             'this-month' => $date->format('m'),
             'this-day' => $date->format('d'),
             'timezone' => $date->format('P'),
-            'website-name' => \Symphony::Configuration()->get('sitename', 'general'),
+            'website-name' => Symphony\Frontend::Configuration()->get('sitename', 'general'),
             'page-title' => $page['title'],
             'root' => URL,
             'workspace' => URL.'/workspace',
@@ -397,7 +397,7 @@ class Page extends Symphony\AbstractXSLTPage
             'current-query-string' => self::sanitizeParameter($querystring),
             'current-url' => URL.$current_path,
             'upload-limit' => min($upload_size_php, $upload_size_sym),
-            'symphony-version' => \Symphony::Configuration()->get('version', 'symphony'),
+            'symphony-version' => Symphony\Frontend::Configuration()->get('version', 'symphony'),
         );
 
         if (isset($this->_env['url']) && is_array($this->_env['url'])) {
@@ -463,7 +463,7 @@ class Page extends Symphony\AbstractXSLTPage
          * @param array $params
          *  An associative array of this page's parameters
          */
-        \Symphony::ExtensionManager()->notifyMembers('FrontendParamsResolve', '/frontend/', array('params' => &$this->_param));
+        Symphony\Frontend::ExtensionManager()->notifyMembers('FrontendParamsResolve', '/frontend/', array('params' => &$this->_param));
 
         $xml_build_start = precision_timer();
 
@@ -478,8 +478,8 @@ class Page extends Symphony\AbstractXSLTPage
 
         $this->processDatasources($page['data_sources'], $xml);
 
-        \Symphony::Profiler()->seed($xml_build_start);
-        \Symphony::Profiler()->sample('XML Built', PROFILE_LAP);
+        Symphony\Frontend::Profiler()->seed($xml_build_start);
+        Symphony\Frontend::Profiler()->sample('XML Built', PROFILE_LAP);
 
         if (isset($this->_env['pool']) && is_array($this->_env['pool']) && !empty($this->_env['pool'])) {
             foreach ($this->_env['pool'] as $handle => $p) {
@@ -509,7 +509,7 @@ class Page extends Symphony\AbstractXSLTPage
          * @param array $params
          *  An associative array of this page's parameters
          */
-        \Symphony::ExtensionManager()->notifyMembers('FrontendParamsPostResolve', '/frontend/', array('params' => &$this->_param));
+        Symphony\Frontend::ExtensionManager()->notifyMembers('FrontendParamsPostResolve', '/frontend/', array('params' => &$this->_param));
 
         $params = new \XMLElement('params');
         foreach ($this->_param as $key => $value) {
@@ -560,8 +560,8 @@ class Page extends Symphony\AbstractXSLTPage
         $this->setXSL($xsl, false);
         $this->setRuntimeParam($this->_param);
 
-        \Symphony::Profiler()->seed($start);
-        \Symphony::Profiler()->sample('Page Built', PROFILE_LAP);
+        Symphony\Frontend::Profiler()->seed($start);
+        Symphony\Frontend::Profiler()->sample('Page Built', PROFILE_LAP);
     }
 
     /**
@@ -604,7 +604,7 @@ class Page extends Symphony\AbstractXSLTPage
          * @param FrontendPage $page
          *  An instance of this FrontendPage
          */
-        \Symphony::ExtensionManager()->notifyMembers('FrontendPrePageResolve', '/frontend/', array('row' => &$row, 'page' => &$this->_page));
+        Symphony\Frontend::ExtensionManager()->notifyMembers('FrontendPrePageResolve', '/frontend/', array('row' => &$row, 'page' => &$this->_page));
 
         // Default to the index page if no page has been specified
         if ((!$this->_page || '//' == $this->_page) && null === $row) {
@@ -752,7 +752,7 @@ class Page extends Symphony\AbstractXSLTPage
          * @param array $page_data
          *  An associative array of page meta data
          */
-        \Symphony::ExtensionManager()->notifyMembers('FrontendProcessEvents', '/frontend/', array(
+        Symphony\Frontend::ExtensionManager()->notifyMembers('FrontendProcessEvents', '/frontend/', array(
             'env' => $this->_env,
             'events' => &$events,
             'wrapper' => &$wrapper,
@@ -777,7 +777,7 @@ class Page extends Symphony\AbstractXSLTPage
 
             foreach ($pool as $handle => $event) {
                 $startTime = precision_timer();
-                $queries = \Symphony::Database()->queryCount();
+                $queries = Symphony\Frontend::Database()->queryCount();
 
                 if ($xml = $event->load()) {
                     if (is_object($xml)) {
@@ -789,9 +789,9 @@ class Page extends Symphony\AbstractXSLTPage
                     }
                 }
 
-                $queries = \Symphony::Database()->queryCount() - $queries;
-                \Symphony::Profiler()->seed($startTime);
-                \Symphony::Profiler()->sample($handle, PROFILE_LAP, 'Event', $queries);
+                $queries = Symphony\Frontend::Database()->queryCount() - $queries;
+                Symphony\Frontend::Profiler()->seed($startTime);
+                Symphony\Frontend::Profiler()->sample($handle, PROFILE_LAP, 'Event', $queries);
             }
         }
 
@@ -805,7 +805,7 @@ class Page extends Symphony\AbstractXSLTPage
          *  contained in a root \XMLElement that is the handlised version of
          *  their name.
          */
-        \Symphony::ExtensionManager()->notifyMembers('FrontendEventPostProcess', '/frontend/', array('xml' => &$wrapper));
+        Symphony\Frontend::ExtensionManager()->notifyMembers('FrontendEventPostProcess', '/frontend/', array('xml' => &$wrapper));
     }
 
     /**
@@ -857,7 +857,7 @@ class Page extends Symphony\AbstractXSLTPage
      *
      * @throws Exception
      */
-    public function processDatasources($datasources, \XMLElement &$wrapper, array $params = array())
+    public function processDatasources($datasources, \XMLElement &$wrapper, array $params = [])
     {
         if ('' == trim($datasources)) {
             return;
@@ -875,7 +875,7 @@ class Page extends Symphony\AbstractXSLTPage
         $dependencies = [];
 
         foreach ($datasources as $handle) {
-            $pool[$handle] = \DatasourceManager::create($handle, array(), false);
+            $pool[$handle] = \DatasourceManager::create($handle, [], false);
             $dependencies[$handle] = $pool[$handle]->getDependencies();
         }
 
@@ -883,7 +883,7 @@ class Page extends Symphony\AbstractXSLTPage
 
         foreach ($dsOrder as $handle) {
             $startTime = precision_timer();
-            $queries = \Symphony::Database()->queryCount();
+            $queries = Symphony\Frontend::Database()->queryCount();
 
             // default to no XML
             $xml = null;
@@ -913,7 +913,7 @@ class Page extends Symphony\AbstractXSLTPage
              * @param array $param_pool
              *  The existing param pool including output parameters of any previous data sources
              */
-            \Symphony::ExtensionManager()->notifyMembers('DataSourcePreExecute', '/frontend/', array(
+            Symphony\Frontend::ExtensionManager()->notifyMembers('DataSourcePreExecute', '/frontend/', array(
                 'datasource' => &$ds,
                 'xml' => &$xml,
                 'param_pool' => &$this->_env['pool'],
@@ -942,7 +942,7 @@ class Page extends Symphony\AbstractXSLTPage
                  * @param array $param_pool
                  *  The existing param pool including output parameters of any previous data sources
                  */
-                \Symphony::ExtensionManager()->notifyMembers('DataSourcePostExecute', '/frontend/', array(
+                Symphony\Frontend::ExtensionManager()->notifyMembers('DataSourcePostExecute', '/frontend/', array(
                     'datasource' => $ds,
                     'xml' => &$xml,
                     'param_pool' => &$this->_env['pool'],
@@ -957,9 +957,9 @@ class Page extends Symphony\AbstractXSLTPage
                 }
             }
 
-            $queries = \Symphony::Database()->queryCount() - $queries;
-            \Symphony::Profiler()->seed($startTime);
-            \Symphony::Profiler()->sample($handle, PROFILE_LAP, 'Datasource', $queries);
+            $queries = Symphony\Frontend::Database()->queryCount() - $queries;
+            Symphony\Frontend::Profiler()->seed($startTime);
+            Symphony\Frontend::Profiler()->sample($handle, PROFILE_LAP, 'Datasource', $queries);
             unset($ds);
         }
     }

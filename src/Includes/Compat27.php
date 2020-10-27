@@ -35,6 +35,10 @@ $funcGenerateClassAliases = function ($sourceClassname, $destClassname=null, $so
 
 foreach(
     [
+        ["Symphony"],
+        ["Administration"],
+        ["Frontend"],
+        
         ["Author"],
         ["Session"],
         ["Widget"],

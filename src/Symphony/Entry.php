@@ -229,7 +229,7 @@ class Entry
     {
         $fieldData = isset($this->_data[$field_id])
             ? $this->_data[$field_id]
-            : array();
+            : [];
 
         if (!$field_id) {
             return $this->_data;

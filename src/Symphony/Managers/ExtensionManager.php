@@ -701,7 +701,7 @@ class ExtensionManager extends Symphony\AbstractManager implements Interfaces\Fi
      *
      * @return void|null
      */
-    public static function notifyMembers($delegate, $page, array $context = array())
+    public static function notifyMembers($delegate, $page, array $context = [])
     {
         // Make sure $page is an array
         if (!is_array($page)) {
@@ -859,7 +859,7 @@ class ExtensionManager extends Symphony\AbstractManager implements Interfaces\Fi
      *               An associative array of Extension information, formatted in the same way as the
      *               listAll() method
      */
-    public static function fetch(array $select = array(), array $where = array(), $order_by = null)
+    public static function fetch(array $select = [], array $where = [], $order_by = null)
     {
         $extensions = self::listAll();
         $data = [];
@@ -987,7 +987,7 @@ class ExtensionManager extends Symphony\AbstractManager implements Interfaces\Fi
                 'homepage' => $xpath->evaluate('string(ext:url[@type="homepage"])', $extension),
                 'wiki' => $xpath->evaluate('string(ext:url[@type="wiki"])', $extension),
                 'issues' => $xpath->evaluate('string(ext:url[@type="issues"])', $extension),
-                'status' => array(),
+                'status' => [],
             );
 
             // find the latest <release> (largest version number)
@@ -1101,7 +1101,7 @@ class ExtensionManager extends Symphony\AbstractManager implements Interfaces\Fi
             }
 
             // Create the extension object
-            self::$_pool[$name] = new $classname(array());
+            self::$_pool[$name] = new $classname([]);
         }
 
         return self::$_pool[$name];

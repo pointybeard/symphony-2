@@ -191,7 +191,7 @@ class SectionManager extends Symphony\AbstractManager
         );
 
         if (!$sections = \Symphony::Database()->fetch($sql)) {
-            return $returnSingle ? false : array();
+            return $returnSingle ? false : [];
         }
 
         $ret = [];

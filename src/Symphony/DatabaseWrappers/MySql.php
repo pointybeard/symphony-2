@@ -779,7 +779,7 @@ class MySql extends Symphony\AbstractDatabaseWrapper
     {
         $result = $this->fetch($query);
 
-        return empty($result) ? array() : $result[$offset];
+        return empty($result) ? [] : $result[$offset];
     }
 
     /**

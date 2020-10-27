@@ -178,13 +178,6 @@ define_safe('CORE', LIBRARY.'/core');
 define_safe('LANG', DOCROOT.'/src/Includes/Lang');
 
 /*
- * The filesystem path to the `toolkit` folder which is contained within
- * the `symphony/lib` folder.
- * @var string
- */
-define_safe('TOOLKIT', LIBRARY.'/toolkit');
-
-/*
  * The filesystem path to the `interface` folder which is contained within
  * the `symphony/lib` folder.
  * @since Symphony 2.3

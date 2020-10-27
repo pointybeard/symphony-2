@@ -40,7 +40,7 @@ class Sortable
      * @param array    $params (optional)
      *                         An array of parameters that can be passed to the context-based method
      */
-    public static function initialize(HtmlPage $object, &$result, &$sort, &$order, array $params = array())
+    public static function initialize(HtmlPage $object, &$result, &$sort, &$order, array $params = [])
     {
         if (isset($_REQUEST['sort'])) {
             $sort = $_REQUEST['sort'];

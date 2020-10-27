@@ -319,7 +319,7 @@ abstract class Section extends Symphony\AbstractEvent
      * @return \XMLElement
      *                     The result of the Event
      */
-    public function __doit(array $fields = array(), \XMLElement &$result, $position = null, $entry_id = null)
+    public function __doit(array $fields = [], \XMLElement &$result, $position = null, $entry_id = null)
     {
         $post_values = new \XMLElement('post-values');
 

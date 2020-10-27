@@ -68,17 +68,9 @@ class FieldManager extends Symphony\AbstractManager implements Interfaces\FileRe
      */
     public static function __getClassPath($type)
     {
-        if (is_file(TOOLKIT."/fields/field.{$type}.php")) {
-            return TOOLKIT.'/fields';
-        } else {
-            $extensions = \Symphony::ExtensionManager()->listInstalledHandles();
-
-            if (is_array($extensions) && !empty($extensions)) {
-                foreach ($extensions as $e) {
-                    if (is_file(EXTENSIONS."/{$e}/fields/field.{$type}.php")) {
-                        return EXTENSIONS."/{$e}/fields";
-                    }
-                }
+        foreach (\Symphony::ExtensionManager()->listInstalledHandles() as $e) {
+            if (true == file_exists(EXTENSIONS."/{$e}/fields/field.{$type}.php")) {
+                return EXTENSIONS."/{$e}/fields";
             }
         }
 
@@ -553,33 +545,31 @@ class FieldManager extends Symphony\AbstractManager implements Interfaces\FileRe
 
     /**
      * Returns an array of all available field handles discovered in the
-     * `TOOLKIT . /fields` or `EXTENSIONS . /extension_handle/fields`.
+     * `EXTENSIONS . /extension_handle/fields`.
      *
      * @return array
      *               A single dimensional array of field handles
      */
-    public static function listAll()
+    public static function listAll(): array
     {
-        $structure = Symphony\General::listStructure(TOOLKIT.'/fields', '/field.[a-z0-9_-]+.php/i', false, 'asc', TOOLKIT.'/fields');
-        $extensions = \Symphony::ExtensionManager()->listInstalledHandles();
-        $types = [];
+ 
+        $fieldsLocated = [];
 
-        if (is_array($extensions) && !empty($extensions)) {
-            foreach ($extensions as $handle) {
-                $path = EXTENSIONS.'/'.$handle.'/fields';
-                if (is_dir($path)) {
-                    $tmp = Symphony\General::listStructure($path, '/field.[a-z0-9_-]+.php/i', false, 'asc', $path);
+        foreach (\Symphony::ExtensionManager()->listInstalledHandles() as $handle) {
+            $path = EXTENSIONS.'/'.$handle.'/fields';
+            if (is_dir($path)) {
+                $fields = Symphony\General::listStructure($path, '/field.[a-z0-9_-]+.php/i', false, 'asc', $path);
 
-                    if (is_array($tmp['filelist']) && !empty($tmp['filelist'])) {
-                        $structure['filelist'] = array_merge($structure['filelist'], $tmp['filelist']);
-                    }
+                if (is_array($fields['filelist']) && !empty($fields['filelist'])) {
+                    $fieldsLocated = array_merge($fieldsLocated, $fields['filelist']);
                 }
             }
-
-            $structure['filelist'] = Symphony\General::array_remove_duplicates($structure['filelist']);
         }
 
-        foreach ($structure['filelist'] as $filename) {
+        $fieldsLocated = Symphony\General::array_remove_duplicates($fieldsLocated);
+    
+        $types = [];
+        foreach ($fieldsLocated as $filename) {
             $types[] = self::__getHandleFromFilename($filename);
         }
 
@@ -598,8 +588,8 @@ class FieldManager extends Symphony\AbstractManager implements Interfaces\FileRe
      * @return Field
      */
     public static function create($type)
-    {
-        if (!isset(self::$_pool[$type])) {
+    {   
+        if (!array_key_exists($type, self::$_pool)) {
             $classname = self::__getClassName($type);
             $path = self::__getDriverPath($type);
 

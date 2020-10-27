@@ -368,7 +368,7 @@ abstract class AbstractPage extends Symphony\HtmlPage
      * @throws InvalidArgumentException
      * @throws SymphonyErrorPage
      */
-    public function build(array $context = array())
+    public function build(array $context = [])
     {
         $this->_context = $context;
 
@@ -731,7 +731,7 @@ abstract class AbstractPage extends Symphony\HtmlPage
      *
      * @param array $context
      */
-    private function appendBodyClass(array $context = array())
+    private function appendBodyClass(array $context = [])
     {
         $body_class = '';
 
@@ -1031,7 +1031,7 @@ abstract class AbstractPage extends Symphony\HtmlPage
                 'name' => __(strval($content->name)),
                 'type' => 'structure',
                 'index' => $index,
-                'children' => array(),
+                'children' => [],
             );
 
             if (strlen(trim((string) $content->limit)) > 0) {
@@ -1083,7 +1083,7 @@ abstract class AbstractPage extends Symphony\HtmlPage
                         'name' => $s->get('navigation_group'),
                         'type' => 'content',
                         'index' => $group_index,
-                        'children' => array(),
+                        'children' => [],
                     );
                 }
 
@@ -1228,7 +1228,7 @@ abstract class AbstractPage extends Symphony\HtmlPage
             'name' => $item['name'],
             'type' => isset($item['type']) ? $item['type'] : 'structure',
             'index' => $index,
-            'children' => array(),
+            'children' => [],
             'limit' => isset($item['limit']) ? $item['limit'] : null,
         );
 

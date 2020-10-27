@@ -451,7 +451,7 @@ abstract class AbstractEmailGateway
      *
      * @throws Exceptions\EmailGatewayException
      */
-    public function appendHeaderFields(array $header_array = array())
+    public function appendHeaderFields(array $header_array = [])
     {
         foreach ($header_array as $name => $body) {
             $this->appendHeaderField($name, $body);

@@ -352,7 +352,7 @@ class Log
      *                   If `$writeToLog` is passed, this function will return boolean, otherwise
      *                   void
      */
-    public function pushDeprecateWarningToLog($method, $alternative = null, array $opts = array())
+    public function pushDeprecateWarningToLog($method, $alternative = null, array $opts = [])
     {
         $defaults = array(
             'message-format' => __('The method `%s` is deprecated.'),

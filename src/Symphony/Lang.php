@@ -62,7 +62,7 @@ class Lang
      *          'en' => array(
      *              'name' => 'English',
      *              'handle' => 'english',
-     *              'extensions' => array()
+     *              'extensions' => []
      *          ),
      *
      *          'it' => array(
@@ -142,7 +142,7 @@ class Lang
      * @return array
      *               An array of Language information
      */
-    private static function createLanguage($code, $name, $handle = null, array $extensions = array())
+    private static function createLanguage($code, $name, $handle = null, array $extensions = [])
     {
         return [
             $code => [
