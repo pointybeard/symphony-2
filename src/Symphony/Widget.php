@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 //declare(strict_types=1);
 
 namespace Symphony\Symphony;
@@ -11,12 +13,11 @@ namespace Symphony\Symphony;
  */
 abstract class Widget
 {
-    
     /**
      * @todo: Investigate why this isn't working correctly.
      **/
     // public static function __callStatic(string $name, array $arguments) {
-    //     return WidgetFactory::build($name, ...$arguments)->toXmlElement();
+    //     return WidgetFactory::build(string $name, ...$arguments)->toXmlElement();
     // }
 
     /**
@@ -41,9 +42,8 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function Label($name = null, XmlElement $child = null, $class = null, $id = null, array $attributes = null)
+    public static function Label($name = null, XmlElement $child = null, $class = null, $id = null, array $attributes = [])
     {
-
         General::ensureType(
             [
                 'name' => ['var' => $name, 'type' => 'string', 'optional' => true],
@@ -52,7 +52,7 @@ abstract class Widget
             ]
         );
 
-        return WidgetFactory::build("Label", $name, $child, $class, $id, $attributes ?? [])->toXmlElement();
+        return WidgetFactory::build('Label', $name, $child, $class, $id, $attributes)->toXmlElement();
     }
 
     /**
@@ -74,7 +74,7 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function Input($name, $value = null, $type = 'text', array $attributes = null)
+    public static function Input(string $name, $value = null, string $type = 'text', array $attributes = []): XmlElement
     {
         General::ensureType(
             [
@@ -84,22 +84,7 @@ abstract class Widget
             ]
         );
 
-        $obj = new XMLElement('input');
-        $obj->setAttribute('name', $name);
-
-        if (null !== $type) {
-            $obj->setAttribute('type', $type);
-        }
-
-        if (0 !== strlen((string)$value)) {
-            $obj->setAttribute('value', $value);
-        }
-
-        if (true == is_array($attributes) && false == empty($attributes)) {
-            $obj->setAttributeArray($attributes);
-        }
-
-        return $obj;
+        return WidgetFactory::build('Input', $name, $value, $type, $attributes)->toXmlElement();
     }
 
     /**
@@ -129,47 +114,16 @@ abstract class Widget
      * @return XMLElement
      *                    The markup for the label and the checkbox
      */
-    public static function Checkbox($name, $value, $description = null, XmlElement &$wrapper = null, $help = null)
+    public static function Checkbox(string $name, $value, $description = null, XmlElement &$wrapper = null, $help = null, array $attributes = []): XmlElement
     {
-        General::ensureType(array(
-            'name' => array('var' => $name, 'type' => 'string'),
-            'value' => array('var' => $value, 'type' => 'string', 'optional' => true),
-            'description' => array('var' => $description, 'type' => 'string'),
-            'help' => array('var' => $help, 'type' => 'string', 'optional' => true),
-        ));
+        General::ensureType([
+            'name' => ['var' => $name, 'type' => 'string'],
+            'value' => ['var' => $value, 'type' => 'string', 'optional' => true],
+            'description' => ['var' => $description, 'type' => 'string'],
+            'help' => ['var' => $help, 'type' => 'string', 'optional' => true],
+        ]);
 
-        // Build the label
-        $label = Widget::Label();
-        if ($help) {
-            $label->addClass('inline-help');
-        }
-
-        // Add the 'no' default option to the label, or to the wrapper if it's provided
-        $default_hidden = Widget::Input($name, 'no', 'hidden');
-        if (null === $wrapper) {
-            $label->appendChild($default_hidden);
-        } else {
-            $wrapper->appendChild($default_hidden);
-        }
-
-        // Include the actual checkbox.
-        $input = Widget::Input($name, 'yes', 'checkbox');
-        if ('yes' === $value) {
-            $input->setAttribute('checked', 'checked');
-        }
-
-        // Build the checkbox, then label, then help
-        $label->setValue(__('%s '.$description.' %s', array(
-            $input->generate(),
-            ($help) ? ' <i>('.$help.')</i>' : '',
-        )));
-
-        // If a wrapper was given, add the label to it
-        if (null !== $wrapper) {
-            $wrapper->appendChild($label);
-        }
-
-        return $label;
+        return WidgetFactory::build('Checkbox', $name, $value, $description, $wrapper, $help, $attributes)->toXmlElement();
     }
 
     /**
@@ -193,28 +147,18 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function Textarea($name, $rows = 15, $cols = 50, $value = null, array $attributes = null)
+    public static function Textarea(string $name, int $rows = 15, int $cols = 50, $value = null, array $attributes = []): XmlElement
     {
-        General::ensureType(array(
-            'name' => array('var' => $name, 'type' => 'string'),
-            'rows' => array('var' => $rows, 'type' => 'int'),
-            'cols' => array('var' => $cols, 'type' => 'int'),
-            'value' => array('var' => $value, 'type' => ['string', 'int', 'double', 'float'], 'optional' => true),
-        ));
+        General::ensureType(
+            [
+                'name' => ['var' => $name, 'type' => 'string'],
+                'rows' => ['var' => $rows, 'type' => 'int'],
+                'cols' => ['var' => $cols, 'type' => 'int'],
+                'value' => ['var' => $value, 'type' => ['string', 'int', 'double', 'float'], 'optional' => true],
+            ]
+        );
 
-        $obj = new XmlElement('textarea', $value);
-
-        $obj->setSelfClosingTag(false);
-
-        $obj->setAttribute('name', $name);
-        $obj->setAttribute('rows', $rows);
-        $obj->setAttribute('cols', $cols);
-
-        if (is_array($attributes) && !empty($attributes)) {
-            $obj->setAttributeArray($attributes);
-        }
-
-        return $obj;
+        return WidgetFactory::build('Textarea', $name, $rows, $cols, $value, $attributes)->toXmlElement();
     }
 
     /**
@@ -240,36 +184,19 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function Anchor($value, $href, $title = null, $class = null, $id = null, array $attributes = null)
+    public static function Anchor($value, string $href, ?string $title = null, ?string $class = null, ?string $id = null, array $attributes = []): XmlElement
     {
-        General::ensureType(array(
-            'value' => array('var' => $value, 'type' => ['string', 'int', 'double', 'float']),
-            'href' => array('var' => $href, 'type' => 'string'),
-            'title' => array('var' => $title, 'type' => 'string', 'optional' => true),
-            'class' => array('var' => $class, 'type' => 'string', 'optional' => true),
-            'id' => array('var' => $id, 'type' => 'string', 'optional' => true),
-        ));
+        General::ensureType(
+            [
+                'value' => ['var' => $value, 'type' => ['string', 'int', 'double', 'float']],
+                'href' => ['var' => $href, 'type' => 'string'],
+                'title' => ['var' => $title, 'type' => 'string', 'optional' => true],
+                'class' => ['var' => $class, 'type' => 'string', 'optional' => true],
+                'id' => ['var' => $id, 'type' => 'string', 'optional' => true],
+            ]
+        );
 
-        $obj = new XmlElement('a', $value);
-        $obj->setAttribute('href', $href);
-
-        if ($title) {
-            $obj->setAttribute('title', $title);
-        }
-
-        if ($class) {
-            $obj->setAttribute('class', $class);
-        }
-
-        if ($id) {
-            $obj->setAttribute('id', $id);
-        }
-
-        if (is_array($attributes) && !empty($attributes)) {
-            $obj->setAttributeArray($attributes);
-        }
-
-        return $obj;
+        return WidgetFactory::build('Anchor', $value, $href, $title, $class, $id, $attributes)->toXmlElement();
     }
 
     /**
@@ -293,32 +220,18 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function Form($action = null, $method = 'post', $class = null, $id = null, array $attributes = null)
+    public static function Form(?string $action = null, ?string $method = Widgets\Form::METHOD_POST, ?string $class = null, ?string $id = null, array $attributes = []): XmlElement
     {
-        General::ensureType(array(
-            'action' => array('var' => $action, 'type' => 'string', 'optional' => true),
-            'method' => array('var' => $method, 'type' => 'string'),
-            'class' => array('var' => $class, 'type' => 'string', 'optional' => true),
-            'id' => array('var' => $id, 'type' => 'string', 'optional' => true),
-        ));
+        General::ensureType(
+            [
+                'action' => ['var' => $action, 'type' => 'string', 'optional' => true],
+                'method' => ['var' => $method, 'type' => 'string'],
+                'class' => ['var' => $class, 'type' => 'string', 'optional' => true],
+                'id' => ['var' => $id, 'type' => 'string', 'optional' => true],
+            ]
+        );
 
-        $obj = new XmlElement('form');
-        $obj->setAttribute('action', $action);
-        $obj->setAttribute('method', $method);
-
-        if ($class) {
-            $obj->setAttribute('class', $class);
-        }
-
-        if ($id) {
-            $obj->setAttribute('id', $id);
-        }
-
-        if (is_array($attributes) && !empty($attributes)) {
-            $obj->setAttributeArray($attributes);
-        }
-
-        return $obj;
+        return WidgetFactory::build('Form', $action, $method, $class, $id, $attributes)->toXmlElement();
     }
 
     /**
@@ -326,11 +239,11 @@ abstract class Widget
      * This is a simple way to create generic Symphony table wrapper.
      *
      * @param XmlElement $header
-     *                               An XmlElement containing the `<thead>`. See Widget::TableHead
+     *                               An XmlElement containing the `<thead>`. See self::TableHead
      * @param XmlElement $footer
      *                               An XmlElement containing the `<tfoot>`
      * @param XmlElement $body
-     *                               An XmlElement containing the `<tbody>`. See Widget::TableBody
+     *                               An XmlElement containing the `<tbody>`. See self::TableBody
      * @param string     $class      (optional)
      *                               The class attribute of the resulting `<table>`
      * @param string     $id         (optional)
@@ -345,40 +258,14 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function Table(XmlElement $header = null, XmlElement $footer = null, XmlElement $body = null, $class = null, $id = null, array $attributes = null)
+    public static function Table(?object $header = null, ?object $footer = null, ?object $body = null, $class = null, $id = null, array $attributes = []): XmlElement
     {
         General::ensureType(array(
             'class' => array('var' => $class, 'type' => 'string', 'optional' => true),
             'id' => array('var' => $id, 'type' => 'string', 'optional' => true),
         ));
 
-        $obj = new XmlElement('table');
-
-        if ($class) {
-            $obj->setAttribute('class', $class);
-        }
-
-        if ($id) {
-            $obj->setAttribute('id', $id);
-        }
-
-        if ($header) {
-            $obj->appendChild($header);
-        }
-
-        if ($footer) {
-            $obj->appendChild($footer);
-        }
-
-        if ($body) {
-            $obj->appendChild($body);
-        }
-
-        if (is_array($attributes) && !empty($attributes)) {
-            $obj->setAttributeArray($attributes);
-        }
-
-        return $obj;
+        return WidgetFactory::build('Table', $header, $footer, $body, $class, $id, $attributes)->toXmlElement();
     }
 
     /**
@@ -397,36 +284,9 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function TableHead(array $columns = null)
+    public static function TableHead(array $columns = [], array $attributes = [])
     {
-        $thead = new XmlElement('thead');
-        $tr = new XmlElement('tr');
-
-        if (is_array($columns) && !empty($columns)) {
-            foreach ($columns as $col) {
-                $th = new XmlElement('th');
-
-                if (is_object($col[0])) {
-                    $th->appendChild($col[0]);
-                } else {
-                    $th->setValue($col[0]);
-                }
-
-                if ($col[1] && '' != $col[1]) {
-                    $th->setAttribute('scope', $col[1]);
-                }
-
-                if (!empty($col[2]) && is_array($col[2])) {
-                    $th->setAttributeArray($col[2]);
-                }
-
-                $tr->appendChild($th);
-            }
-        }
-
-        $thead->appendChild($tr);
-
-        return $thead;
+        return WidgetFactory::build('Table\\Head', $columns, $attributes)->toXmlElement();
     }
 
     /**
@@ -451,32 +311,14 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function TableBody(array $rows, $class = null, $id = null, array $attributes = null)
+    public static function TableBody(array $rows, ?string $class = null, ?string $id = null, array $attributes = []): XmlElement
     {
         General::ensureType(array(
             'class' => array('var' => $class, 'type' => 'string', 'optional' => true),
             'id' => array('var' => $id, 'type' => 'string', 'optional' => true),
         ));
 
-        $tbody = new XmlElement('tbody');
-
-        if ($class) {
-            $tbody->setAttribute('class', $class);
-        }
-
-        if ($id) {
-            $tbody->setAttribute('id', $id);
-        }
-
-        if (is_array($attributes) && !empty($attributes)) {
-            $tbody->setAttributeArray($attributes);
-        }
-
-        foreach ($rows as $row) {
-            $tbody->appendChild($row);
-        }
-
-        return $tbody;
+        return WidgetFactory::build('Table\\Body', $rows, $class, $id, $attributes)->toXmlElement();
     }
 
     /**
@@ -484,7 +326,7 @@ abstract class Widget
      * containing column names and any other attributes.
      *
      * @param array  $cells
-     *                           An array of XMLElements of `<td>`'s. See Widget::TableData
+     *                           An array of XMLElements of `<td>`'s. See self::TableData
      * @param string $class      (optional)
      *                           The class attribute of the resulting `<tr>`
      * @param string $id         (optional)
@@ -501,7 +343,7 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function TableRow(array $cells, $class = null, $id = null, $rowspan = null, array $attributes = null)
+    public static function TableRow(array $cells, ?string $class = null, ?string $id = null, ?int $rowspan = null, array $attributes = []): XmlElement
     {
         General::ensureType(array(
             'class' => array('var' => $class, 'type' => 'string', 'optional' => true),
@@ -509,29 +351,7 @@ abstract class Widget
             'rowspan' => array('var' => $rowspan, 'type' => 'int', 'optional' => true),
         ));
 
-        $tr = new XmlElement('tr');
-
-        if ($class) {
-            $tr->setAttribute('class', $class);
-        }
-
-        if ($id) {
-            $tr->setAttribute('id', $id);
-        }
-
-        if ($rowspan) {
-            $tr->setAttribute('rowspan', $rowspan);
-        }
-
-        if (is_array($attributes) && !empty($attributes)) {
-            $tr->setAttributeArray($attributes);
-        }
-
-        foreach ($cells as $cell) {
-            $tr->appendChild($cell);
-        }
-
-        return $tr;
+        return WidgetFactory::build('Table\\Row', $cells, $class, $id, $rowspan, $attributes)->toXmlElement();
     }
 
     /**
@@ -556,7 +376,7 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function TableData($value, $class = null, $id = null, $colspan = null, array $attributes = null)
+    public static function TableData($value, ?string $class = null, ?string $id = null, ?int $colspan = null, array $attributes = []): XmlElement
     {
         General::ensureType(array(
             'class' => array('var' => $class, 'type' => 'string', 'optional' => true),
@@ -564,30 +384,7 @@ abstract class Widget
             'colspan' => array('var' => $colspan, 'type' => 'int', 'optional' => true),
         ));
 
-        if (is_object($value)) {
-            $td = new XmlElement('td');
-            $td->appendChild($value);
-        } else {
-            $td = new XmlElement('td', $value);
-        }
-
-        if ($class) {
-            $td->setAttribute('class', $class);
-        }
-
-        if ($id) {
-            $td->setAttribute('id', $id);
-        }
-
-        if ($colspan) {
-            $td->setAttribute('colspan', $colspan);
-        }
-
-        if (is_array($attributes) && !empty($attributes)) {
-            $td->setAttributeArray($attributes);
-        }
-
-        return $td;
+        return WidgetFactory::build('Table\\Data', $value, $class, $id, $colspan, $attributes)->toXmlElement();
     }
 
     /**
@@ -596,38 +393,25 @@ abstract class Widget
      * @since Symphony 2.3
      *
      * @param string $string
-     *                        A string containing date and time, defaults to the current date and time
-     * @param string $format  (optional)
-     *                        A valid PHP date format, defaults to `__SYM_TIME_FORMAT__`
-     * @param bool   $pubdate (optional)
-     *                        A flag to make the given date a publish date
+     *                                A string containing date and time, defaults to the current date and time
+     * @param string $format          (optional)
+     *                                A valid PHP date format, defaults to `__SYM_TIME_FORMAT__`
+     * @param bool   $isPublishedDate (optional)
+     *                                A flag to make the given date a publish date
      *
      * @return XMLElement
      */
-    public static function Time($string = 'now', $format = __SYM_TIME_FORMAT__, $pubdate = false)
+    public static function Time(string $string = 'now', string $format = __SYM_TIME_FORMAT__, bool $isPublishedDate = false, array $attributes = []): XmlElement
     {
-        // Parse date
-        $date = DateTimeObj::parse($string);
-
-        // Create element
-        $obj = new XmlElement('time', Lang::localizeDate($date->format($format)));
-        $obj->setAttribute('datetime', $date->format(\DateTime::ISO8601));
-        $obj->setAttribute('utc', $date->format('U'));
-
-        // Pubdate?
-        if (true === $pubdate) {
-            $obj->setAttribute('pubdate', 'pubdate');
-        }
-
-        return $obj;
+        return WidgetFactory::build('Time', $string, $format, $isPublishedDate, $attributes)->toXmlElement();
     }
 
     /**
      * Generates a XmlElement representation of a `<select>`. This uses
-     * the private function `__SelectBuildOption()` to build XMLElements of
+     * the private function `selectBuildOption()` to build XMLElements of
      * options given the `$options` array.
      *
-     * @see toolkit.Widget::__SelectBuildOption()
+     * @see toolkit.Widget::selectBuildOption()
      *
      * @param string $name
      *                           The name attribute of the resulting `<select>`
@@ -657,121 +441,22 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function Select($name, array $options = null, array $attributes = null)
+    public static function Select(string $name, ?array $options = [], array $attributes = []): XmlElement
     {
         General::ensureType(array(
             'name' => array('var' => $name, 'type' => 'string'),
         ));
 
-        $obj = new XmlElement('select');
-        $obj->setAttribute('name', $name);
-
-        $obj->setSelfClosingTag(false);
-
-        if (is_array($attributes) && !empty($attributes)) {
-            $obj->setAttributeArray($attributes);
-        }
-
-        if (!is_array($options) || empty($options)) {
-            if (!isset($attributes['disabled'])) {
-                $obj->setAttribute('disabled', 'disabled');
-            }
-
-            return $obj;
-        }
-
-        foreach ($options as $o) {
-            //  Optgroup
-            if (isset($o['label'])) {
-                $optgroup = new XmlElement('optgroup');
-                $optgroup->setAttribute('label', $o['label']);
-
-                if (isset($o['data-label'])) {
-                    $optgroup->setAttribute('data-label', $o['data-label']);
-                }
-
-                foreach ($o['options'] as $option) {
-                    $optgroup->appendChild(
-                        Widget::__SelectBuildOption($option)
-                    );
-                }
-
-                $obj->appendChild($optgroup);
-            } else {
-                $obj->appendChild(Widget::__SelectBuildOption($o));
-            }
-        }
-
-        return $obj;
-    }
-
-    /**
-     * This function is used internally by the `Widget::Select()` to build
-     * an XmlElement of an `<option>` from an array.
-     *
-     * @param array $option
-     *                      An array containing the data a single `<option>` for this
-     *                      `<select>`. The array can contain the following params:
-     *                      string $value
-     *                      The value attribute of the resulting `<option>`
-     *                      boolean $selected
-     *                      Whether this `<option>` should be selected
-     *                      string $desc (optional)
-     *                      The text of the resulting `<option>`. If omitted $value will
-     *                      be used a default.
-     *                      string $class (optional)
-     *                      The class attribute of the resulting `<option>`
-     *                      string $id (optional)
-     *                      The id attribute of the resulting `<option>`
-     *                      array $attributes (optional)
-     *                      Any additional attributes can be included in an associative
-     *                      array with the key being the name and the value being the
-     *                      value of the attribute. Attributes set from this array
-     *                      will override existing attributes set by previous params.
-     *                      `array(
-     *                      array('one-shot', false, 'One Shot', 'my-option')
-     *                      )`
-     *
-     * @return XMLElement
-     */
-    private static function __SelectBuildOption($option)
-    {
-        list($value, $selected, $desc, $class, $id, $attributes) = array_pad($option, 6, null);
-
-        if (!$desc) {
-            $desc = $value;
-        }
-
-        $obj = new XmlElement('option', "$desc");
-        $obj->setSelfClosingTag(false);
-        $obj->setAttribute('value', "$value");
-
-        if (!empty($class)) {
-            $obj->setAttribute('class', $class);
-        }
-
-        if (!empty($id)) {
-            $obj->setAttribute('id', $id);
-        }
-
-        if (is_array($attributes) && !empty($attributes)) {
-            $obj->setAttributeArray($attributes);
-        }
-
-        if ($selected) {
-            $obj->setAttribute('selected', 'selected');
-        }
-
-        return $obj;
+        return WidgetFactory::build('Select', $name, $options, $attributes)->toXmlElement();
     }
 
     /**
      * Generates a XmlElement representation of a `<fieldset>` containing
-     * the "With selected…" menu. This uses the private function `__SelectBuildOption()`
+     * the "With selected…" menu. This uses the private function `selectBuildOption()`
      * to build `XMLElement`'s of options given the `$options` array.
      *
      * @since Symphony 2.3
-     * @see toolkit.Widget::__SelectBuildOption()
+     * @see toolkit.Widget::selectBuildOption()
      *
      * @param array $options (optional)
      *                       An array containing the data for each `<option>` for this
@@ -794,20 +479,9 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function Apply(array $options = null)
+    public static function Apply(?array $options = [], array $attributes = []): XmlElement
     {
-        $fieldset = new XmlElement('fieldset', null, array('class' => 'apply'));
-        $div = new XmlElement('div');
-        $div->appendChild(Widget::Label(__('Actions'), null, 'accessible', null, array(
-            'for' => 'with-selected',
-        )));
-        $div->appendChild(Widget::Select('with-selected', $options, array(
-            'id' => 'with-selected',
-        )));
-        $fieldset->appendChild($div);
-        $fieldset->appendChild(new XmlElement('button', __('Apply'), array('name' => 'action[apply]', 'type' => 'submit')));
-
-        return $fieldset;
+        return WidgetFactory::build('Apply', $options, $attributes)->toXmlElement();
     }
 
     /**
@@ -826,19 +500,13 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function Error(XmlElement $element, $message)
+    public static function Error(XmlElement $element, string $message, array $attributes = []): XmlElement
     {
         General::ensureType(array(
             'message' => array('var' => $message, 'type' => 'string'),
         ));
 
-        $div = new XmlElement('div');
-        $div->setAttributeArray(array('class' => 'invalid'));
-
-        $div->appendChild($element);
-        $div->appendChild(new XmlElement('p', $message));
-
-        return $div;
+        return WidgetFactory::build('Error', $element, $message, $attributes)->toXmlElement();
     }
 
     /**
@@ -867,24 +535,9 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function Drawer($id = '', $label = '', XmlElement $content = null, $default_state = 'closed', $context = '', array $attributes = array())
+    public static function Drawer(string $id, string $label, XmlElement $content, $defaultState = Drawer::STATE_CLOSED, ?string $context = null, array $attributes = []): XmlElement
     {
-        $id = Lang::createHandle($id);
-
-        $contents = new XmlElement('div', $content, array(
-            'class' => 'contents',
-        ));
-        $contents->setElementStyle('html');
-
-        $drawer = new XmlElement('div', $contents, $attributes);
-        $drawer->setAttribute('data-default-state', $default_state);
-        $drawer->setAttribute('data-context', $context);
-        $drawer->setAttribute('data-label', $label);
-        $drawer->setAttribute('data-interactive', 'data-interactive');
-        $drawer->addClass('drawer');
-        $drawer->setAttribute('id', 'drawer-'.$id);
-
-        return $drawer;
+        return WidgetFactory::build('Drawer', $id, $label, $content, $defaultState, $context, $attributes)->toXmlElement();
     }
 
     /**
@@ -897,25 +550,8 @@ abstract class Widget
      *
      * @return XMLElement
      */
-    public static function Calendar($time = true)
+    public static function Calendar(bool $isTime = true, array $attributes = []): XmlElement
     {
-        $calendar = new XmlElement('div');
-        $calendar->setAttribute('class', 'calendar');
-
-        $date = DateTimeObj::convertDateToMoment(DateTimeObj::getSetting('date_format'));
-        if ($date) {
-            if (true === $time) {
-                $separator = DateTimeObj::getSetting('datetime_separator');
-                $time = DateTimeObj::convertTimeToMoment(DateTimeObj::getSetting('time_format'));
-
-                $calendar->setAttribute('data-calendar', 'datetime');
-                $calendar->setAttribute('data-format', $date.$separator.$time);
-            } else {
-                $calendar->setAttribute('data-calendar', 'date');
-                $calendar->setAttribute('data-format', $date);
-            }
-        }
-
-        return $calendar;
+        return WidgetFactory::build('Calendar', $isTime, $attributes)->toXmlElement();
     }
 }

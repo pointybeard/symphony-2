@@ -6,10 +6,10 @@ namespace Symphony\Symphony\Widgets;
 
 use Symphony\Symphony;
 
-class Label extends Symphony\AbstractWidget {
-
-    public function __construct(?string $name = null, ?Symphony\XmlElement $child = null, ?string $class = null, ?string $id = null, array $attributes = []) {
-
+class Label extends Symphony\AbstractWidget
+{
+    public function __construct(?string $name = null, ?Symphony\XmlElement $child = null, ?string $class = null, ?string $id = null, array $attributes = [])
+    {
         $this
             ->name($name)
             ->child($child)

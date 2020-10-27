@@ -6,6 +6,7 @@ namespace Symphony\Symphony\Interfaces;
 
 use Symphony\Symphony;
 
-interface WidgetInterface {
+interface WidgetInterface
+{
     public function toXmlElement(): Symphony\XmlElement;
 }

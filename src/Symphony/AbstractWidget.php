@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Symphony\Symphony;
 
-abstract class AbstractWidget implements Interfaces\WidgetInterface {
+abstract class AbstractWidget implements Interfaces\WidgetInterface
+{
     protected $properties = [];
 
     public function __call(string $name, array $args)
