@@ -41,36 +41,31 @@ define_safe('WORKSPACE', DOCROOT.'/workspace');
  * The filesystem path to the `symphony` folder
  * @var string
  */
-define_safe('SYMPHONY', DOCROOT.'/symphony');
-
-/*
- * The filesystem path to the `lib` folder which is contained within
- * the `symphony` folder.
- * @var string
- */
-define_safe('LIBRARY', SYMPHONY.'/lib');
+define_safe('SYMPHONY', DOCROOT.'/src');
+define_safe('INCLUDES', SYMPHONY.'/src/Includes');
 
 /*
  * The filesystem path to the `assets` folder which is contained within
  * the `symphony` folder.
  * @var string
  */
-define_safe('ASSETS', SYMPHONY.'/assets');
+define_safe('ASSETS', SYMPHONY.'/Assets');
 
 /*
  * The filesystem path to the `content` folder which is contained within
  * the `symphony` folder.
  * @var string
  */
-define_safe('CONTENT', SYMPHONY.'/content');
+define_safe('CONTENT', SYMPHONY.'/Views');
+define_safe('VIEWS', SYMPHONY.'/Views');
 
 /*
  * The filesystem path to the `template` folder which is contained within
  * the `symphony` folder.
  * @var string
  */
-define_safe('TEMPLATE', DOCROOT.'/src/Includes/Templates');
-define_safe('ERROR_PAGES', DOCROOT.'/src/Includes/ErrorPages');
+define_safe('TEMPLATE', INCLUDES . '/Templates');
+define_safe('ERROR_PAGES', INCLUDES . '/ErrorPages');
 
 /*
  * The filesystem path to the `utilities` folder which is contained within
@@ -156,34 +151,12 @@ define_safe('ACTIVITY_LOG', LOGS.'/main');
 define_safe('CONFIG', MANIFEST.'/config.json');
 
 /*
- * The filesystem path to the `boot` folder which is contained within
- * the `symphony/lib` folder.
- * @var string
- */
-define_safe('BOOT', LIBRARY.'/boot');
-
-/*
- * The filesystem path to the `core` folder which is contained within
- * the `symphony/lib` folder.
- * @var string
- */
-define_safe('CORE', LIBRARY.'/core');
-
-/*
  * The filesystem path to the `lang` folder which is contained within
  * the `symphony/src/Includes` folder. By default, the Symphony install comes with
  * an english language translation.
  * @var string
  */
 define_safe('LANG', DOCROOT.'/src/Includes/Lang');
-
-/*
- * The filesystem path to the `interface` folder which is contained within
- * the `symphony/lib` folder.
- * @since Symphony 2.3
- * @var string
- */
-define_safe('FACE', LIBRARY.'/interface');
 
 /*
  * The filesystem path to the `email-gateways` folder which is contained within

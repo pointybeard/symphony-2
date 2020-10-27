@@ -325,7 +325,7 @@ class Administration extends Symphony
 
             $callback = array(
                 'driver' => 'login',
-                'driver_location' => CONTENT.'/content.login.php',
+                'driver_location' => VIEWS.'/content.login.php',
                 'context' => $context,
                 'classname' => 'contentLogin',
                 'pageroot' => '/login/',
@@ -360,7 +360,7 @@ class Administration extends Symphony
 
             $callback = array(
                 'driver' => 'publish',
-                'driver_location' => $callback['driver_location'] = CONTENT.'/content.publish.php',
+                'driver_location' => $callback['driver_location'] = VIEWS.'/content.publish.php',
                 'context' => array(
                     'section_handle' => $bits[1],
                     'page' => null,
@@ -402,7 +402,7 @@ class Administration extends Symphony
 
             $callback['classname'] = 'content'.$callback['driver'];
             $callback['driver'] = strtolower($callback['driver']);
-            $callback['driver_location'] = CONTENT.'/content.'.$callback['driver'].'.php';
+            $callback['driver_location'] = VIEWS.'/content.'.$callback['driver'].'.php';
         }
 
         /*
