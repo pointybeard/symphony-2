@@ -41,11 +41,11 @@ define('INSTALL_URL', URL . '/install');
 // If Symphony is already installed, run the updater instead
 if (false !== realpath(CONFIG)) {
     // System updater
-    $script = \Updater::instance();
+    $script = Symphony\Updater::instance();
 // If there's no config file, run the installer
 } else {
     // System installer
-    $script = \Installer::instance();
+    $script = Symphony\Installer::instance();
 }
 
 $script->run();

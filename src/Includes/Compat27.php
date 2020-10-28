@@ -60,7 +60,10 @@ foreach(
         ["Profiler"],
         ["TimestampValidator"],
         ["XsltProcess"],
+        ["Installer"],
+        ["Updater"],
 
+        ["AbstractMigration", "Migration"],
         ["AbstractField", "Field"],
         ["AbstractTextFormatter", "TextFormatter"],
         ["AbstractDevKitPage", "DevKit"],
@@ -79,6 +82,10 @@ foreach(
         ["AbstractResourcesPage", "ResourcesPage"],
 
         ["MySql", "MySQL", "\\Symphony\\Symphony\\DatabaseWrappers"],
+
+        ["Page", "InstallerPage", "\\Symphony\\Symphony\\Installer"],
+
+        ["Page", "UpdaterPage", "\\Symphony\\Symphony\\Updater"],
 
         ["Page", "FrontendPage", "\\Symphony\\Symphony\\Frontend"],
 

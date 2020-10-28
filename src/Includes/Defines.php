@@ -42,7 +42,7 @@ define_safe('WORKSPACE', DOCROOT.'/workspace');
  * @var string
  */
 define_safe('SYMPHONY', DOCROOT.'/src');
-define_safe('INCLUDES', SYMPHONY.'/src/Includes');
+define_safe('INCLUDES', SYMPHONY.'/Includes');
 
 /*
  * The filesystem path to the `assets` folder which is contained within
@@ -273,14 +273,14 @@ define_safe('URL', HTTP_PROTO.'//'.DOMAIN);
  * @since Symphony 2.3.2
  * @var string
  */
-define_safe('APPLICATION_URL', URL.'/symphony');
+define_safe('APPLICATION_URL', URL . '/symphony');
 
 /*
  * Returns the folder name for Symphony as an application
  * @since Symphony 2.6.0
  * @var string
  */
-define_safe('ASSETS_URL', APPLICATION_URL.'/assets');
+define_safe('ASSETS_URL', URL.'/src/Assets');
 
 /*
  * The integer value for event-type resources.

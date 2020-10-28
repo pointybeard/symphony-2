@@ -144,7 +144,7 @@ class GenericExceptionHandler
         // to the generic exception handler
         } catch (\Exception $exception) {
             try {
-                $output = call_user_func([self, 'render'], $exception);
+                $output = call_user_func([$this, 'render'], $exception);
 
                 // If the generic exception handler couldn't do it, well we're in bad
             // shape, just output a plaintext response!

@@ -609,8 +609,22 @@ abstract class Symphony implements Interfaces\SingletonInterface
     public static function getMigrationVersion()
     {
         if (self::isInstallerAvailable()) {
+
+            // @TODO: This needs some serious work. When there are no migration
+            // scripts, the last file returned from call to scandir() is 
+            // '.gitkeep' which throws off the call to "getVersion" lower down. 
+            // There is no sanity checking here to make sure that the file that 
+            // is being called is actually a migration script! For now there is
+            // a call to preg_match() to validate the file name. Entire migration
+            // system needs to be overhauled.
+
             $migrations = scandir(DOCROOT.'/install/migrations');
             $migration_file = end($migrations);
+
+            if(false == preg_match("@migration_@", $migration_file)) {
+                return false;
+            }
+
             $migration_class = 'migration_'.str_replace('.', '', substr($migration_file, 0, -4));
 
             return call_user_func(array($migration_class, 'getVersion'));
