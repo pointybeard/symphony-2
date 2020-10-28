@@ -8,7 +8,7 @@ use Symphony\Symphony;
  * @package content
  */
 
-class Page extends Symphony\AbstractHtmlPage
+class Page extends Symphony\HtmlPage
 {
     private $template;
 

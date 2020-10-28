@@ -23,11 +23,6 @@
     },
     "minimum-stability": "stable",
     "autoload": {
-        "classmap": [
-            "symphony/content",
-            "symphony/lib",
-            "install"
-        ],
         "psr-4": {
             "Symphony\\Symphony\\": "src/Symphony/"
         },

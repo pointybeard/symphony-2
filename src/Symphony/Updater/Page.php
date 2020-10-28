@@ -8,7 +8,7 @@ use Symphony\Symphony;
  * @package content
  */
 
-class Page extends Symphony\Installer\Page
+final class Page extends Symphony\Installer\Page
 {
     public function __construct($template, $params = [])
     {
@@ -18,7 +18,7 @@ class Page extends Symphony\Installer\Page
         $this->pageTitle = __('Update Symphony');
     }
 
-    protected function __build($version = VERSION, Symphony\XmlElement $extra = null)
+    protected function __build($version = VERSION, ?Symphony\XmlElement $extra = null): void
     {
         parent::__build(
             // Replace the installed version with the updated version
