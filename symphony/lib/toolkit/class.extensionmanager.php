@@ -207,7 +207,10 @@ class ExtensionManager implements FileResource
     {
         self::__buildExtensionList();
 
-        return self::$_extensions[$name]['id'];
+        return true == array_key_exists($name, self::$_extensions) && true == array_key_exists('id', self::$_extensions[$name])
+            ? self::$_extensions[$name]['id']
+            : null
+        ;
     }
 
     /**
