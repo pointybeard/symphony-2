@@ -1,5 +1,7 @@
 <?php
 
+use Symphony\Symphony;
+
 /**
  * @package boot
  */
@@ -51,20 +53,11 @@ function getcwd_safe()
 }
 
 /**
- * Checks that a constant has not been defined before defining
- * it. If the constant is already defined, this function will do
- * nothing, otherwise, it will set the constant
- *
- * @param string $name
- *  The name of the constant to set
- * @param string|integer|boolean $value
- *  The value of the desired constant
+ * @see Symphony/define_safe()
  */
-function define_safe($name, $value)
+function define_safe(string $name, $value): bool
 {
-    if (!defined($name)) {
-        define($name, $value);
-    }
+    return Symphony\define_safe($name, $value, Symphony\FLAG_NONE);
 }
 
 /**

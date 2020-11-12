@@ -33,6 +33,7 @@
             "Symphony\\": "src"
         },
         "files": [
+            "src/Symphony/Symphony.php",
             "symphony/lib/boot/preboot.php",
             "symphony/lib/boot/func.utilities.php",
             "symphony/lib/boot/defines.php",
