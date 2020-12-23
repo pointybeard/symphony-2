@@ -553,7 +553,14 @@ class contentPublish extends AdministrationPage
         if (is_array($associated_sections) && !empty($associated_sections)) {
             foreach ($associated_sections as $key => $as) {
                 $child_sections[$key] = SectionManager::fetch($as['child_section_id']);
-                $aTableHead[] = array($child_sections[$key]->get('name'), 'col');
+                $aTableHead[] = [
+                    sprintf(
+                        "%s (%s)",
+                        $child_sections[$key]->get('name'),
+                        FieldManager::fetch($as['child_section_field_id'])->get("label")
+                    ),
+                    'col'
+                ];
             }
         }
 
