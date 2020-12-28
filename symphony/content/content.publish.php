@@ -1713,7 +1713,12 @@ class contentPublish extends AdministrationPage
 
                         // Create link
                         $link = SYMPHONY_URL . '/publish/' . $as['handle'] . '/';
-                        $aname = General::sanitize($as['name']);
+                        //$aname = General::sanitize($as['name']);
+                        $aname = sprintf(
+                            "%s (%s)",
+                            General::sanitize($as['name']),
+                            FieldManager::fetch($as['child_section_field_id'])->get("label")
+                        );
                         if ($has_entries) {
                             $aname .= ' <span>(' . $entries['total-entries'] . ')</span>';
                         }
@@ -1808,7 +1813,15 @@ class contentPublish extends AdministrationPage
 
                     // Create link with filter or prepopulate
                     $link = SYMPHONY_URL . '/publish/' . $as['handle'] . '/' . $filter;
-                    $aname = General::sanitize($as['name']);
+
+                    $aname = sprintf(
+                        "%s (%s)",
+                        General::sanitize($as['name']),
+                        FieldManager::fetch($as['child_section_field_id'])->get("label")
+                    );
+
+                    //$aname = General::sanitize($as['name']);
+
                     if ($has_entries) {
                         $aname .= ' <span>(' . $entries['total-entries'] . ')</span>';
                     }
