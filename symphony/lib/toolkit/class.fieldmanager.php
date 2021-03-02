@@ -51,9 +51,13 @@ class FieldManager implements FileResource
     }
 
     /**
-     * Finds a Field by type by searching the `TOOLKIT . /fields` folder and then
-     * any fields folders in the installed extensions. The function returns
-     * the path to the folder where the field class resides.
+     * Finds a Field by type by searching the `TOOLKIT . /fields` folder,
+     * then `WORKSPACE . /fields` and then any fields folders in the
+     * installed extensions. The function returns the path to the folder
+     * where the field class resides.
+     *
+     * Use enable-toolkit-fields and enable-workspace-fields in manifest/config.json
+     * to control the behaviour.
      *
      * @param string $type
      *  The field handle, that is, `field.{$handle}.php`
@@ -61,14 +65,18 @@ class FieldManager implements FileResource
      */
     public static function __getClassPath($type)
     {
-        if (is_file(TOOLKIT . "/fields/field.{$type}.php")) {
+        if (true === Symphony::Configuration()->get("enable-toolkit-fields", "symphony") && true == is_file(TOOLKIT . "/fields/field.{$type}.php")) {
             return TOOLKIT . '/fields';
+
+        } elseif (true === Symphony::Configuration()->get("enable-workspace-fields", "symphony") && true == is_file(WORKSPACE . "/fields/field.{$type}.php")) {
+            return WORKSPACE . '/fields';
+
         } else {
             $extensions = Symphony::ExtensionManager()->listInstalledHandles();
 
-            if (is_array($extensions) && !empty($extensions)) {
+            if (false == empty($extensions) && true == is_array($extensions)) {
                 foreach ($extensions as $e) {
-                    if (is_file(EXTENSIONS . "/{$e}/fields/field.{$type}.php")) {
+                    if (true == is_file(EXTENSIONS . "/{$e}/fields/field.{$type}.php")) {
                         return EXTENSIONS . "/{$e}/fields";
                     }
                 }
