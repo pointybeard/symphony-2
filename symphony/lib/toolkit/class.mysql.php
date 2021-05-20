@@ -17,7 +17,7 @@ class DatabaseException extends Exception
      * An associative array with three keys, 'query', 'msg' and 'num'
      * @var array
      */
-    private $_error = array();
+    private $_error = [];
 
     /**
      * Constructor takes a message and an associative array to set to
@@ -79,21 +79,21 @@ class MySQL
      *
      * @var integer
      */
-    const __WRITE_OPERATION__ = 0;
+    public const __WRITE_OPERATION__ = 0;
 
     /**
      * Constant to indicate whether the query is a write operation
      *
      * @var integer
      */
-    const __READ_OPERATION__ = 1;
+    public const __READ_OPERATION__ = 1;
 
     /**
      * Sets the current `$_log` to be an empty array
      *
      * @var array
      */
-    private static $_log = array();
+    private static $_log = [];
 
     /**
      * The number of queries this class has executed, defaults to 0.
@@ -125,7 +125,7 @@ class MySQL
      *
      * @var array
      */
-    private static $_connection = array();
+    private static $_connection = [];
 
     /**
      * The resource of the last result returned from mysqli_query
@@ -154,7 +154,51 @@ class MySQL
      * By default, an array of arrays or objects representing the result set
      * from the `$this->_lastQuery`
      */
-    private $_lastResult = array();
+    private $_lastResult = [];
+
+    /**
+     * If set, this will strip the COLLATE value from CREATE TABLE queries
+     *
+     * @var boolean
+     */
+    private static $_strip_default_collate = false;
+
+    /**
+     * If set, this will strip the CHARSET value from CREATE TABLE queries
+     *
+     * @var boolean
+     */
+    private static $_strip_default_charset = false;
+
+    /**
+     * If set, this will strip the ENGINE=... value from CREATE TABLE queries
+     *
+     * @var boolean
+     */
+    private static $_strip_engine = false;
+
+    /**
+     * If set, this will strip the AUTO_INCREMENT=... value from CREATE TABLE queries
+     *
+     * @var boolean
+     */
+    private static $_strip_auto_increment = true;
+
+    public static function stripDefaultCollate(bool $value) {
+        self::$_strip_default_collate = $value;
+    }
+
+    public static function stripDefaultCharset(bool $value) {
+        self::$_strip_default_charset = $value;
+    }
+
+    public static function stripEngine(bool $value) {
+        self::$_strip_engine = $value;
+    }
+
+    public static function stripAutoIncrement(bool $value) {
+        self::$_strip_auto_increment = $value;
+    }
 
     /**
      * Magic function that will flush the MySQL log and close the MySQL
@@ -175,7 +219,7 @@ class MySQL
     public function flush()
     {
         $this->_result = null;
-        $this->_lastResult = array();
+        $this->_lastResult = [];
         $this->_lastQuery = null;
         $this->_lastQueryHash = null;
     }
@@ -185,7 +229,7 @@ class MySQL
      */
     public static function flushLog()
     {
-        self::$_log = array();
+        self::$_log = [];
     }
 
     /**
@@ -384,12 +428,14 @@ class MySQL
      * is assumed.
      *
      * @link http://au2.php.net/manual/en/function.mysql-set-charset.php
-     * @param string $set
-     *  The character encoding to use, by default this 'utf8'
+     * @param string $value
+     *  The character encoding to use
      */
-    public function setCharacterEncoding($set = 'utf8')
+    public function setCharacterEncoding($value)
     {
-        mysqli_set_charset(self::$_connection['id'], $set);
+        if(false == mysqli_set_charset(self::$_connection['id'], $value)) {
+            throw \Exception("Unable to set database character encoding to '{$value}'. Returned: " . mysqli_error(self::$_connection['id']));
+        }
     }
 
     /**
@@ -397,14 +443,14 @@ class MySQL
      * new tables that are created by Symphony use this character encoding
      *
      * @link http://dev.mysql.com/doc/refman/5.0/en/charset-connection.html
-     * @param string $set
-     *  The character encoding to use, by default this 'utf8'
+     * @param string $value
+     *  The character encoding to use
      * @throws DatabaseException
      */
-    public function setCharacterSet($set = 'utf8')
+    public function setCharacterSet($value)
     {
-        $this->query("SET character_set_connection = '$set', character_set_database = '$set', character_set_server = '$set'");
-        $this->query("SET CHARACTER SET '$set'");
+        $this->query("SET character_set_connection = '$value', character_set_database = '$value', character_set_server = '$value'");
+        $this->query("SET CHARACTER SET '$value'");
     }
 
     /**
@@ -543,6 +589,25 @@ class MySQL
             }
         }
 
+        // The following only applies on CREATE TABLE queries
+        if(true == preg_match("/^CREATE TABLE/i", $query)) {
+            if(true == self::$_strip_default_charset) {
+                $query = preg_replace('/(DEFAULT(\s+?))?CHARSET(\=|[\s+])[^\s]+(\s+)?/i', '', $query);
+            }
+
+            if(true == self::$_strip_default_collate) {
+                $query = preg_replace('/(DEFAULT(\s+?))?COLLATE(\=|[\s+])[^\s]+(\s+)?/i', '', $query);
+            }
+
+            if(true == self::$_strip_engine) {
+                $query = preg_replace('/ENGINE=[^\s]+(\s+)?/i', '', $query);
+            }
+
+            if(true == self::$_strip_auto_increment) {
+                $query = preg_replace('/AUTO_INCREMENT=\d+(\s+)?/i', '', $query);
+            }
+        }
+
         $this->flush();
         $this->_lastQuery = $query;
         $this->_lastQueryHash = $query_hash;
@@ -657,7 +722,7 @@ class MySQL
         // Multiple Insert
         if (is_array(current($fields))) {
             $sql  = "INSERT INTO `$table` (`".implode('`, `', array_keys(current($fields))).'`) VALUES ';
-            $rows = array();
+            $rows = [];
 
             foreach ($fields as $key => $array) {
                 // Sanity check: Make sure we dont end up with ',()' in the SQL.
@@ -712,7 +777,7 @@ class MySQL
     {
         self::cleanFields($fields);
         $sql = "UPDATE $table SET ";
-        $rows = array();
+        $rows = [];
 
         foreach ($fields as $key => $val) {
             $rows[] = " `$key` = $val";
@@ -769,13 +834,13 @@ class MySQL
         if (!is_null($query)) {
             $this->query($query, "ASSOC");
         } elseif (is_null($this->_lastResult)) {
-            return array();
+            return [];
         }
 
         $result = $this->_lastResult;
 
         if (!is_null($index_by_column) && isset($result[0][$index_by_column])) {
-            $n = array();
+            $n = [];
 
             foreach ($result as $ii) {
                 $n[$ii[$index_by_column]] = $ii;
@@ -809,7 +874,7 @@ class MySQL
     public function fetchRow($offset = 0, $query = null)
     {
         $result = $this->fetch($query);
-        return (empty($result) ? array() : $result[$offset]);
+        return (empty($result) ? [] : $result[$offset]);
     }
 
     /**
@@ -831,10 +896,10 @@ class MySQL
         $result = $this->fetch($query);
 
         if (empty($result)) {
-            return array();
+            return [];
         }
 
-        $rows = array();
+        $rows = [];
         foreach ($result as $row) {
             $rows[] = $row[$column];
         }
@@ -1003,7 +1068,7 @@ class MySQL
     public function getStatistics()
     {
         $query_timer = 0.0;
-        $slow_queries = array();
+        $slow_queries = [];
 
         foreach (self::$_log as $key => $val) {
             $query_timer += $val['execution_time'];

@@ -366,26 +366,40 @@ abstract class Symphony implements Singleton
                 return false;
             }
 
+            $normaliseTrueFalse = function($value, $default = false) {
+                if($value === true || $value === false) {
+                    return $value;
+                }
+
+                $value = strtolower((string)$value);
+                if($value == "on" || $value == "yes") {
+                    return true;
+                }
+
+                if($value == "off" | $value == "no") {
+                    return false;
+                }
+
+                return $default;
+            };
+
             self::Database()->setPrefix($details['tbl_prefix']);
-            self::Database()->setCharacterEncoding();
-            self::Database()->setCharacterSet();
+            self::Database()->setCharacterEncoding($details['character_encoding'] ?: "utf8mb4");
+            self::Database()->setCharacterSet($details['character_set'] ?: "utf8mb4");
             self::Database()->setTimeZone(self::Configuration()->get('timezone', 'region'));
+            self::Database()->stripEngine($normaliseTrueFalse($details["strip_engine"]));
+            self::Database()->stripDefaultCollate($normaliseTrueFalse($details["strip_default_collate"]));
+            self::Database()->stripDefaultCharset($normaliseTrueFalse($details["strip_default_charset"]));
+            self::Database()->stripAutoIncrement($normaliseTrueFalse($details["strip_auto_increment"]));
 
-            if (isset($details['query_caching'])) {
-                if ($details['query_caching'] == 'off') {
-                    self::Database()->disableCaching();
-                } elseif ($details['query_caching'] == 'on') {
-                    self::Database()->enableCaching();
-                }
+            if ($normaliseTrueFalse($details["query_caching"], true) == false) {
+                self::Database()->disableCaching();
             }
 
-            if (isset($details['query_logging'])) {
-                if ($details['query_logging'] == 'off') {
-                    self::Database()->disableLogging();
-                } elseif ($details['query_logging'] == 'on') {
-                    self::Database()->enableLogging();
-                }
+            if ($normaliseTrueFalse($details["query_logging"], true) == false) {
+                self::Database()->disableLogging();
             }
+
         } catch (DatabaseException $e) {
             self::throwCustomError(
                 $e->getDatabaseErrorCode() . ': ' . $e->getDatabaseErrorMessage(),
